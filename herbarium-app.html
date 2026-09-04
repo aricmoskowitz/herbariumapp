@@ -389,15 +389,53 @@ window.TAXONOMY_DATA = {
      "status": "context",
      "quizClue": "A stack of triangles narrowing toward the top on a short trunk &mdash; the generic pine-tree silhouette.",
      "quizWhy": "This order contains essentially all living conifers, so a simple pine-tree silhouette can stand in for the whole group.",
-     "families": [],
-     "plants": [
-      "Pine",
-      "Fir",
-      "Spruce",
-      "Cedar",
-      "Juniper",
-      "Redwood"
-     ]
+     "families": [
+      {
+       "id": "pinaceae",
+       "name": "Pinaceae",
+       "common": "Pine family",
+       "icon": "<path d=\"M20 4l7 10h-4l6 9h-5l6 10H10l6-10h-5l6-9h-4z\"/><path d=\"M20 33v3\"/>",
+       "trait": "Needle-like leaves borne singly or in bundles of two to five; large woody cones with overlapping scales, and resin canals running through the wood.",
+       "differentia": "The order's largest family by far &mdash; distinguished from Cupressaceae by true needle leaves (not scale-like) and by cones with separate, overlapping woody scales rather than fused or berry-like ones.",
+       "species": [
+        {
+         "common": "Scots pine",
+         "sci": "Pinus sylvestris"
+        },
+        {
+         "common": "European silver fir",
+         "sci": "Abies alba"
+        },
+        {
+         "common": "Norway spruce",
+         "sci": "Picea abies"
+        },
+        {
+         "common": "Cedar of Lebanon",
+         "sci": "Cedrus libani"
+        }
+       ]
+      },
+      {
+       "id": "cupressaceae",
+       "name": "Cupressaceae",
+       "common": "Cypress family",
+       "icon": "<path d=\"M20 34V8\"/><path d=\"M20 12l-6-3M20 12l6-3M20 18l-6-3M20 18l6-3M20 24l-6-3M20 24l6-3\"/><circle cx=\"14\" cy=\"29\" r=\"2\"/><circle cx=\"26\" cy=\"29\" r=\"2\"/>",
+       "trait": "Small, scale-like or awl-shaped leaves pressed flat against the twig; cones either small and woody or, in junipers, fused into fleshy blue &ldquo;berries.&rdquo;",
+       "differentia": "Unlike Pinaceae's needle bundles and separate-scaled cones, this family's leaves hug the stem in flattened sprays, and its cones can fuse into soft, berry-like structures instead of staying woody.",
+       "species": [
+        {
+         "common": "Common juniper",
+         "sci": "Juniperus communis"
+        },
+        {
+         "common": "Coast redwood",
+         "sci": "Sequoia sempervirens"
+        }
+       ]
+      }
+     ],
+     "desc": "The living conifers &mdash; evergreen, resin-producing trees and shrubs bearing seeds in woody cones rather than flowers, with needle- or scale-like leaves adapted to conserve water through harsh winters."
     }
    ]
   },
@@ -445,10 +483,23 @@ window.TAXONOMY_DATA = {
        "status": "context",
        "quizClue": "Eight thin boat-shaped pods radiating from a central hub, like a dried spice pod split open into a star.",
        "quizWhy": "This order includes Illiciaceae, the family that produces star anise, whose dried fruit is a star-shaped ring of pointed pods.",
-       "families": [],
-       "plants": [
-        "Star anise"
-       ]
+       "families": [
+        {
+         "id": "schisandraceae",
+         "name": "Schisandraceae",
+         "common": "Star anise family",
+         "icon": "<path d=\"M20 8c-4 2-6 6-6 12s2 10 6 12c4-2 6-6 6-12s-2-10-6-12z\"/><path d=\"M14 20h12\"/><path d=\"M20 8v24\"/>",
+         "trait": "Star-shaped, many-chambered dry fruit that splits open into boat-shaped pods; primitive flowers with numerous spirally arranged tepals and stamens.",
+         "differentia": "The order's only economically important family &mdash; its dry, star-shaped fruit is unlike anything else among the basal angiosperm lineages nearby in the Diagram.",
+         "species": [
+          {
+           "common": "Star anise",
+           "sci": "Illicium verum"
+          }
+         ]
+        }
+       ],
+       "desc": "A small, ancient order of woody plants retaining primitive floral traits from near the base of the flowering-plant family tree, most familiar through the star-shaped dried fruit of star anise."
       }
      ]
     },
@@ -465,11 +516,27 @@ window.TAXONOMY_DATA = {
        "status": "context",
        "quizClue": "A single long oval leaf on a straight stem &mdash; about as plain as a leaf shape gets.",
        "quizWhy": "This order includes laurel, bay, avocado, and cinnamon &mdash; plants best known for simple, aromatic evergreen leaves.",
-       "families": [],
-       "plants": [
-        "Avocado",
-        "Cinnamon"
-       ]
+       "families": [
+        {
+         "id": "lauraceae",
+         "name": "Lauraceae",
+         "common": "Laurel family",
+         "icon": "<ellipse cx=\"20\" cy=\"20\" rx=\"8\" ry=\"15\"/><path d=\"M20 5v30\"/>",
+         "trait": "Simple, leathery, often aromatic evergreen leaves; small flowers in clusters; one-seeded berry or drupe fruits.",
+         "differentia": "The family that gives the order its economic identity &mdash; nearly every commercially important Laurales plant, from bay leaves to avocado to cinnamon bark, belongs here.",
+         "species": [
+          {
+           "common": "Avocado",
+           "sci": "Persea americana"
+          },
+          {
+           "common": "Cinnamon",
+           "sci": "Cinnamomum verum"
+          }
+         ]
+        }
+       ],
+       "desc": "Aromatic evergreen trees and shrubs with simple, leathery leaves and small flowers borne in clusters, prized worldwide for the essential oils concentrated in their bark and leaves."
       },
       {
        "name": "Magnoliales",
@@ -479,10 +546,23 @@ window.TAXONOMY_DATA = {
        "status": "context",
        "quizClue": "A closed teardrop-shaped bud with a couple of curved lines peeking out from behind it, as if petals are still wrapped shut.",
        "quizWhy": "Magnolia flowers are famous for opening from a large, tightly wrapped closed bud with overlapping tepals.",
-       "families": [],
-       "plants": [
-        "Nutmeg"
-       ]
+       "families": [
+        {
+         "id": "myristicaceae",
+         "name": "Myristicaceae",
+         "common": "Nutmeg family",
+         "icon": "<ellipse cx=\"20\" cy=\"22\" rx=\"7\" ry=\"10\"/><path d=\"M14 14c2 2 3 5 3 8M26 14c-2 2-3 5-3 8M13 18c2 1 4 3 4 6M27 18c-2 1-4 3-4 6M12 24c2 0 4 2 5 4M28 24c-2 0-4 2-5 4\"/>",
+         "trait": "Aromatic seeds enclosed in a fleshy fruit that splits to reveal a bright red, lacy aril wrapped around the true seed within.",
+         "differentia": "The order's only family represented here &mdash; unique for yielding two distinct spices (nutmeg the seed, mace the lacy aril) from a single fruit.",
+         "species": [
+          {
+           "common": "Nutmeg",
+           "sci": "Myristica fragrans"
+          }
+         ]
+        }
+       ],
+       "desc": "Woody trees and shrubs with large, often solitary flowers and numerous spirally arranged floral parts, an early-diverging lineage that predates the split between monocots and eudicots."
       },
       {
        "name": "Piperales",
