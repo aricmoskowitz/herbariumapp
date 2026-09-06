@@ -1959,6 +1959,10 @@
             {
              "common": "Strawberry tree",
              "sci": "Arbutus unedo"
+            },
+            {
+             "common": "Huckleberry",
+             "sci": "Gaylussacia baccata"
             }
            ]
           },
@@ -2041,17 +2045,39 @@
              "sci": "Actinidia deliciosa"
             }
            ]
+          },
+          {
+           "id": "ebenaceae",
+           "name": "Ebenaceae",
+           "common": "Ebony / Persimmon family",
+           "icon": "<ellipse cx=\"20\" cy=\"22\" rx=\"9\" ry=\"8\"/><path d=\"M14 15c2-2 4-2 6 0M20 15c2-2 4-2 6 0\"/><path d=\"M20 15v-4\"/>",
+           "trait": "Dense, dark heartwood (the source of true ebony timber) or, in persimmon, sweet orange fruit that ripens from astringent to sweet; simple, often glossy leaves.",
+           "differentia": "Unlike the acid-soil Ericaceae or milky-latex Sapotaceae, this family is defined by dense dark heartwood (ebony) or a fruit crowned with a papery calyx (persimmon).",
+           "species": [
+            {
+             "common": "Ebony",
+             "sci": "Diospyros ebenum"
+            },
+            {
+             "common": "Persimmon",
+             "sci": "Diospyros kaki"
+            }
+           ]
+          },
+          {
+           "id": "polemoniaceae",
+           "name": "Polemoniaceae",
+           "common": "Phlox family",
+           "icon": "<circle cx=\"14\" cy=\"16\" r=\"4\"/><circle cx=\"26\" cy=\"16\" r=\"4\"/><circle cx=\"20\" cy=\"24\" r=\"4\"/><circle cx=\"14\" cy=\"28\" r=\"4\"/><circle cx=\"26\" cy=\"28\" r=\"4\"/><path d=\"M20 24v-6\"/>",
+           "trait": "Flat, five-lobed, star-shaped flowers fused into a narrow tube at the base, typically clustered into showy rounded heads; leaves often opposite and simple.",
+           "differentia": "Distinguished from Primulaceae's single radiating bloom by flat five-lobed flowers clustered into showy rounded heads, and from Ericaceae's urn shape by an open, star-like corolla.",
+           "species": [
+            {
+             "common": "Phlox",
+             "sci": "Phlox paniculata"
+            }
+           ]
           }
-         ],
-         "plants": [
-          "Kiwi",
-          "Blueberry",
-          "Huckleberry",
-          "Tea",
-          "Ebony",
-          "Persimmon",
-          "Rhododendron/Azalea",
-          "Phlox"
          ]
         },
         {
@@ -2072,12 +2098,41 @@
              "status": "context",
              "quizClue": "A five-pointed star shape radiating out from a center dot.",
              "quizWhy": "Coffee, milkweed, and gentians often have five-parted, star-shaped tubular flowers.",
-             "families": [],
-             "plants": [
-              "Milkweed",
-              "Coffee",
-              "Dogbane"
-             ]
+             "families": [
+              {
+               "id": "apocynaceae",
+               "name": "Apocynaceae",
+               "common": "Milkweed / Dogbane family",
+               "icon": "<path d=\"M20 8c-4 2-6 8-6 14s2 10 6 12c4-2 6-6 6-12s-2-12-6-14z\"/><path d=\"M15 14l-2-1M25 14l2-1M14 20l-2 0M26 20l2 0M16 26l-2 1M24 26l2 1\"/>",
+               "trait": "Milky latex sap in stems and leaves; flowers with petals twisted or fused into a tube, often with an elaborate corona; many produce cardiac glycosides toxic to most animals but tolerated by specialist insects like monarch caterpillars.",
+               "differentia": "Distinguished from Rubiaceae's four-parted tubular flowers by milky latex sap and a warty, silk-haired seed pod, a hallmark of milkweed and its dogbane relatives.",
+               "species": [
+                {
+                 "common": "Common milkweed",
+                 "sci": "Asclepias syriaca"
+                },
+                {
+                 "common": "Dogbane",
+                 "sci": "Apocynum cannabinum"
+                }
+               ]
+              },
+              {
+               "id": "rubiaceae",
+               "name": "Rubiaceae",
+               "common": "Coffee family",
+               "icon": "<path d=\"M20 34V16\"/><ellipse cx=\"14\" cy=\"14\" rx=\"5\" ry=\"8\" transform=\"rotate(-20 14 14)\"/><ellipse cx=\"26\" cy=\"14\" rx=\"5\" ry=\"8\" transform=\"rotate(20 26 14)\"/><circle cx=\"16\" cy=\"26\" r=\"3\"/><circle cx=\"24\" cy=\"26\" r=\"3\"/>",
+               "trait": "Opposite leaves joined at the base by a stipule; small, four- or five-lobed tubular flowers followed by fleshy berries, each containing two seeds.",
+               "differentia": "The order's most economically important family here &mdash; opposite leaves with fused basal stipules and paired fleshy berries distinguish it from the milky, pod-bearing Apocynaceae.",
+               "species": [
+                {
+                 "common": "Coffee",
+                 "sci": "Coffea arabica"
+                }
+               ]
+              }
+             ],
+             "desc": "Mostly tropical trees, shrubs, and vines with opposite leaves and fused, tubular flower parts, spanning both milky-latex milkweeds and the world's coffee supply."
             },
             {
              "name": "Boraginales",
@@ -2087,11 +2142,27 @@
              "status": "context",
              "quizClue": "Five small overlapping circles around a center dot &mdash; more delicate and compact than a rose-like bloom.",
              "quizWhy": "Forget-me-nots and borage have small, delicate five-petaled flowers, often blue or purple.",
-             "families": [],
-             "plants": [
-              "Borage",
-              "Forget-me-not"
-             ]
+             "families": [
+              {
+               "id": "boraginaceae",
+               "name": "Boraginaceae",
+               "common": "Borage family",
+               "icon": "<circle cx=\"20\" cy=\"20\" r=\"2\"/><circle cx=\"20\" cy=\"13\" r=\"4\"/><circle cx=\"26\" cy=\"17\" r=\"4\"/><circle cx=\"24\" cy=\"24\" r=\"4\"/><circle cx=\"16\" cy=\"24\" r=\"4\"/><circle cx=\"14\" cy=\"17\" r=\"4\"/>",
+               "trait": "Coiled flower clusters (cymes) that unfurl like a fiddlehead as they bloom; leaves and stems often bristly with rough hairs; five-petaled flowers, frequently blue.",
+               "differentia": "The order's defining family &mdash; a distinctive coiled, unfurling flower cluster (scorpioid cyme) sets it apart from the flower arrangements of neighboring Lamiid orders.",
+               "species": [
+                {
+                 "common": "Borage",
+                 "sci": "Borago officinalis"
+                },
+                {
+                 "common": "Forget-me-not",
+                 "sci": "Myosotis scorpioides"
+                }
+               ]
+              }
+             ],
+             "desc": "Herbs and shrubs with a distinctive coiled flower cluster that unfurls as it blooms, most familiar through garden borage and forget-me-nots."
             },
             {
              "name": "Solanales",
@@ -2101,16 +2172,57 @@
              "status": "context",
              "quizClue": "A five-line star with an unusually large, prominent center circle.",
              "quizWhy": "Tomatoes, potatoes, and petunias have flowers with a prominent, cone-like cluster of stamens at the center.",
-             "families": [],
-             "plants": [
-              "Potato",
-              "Aubergine",
-              "Tobacco",
-              "Morning Glory",
-              "Ensai",
-              "Tomato",
-              "Chili"
-             ]
+             "families": [
+              {
+               "id": "solanaceae",
+               "name": "Solanaceae",
+               "common": "Nightshade family",
+               "icon": "<path d=\"M20 20L20 8M20 20l11 6M20 20l-4 13M20 20l4 13M20 20l-11 6\"/><circle cx=\"20\" cy=\"20\" r=\"3\"/>",
+               "trait": "Flowers with five fused petals forming a star or funnel shape around a prominent central cone of stamens; many species contain alkaloids (nicotine, solanine, capsaicin) ranging from toxic to intensely flavorful.",
+               "differentia": "The order's namesake and largest family &mdash; a star-shaped flower with a prominent stamen cone, and alkaloid chemistry absent from the twining vines of Convolvulaceae.",
+               "species": [
+                {
+                 "common": "Potato",
+                 "sci": "Solanum tuberosum"
+                },
+                {
+                 "common": "Aubergine",
+                 "sci": "Solanum melongena"
+                },
+                {
+                 "common": "Tobacco",
+                 "sci": "Nicotiana tabacum"
+                },
+                {
+                 "common": "Tomato",
+                 "sci": "Solanum lycopersicum"
+                },
+                {
+                 "common": "Chili",
+                 "sci": "Capsicum annuum"
+                }
+               ]
+              },
+              {
+               "id": "convolvulaceae",
+               "name": "Convolvulaceae",
+               "common": "Morning glory family",
+               "icon": "<path d=\"M10 32c4-10 8-16 10-20\"/><ellipse cx=\"26\" cy=\"14\" rx=\"8\" ry=\"6\" transform=\"rotate(-30 26 14)\"/><circle cx=\"26\" cy=\"14\" r=\"2\"/>",
+               "trait": "Twining or trailing vines with funnel-shaped flowers that typically open at dawn and wilt by midday; often exude a milky sap.",
+               "differentia": "Distinguished from Solanaceae's star-shaped, stamen-coned flower by a smooth funnel-shaped bloom on a twining vine, and by lacking the order's characteristic alkaloids.",
+               "species": [
+                {
+                 "common": "Morning glory",
+                 "sci": "Ipomoea purpurea"
+                },
+                {
+                 "common": "Ensai (water spinach)",
+                 "sci": "Ipomoea aquatica"
+                }
+               ]
+              }
+             ],
+             "desc": "Herbs and vines producing some of the world's most important food crops and a few of its most potent alkaloids, spanning the nightshades and the twining morning-glory vines."
             },
             {
              "name": "Lamiales",
@@ -2149,6 +2261,10 @@
                 {
                  "common": "Rosemary",
                  "sci": "Salvia rosmarinus"
+                },
+                {
+                 "common": "Shiso",
+                 "sci": "Perilla frutescens"
                 }
                ]
               },
@@ -2175,6 +2291,10 @@
                 {
                  "common": "Forsythia",
                  "sci": "Forsythia &times; intermedia"
+                },
+                {
+                 "common": "Jasmine",
+                 "sci": "Jasminum officinale"
                 }
                ]
               },
@@ -2243,22 +2363,35 @@
                  "sci": "Tectona grandis"
                 }
                ]
+              },
+              {
+               "id": "pedaliaceae",
+               "name": "Pedaliaceae",
+               "common": "Sesame family",
+               "icon": "<path d=\"M20 34V18\"/><ellipse cx=\"20\" cy=\"14\" rx=\"5\" ry=\"7\"/><path d=\"M20 7v3\"/><path d=\"M16 10l1 2M24 10l-1 2\"/>",
+               "trait": "Sticky, mucilage-covered capsules split open at maturity to release small, oil-rich seeds; opposite leaves often glandular-hairy.",
+               "differentia": "The order's oilseed specialist &mdash; small pods packed with tiny oil-rich seeds distinguish it from the square-stemmed herbs of Lamiaceae and the woody Oleaceae.",
+               "species": [
+                {
+                 "common": "Sesame",
+                 "sci": "Sesamum indicum"
+                }
+               ]
+              },
+              {
+               "id": "paulowniaceae",
+               "name": "Paulowniaceae",
+               "common": "Empress tree family",
+               "icon": "<path d=\"M20 14c-4-4-9-2-9 2 0 4 9 10 9 10s9-6 9-10c0-4-5-6-9-2z\"/><path d=\"M20 26v8\"/><path d=\"M20 26l-3 3M20 26l3 3M20 30l-3 3M20 30l3 3\"/>",
+               "trait": "Large heart-shaped leaves and showy, upright clusters of tubular purple flowers blooming before the leaves emerge; among the fastest-growing hardwood trees known.",
+               "differentia": "The order's fastest-growing tree &mdash; large heart-shaped leaves and an upright spike of purple tubular flowers set it apart from the smaller herbs and shrubs typical of Lamiales.",
+               "species": [
+                {
+                 "common": "Empress tree",
+                 "sci": "Paulownia tomentosa"
+                }
+               ]
               }
-             ],
-             "plants": [
-              "Shiso",
-              "Sage",
-              "Rosemary",
-              "Lavender",
-              "Sesame",
-              "Forsythia",
-              "Ash",
-              "Jasmine",
-              "Mint",
-              "Lilac",
-              "Verbena",
-              "Empress Tree",
-              "Olive"
              ]
             }
            ]
@@ -2276,11 +2409,27 @@
              "status": "context",
              "quizClue": "A pointed leaf shape with a single berry hanging beneath it.",
              "quizWhy": "Holly is instantly recognizable by its pointed leaves and bright red berries.",
-             "families": [],
-             "plants": [
-              "Holly",
-              "Yerba Mate"
-             ]
+             "families": [
+              {
+               "id": "aquifoliaceae",
+               "name": "Aquifoliaceae",
+               "common": "Holly family",
+               "icon": "<path d=\"M20 8c6 4 8 10 6 16-2-1-4-3-6-6-2 3-4 5-6 6-2-6 0-12 6-16z\"/><circle cx=\"20\" cy=\"30\" r=\"2.5\"/>",
+               "trait": "Simple, often spiny-toothed evergreen leaves; small white flowers followed by bright, berry-like drupes; several species (mate, guayusa) are brewed into caffeinated infusions.",
+               "differentia": "The order's sole family &mdash; every Aquifoliales species tagged here, ornamental holly and caffeinated mate alike, belongs to the single genus Ilex.",
+               "species": [
+                {
+                 "common": "Holly",
+                 "sci": "Ilex aquifolium"
+                },
+                {
+                 "common": "Yerba mate",
+                 "sci": "Ilex paraguariensis"
+                }
+               ]
+              }
+             ],
+             "desc": "A single-genus order &mdash; every species here, ornamental holly and caffeinated mate alike, belongs to Ilex."
             },
             {
              "name": "Apiales",
@@ -2290,18 +2439,65 @@
              "status": "context",
              "quizClue": "An umbrella-like spray of lines ending in small dots, like an umbel of tiny flowers.",
              "quizWhy": "Carrots, dill, and parsley all produce their tiny flowers in umbrella-shaped clusters called umbels.",
-             "families": [],
-             "plants": [
-              "Fennel",
-              "Cumin",
-              "Ginseng",
-              "Parsnip",
-              "Dill",
-              "Anise",
-              "Parsley",
-              "Carrot",
-              "Celery"
-             ]
+             "families": [
+              {
+               "id": "apiaceae",
+               "name": "Apiaceae",
+               "common": "Carrot family",
+               "icon": "<path d=\"M20 34V18M20 18l-9-6M20 18l9-6M20 18l-9 3M20 18l9 3\"/><circle cx=\"11\" cy=\"12\" r=\"1.3\"/><circle cx=\"29\" cy=\"12\" r=\"1.3\"/><circle cx=\"11\" cy=\"21\" r=\"1.3\"/><circle cx=\"29\" cy=\"21\" r=\"1.3\"/>",
+               "trait": "Tiny five-petaled flowers clustered into umbrella-shaped compound umbels; hollow, ridged stems and finely divided, aromatic leaves; many produce essential oils used as spices.",
+               "differentia": "The order's namesake and dominant family &mdash; umbrella-shaped flower clusters (umbels) on hollow ridged stems distinguish nearly every Apiales species here from the woody Araliaceae.",
+               "species": [
+                {
+                 "common": "Fennel",
+                 "sci": "Foeniculum vulgare"
+                },
+                {
+                 "common": "Cumin",
+                 "sci": "Cuminum cyminum"
+                },
+                {
+                 "common": "Parsnip",
+                 "sci": "Pastinaca sativa"
+                },
+                {
+                 "common": "Dill",
+                 "sci": "Anethum graveolens"
+                },
+                {
+                 "common": "Anise",
+                 "sci": "Pimpinella anisum"
+                },
+                {
+                 "common": "Parsley",
+                 "sci": "Petroselinum crispum"
+                },
+                {
+                 "common": "Carrot",
+                 "sci": "Daucus carota"
+                },
+                {
+                 "common": "Celery",
+                 "sci": "Apium graveolens"
+                }
+               ]
+              },
+              {
+               "id": "araliaceae",
+               "name": "Araliaceae",
+               "common": "Ginseng family",
+               "icon": "<path d=\"M20 20V8\"/><circle cx=\"20\" cy=\"8\" r=\"1.5\"/><path d=\"M20 20c-2 4-3 8-2 12M20 20c2 4 3 8 2 12M20 20c-4 2-6 5-6 9M20 20c4 2 6 5 6 9\"/>",
+               "trait": "Often woody shrubs, trees, or vines with palmately compound leaves; small flowers in umbel-like clusters, and in ginseng, a slow-growing forked root prized in traditional medicine.",
+               "differentia": "The order's only woody family here &mdash; distinguished from Apiaceae's herbaceous umbels by a shrub or tree habit and, in ginseng, a slow-growing forked taproot.",
+               "species": [
+                {
+                 "common": "Ginseng",
+                 "sci": "Panax ginseng"
+                }
+               ]
+              }
+             ],
+             "desc": "Aromatic herbs (and a few woody outliers) known for umbrella-shaped flower clusters and essential oils, supplying much of the world's savory spice cabinet."
             },
             {
              "name": "Dipsacales",
@@ -2311,12 +2507,41 @@
              "status": "context",
              "quizClue": "Two curved trumpet shapes branching together from one stem, like paired honeysuckle blooms.",
              "quizWhy": "Honeysuckle produces paired tubular flowers that grow directly from the same point on the stem.",
-             "families": [],
-             "plants": [
-              "Honeysuckle",
-              "Valerian",
-              "Elderflower"
-             ]
+             "families": [
+              {
+               "id": "caprifoliaceae",
+               "name": "Caprifoliaceae",
+               "common": "Honeysuckle family",
+               "icon": "<path d=\"M12 34c0-14 4-22 4-22M28 34c0-14-4-22-4-22\"/><ellipse cx=\"16\" cy=\"10\" rx=\"3\" ry=\"5\"/><ellipse cx=\"24\" cy=\"10\" rx=\"3\" ry=\"5\"/>",
+               "trait": "Paired, often fragrant tubular flowers with fused petals opening into flaring lobes; many are climbing or scrambling shrubs, though the family (broadened by DNA evidence) also includes the low herbaceous valerian.",
+               "differentia": "Distinguished from Adoxaceae's flat-topped flower clusters by paired, fused tubular flowers and (in honeysuckle) a climbing, twining habit.",
+               "species": [
+                {
+                 "common": "Honeysuckle",
+                 "sci": "Lonicera periclymenum"
+                },
+                {
+                 "common": "Valerian",
+                 "sci": "Valeriana officinalis"
+                }
+               ]
+              },
+              {
+               "id": "adoxaceae",
+               "name": "Adoxaceae",
+               "common": "Elderflower family",
+               "icon": "<path d=\"M20 34V22\"/><circle cx=\"20\" cy=\"14\" r=\"2\"/><circle cx=\"13\" cy=\"16\" r=\"2\"/><circle cx=\"27\" cy=\"16\" r=\"2\"/><circle cx=\"9\" cy=\"20\" r=\"2\"/><circle cx=\"31\" cy=\"20\" r=\"2\"/><circle cx=\"16\" cy=\"12\" r=\"2\"/><circle cx=\"24\" cy=\"12\" r=\"2\"/><path d=\"M20 22l0-8M20 14l-7 2M20 14l7 2M13 16l-4 4M27 16l4 4M20 14l-4-2M20 14l4-2\"/>",
+               "trait": "Small white flowers packed into broad, flat-topped clusters (corymbs), followed by clusters of small dark berries; compound, opposite leaves.",
+               "differentia": "The order's flat-topped bloomer &mdash; broad clusters of tiny white flowers set it apart from Caprifoliaceae's larger, paired tubular blooms.",
+               "species": [
+                {
+                 "common": "Elderflower",
+                 "sci": "Sambucus nigra"
+                }
+               ]
+              }
+             ],
+             "desc": "Shrubs, vines, and herbs of the northern temperate zone bearing clustered tubular or flat-topped flowers, spanning ornamental honeysuckle, medicinal valerian, and elderflower."
             },
             {
              "name": "Asterales",
@@ -2326,21 +2551,67 @@
              "status": "extension",
              "quizClue": "A center disc ringed by many thin radiating lines &mdash; the most literal daisy shape in the set.",
              "quizWhy": "Daisies and sunflowers are composite flowers &mdash; what looks like one bloom is really a disc of many tiny flowers ringed by petal-like rays.",
-             "families": [],
-             "plants": [
-              "Artichoke",
-              "Burdock",
-              "Topinambur",
-              "Sunflower",
-              "Chamomile",
-              "Chicory",
-              "Dandelion",
-              "Marigold",
-              "Chrysanthemum",
-              "Daisy",
-              "Lettuce",
-              "Feverfew"
-             ]
+             "families": [
+              {
+               "id": "asteraceae",
+               "name": "Asteraceae",
+               "common": "Daisy / Sunflower family",
+               "icon": "<circle cx=\"20\" cy=\"20\" r=\"4\"/><path d=\"M20 12V6M20 34v-6M12 20H6M34 20h-6M14 14l-4-4M30 14l4-4M14 26l-4 4M30 26l4 4\"/>",
+               "trait": "Flower heads that are actually dense clusters of many tiny florets packed onto a single receptacle, surrounded by protective bracts, giving the appearance of one large bloom; among the largest of all flowering-plant families.",
+               "differentia": "The order's sole family and one of the two largest plant families on Earth &mdash; what looks like a single flower is really a composite head of dozens to hundreds of tiny florets.",
+               "species": [
+                {
+                 "common": "Artichoke",
+                 "sci": "Cynara cardunculus"
+                },
+                {
+                 "common": "Burdock",
+                 "sci": "Arctium lappa"
+                },
+                {
+                 "common": "Topinambur",
+                 "sci": "Helianthus tuberosus"
+                },
+                {
+                 "common": "Sunflower",
+                 "sci": "Helianthus annuus"
+                },
+                {
+                 "common": "Chamomile",
+                 "sci": "Matricaria chamomilla"
+                },
+                {
+                 "common": "Chicory",
+                 "sci": "Cichorium intybus"
+                },
+                {
+                 "common": "Dandelion",
+                 "sci": "Taraxacum officinale"
+                },
+                {
+                 "common": "Marigold",
+                 "sci": "Tagetes erecta"
+                },
+                {
+                 "common": "Chrysanthemum",
+                 "sci": "Chrysanthemum morifolium"
+                },
+                {
+                 "common": "Daisy",
+                 "sci": "Bellis perennis"
+                },
+                {
+                 "common": "Lettuce",
+                 "sci": "Lactuca sativa"
+                },
+                {
+                 "common": "Feverfew",
+                 "sci": "Tanacetum parthenium"
+                }
+               ]
+              }
+             ],
+             "desc": "The daisy order &mdash; composite flower heads built from many tiny florets crowded onto a single receptacle, spanning garden ornamentals, salad greens, and the towering sunflower."
             }
            ]
           }
