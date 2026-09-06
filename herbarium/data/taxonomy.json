@@ -679,11 +679,37 @@
        "status": "context",
        "quizClue": "A simple flower made of eight thin lines radiating from a center dot.",
        "quizWhy": "Buttercups and poppies are classic examples of this early-diverging eudicot order, often with simple, radially symmetric flowers.",
-       "families": [],
-       "plants": [
-        "Buttercup",
-        "Poppy"
-       ]
+       "families": [
+        {
+         "id": "ranunculaceae",
+         "name": "Ranunculaceae",
+         "common": "Buttercup family",
+         "icon": "<circle cx=\"20\" cy=\"20\" r=\"3\"/><path d=\"M20 17c0-6 3-10 3-10M20 17c0-6-3-10-3-10M20 23c0 6 3 10 3 10M20 23c0 6-3 10-3 10M17 20c-6 0-10-3-10-3M17 20c-6 0-10 3-10 3M23 20c6 0 10-3 10-3M23 20c6 0 10 3 10 3\"/>",
+         "trait": "Simple, often deeply lobed leaves and radially symmetric flowers with numerous separate stamens and pistils spiraling around a raised center; many contain acrid, mildly toxic compounds.",
+         "differentia": "The order's namesake family &mdash; flowers built from many separate, spirally arranged stamens and pistils rather than the fused, latex-bearing capsule fruit of Papaveraceae.",
+         "species": [
+          {
+           "common": "Meadow buttercup",
+           "sci": "Ranunculus acris"
+          }
+         ]
+        },
+        {
+         "id": "papaveraceae",
+         "name": "Papaveraceae",
+         "common": "Poppy family",
+         "icon": "<ellipse cx=\"20\" cy=\"23\" rx=\"8\" ry=\"9\"/><path d=\"M14 16c2-2 4-3 6-3s4 1 6 3\"/><path d=\"M20 13v-5\"/>",
+         "trait": "Milky or colored latex sap in stems and leaves; four delicate, crumpled petals opening from a nodding bud, with seeds housed in a capsule that shakes them out through pores.",
+         "differentia": "Distinguished from Ranunculaceae's many-parted spiral flowers by milky latex sap and a four-petaled bloom that opens from a distinctively crumpled, nodding bud.",
+         "species": [
+          {
+           "common": "Common poppy",
+           "sci": "Papaver rhoeas"
+          }
+         ]
+        }
+       ],
+       "desc": "Herbaceous plants near the base of the eudicot family tree, retaining relatively primitive flowers with numerous separate floral parts rather than the fused structures common in later-diverging orders."
       },
       {
        "name": "Proteales",
@@ -693,12 +719,51 @@
        "status": "context",
        "quizClue": "A spiky burst of lines around a solid center circle.",
        "quizWhy": "This order is a botanical grab-bag &mdash; sycamores, lotus, and the spiky-flowered Proteaceae &mdash; united by DNA more than by shared looks.",
-       "families": [],
-       "plants": [
-        "Sycamore/Plane",
-        "Lotus",
-        "Macadamia"
-       ]
+       "families": [
+        {
+         "id": "platanaceae",
+         "name": "Platanaceae",
+         "common": "Plane / Sycamore family",
+         "icon": "<path d=\"M20 6v10\"/><circle cx=\"16\" cy=\"22\" r=\"5\"/><circle cx=\"24\" cy=\"28\" r=\"5\"/><path d=\"M16 17v0M24 23v0\"/>",
+         "trait": "Mottled, flaking bark that peels away in patches; ball-shaped clusters of tiny fruits (achenes) dangling on long stalks; large, palmately lobed leaves.",
+         "differentia": "Unlike the aquatic Nelumbonaceae or nut-bearing Proteaceae, this family is built around mottled, exfoliating bark and ball-shaped fruit clusters dangling from waterside trees.",
+         "species": [
+          {
+           "common": "Sycamore/Plane",
+           "sci": "Platanus x acerifolia"
+          }
+         ]
+        },
+        {
+         "id": "nelumbonaceae",
+         "name": "Nelumbonaceae",
+         "common": "Lotus family",
+         "icon": "<circle cx=\"14\" cy=\"14\" r=\"6\"/><path d=\"M14 20v14\"/><ellipse cx=\"27\" cy=\"18\" rx=\"4\" ry=\"7\"/><path d=\"M27 25v9\"/>",
+         "trait": "Aquatic perennials with rounded, waxy leaves and flower stalks held well above the water; unlike true water lilies, both leaf and flower rise clear of the surface on separate stalks.",
+         "differentia": "The order's only aquatic family &mdash; both leaf and flower rise on separate stalks well above the water, unlike the streamside trees of Platanaceae or the woody shrubs of Proteaceae.",
+         "species": [
+          {
+           "common": "Sacred lotus",
+           "sci": "Nelumbo nucifera"
+          }
+         ]
+        },
+        {
+         "id": "proteaceae",
+         "name": "Proteaceae",
+         "common": "Protea family",
+         "icon": "<circle cx=\"20\" cy=\"22\" r=\"5\"/><path d=\"M20 17V4M15 19l-9-6M25 19l9-6M15 25l-9 6M25 25l9 6\"/>",
+         "trait": "Flowers packed into dense, often brush- or cone-like inflorescences with narrow, radiating floral parts; woody, nut- or cone-like fruiting structures typical of nutrient-poor soils.",
+         "differentia": "The order's namesake family &mdash; distinguished from Platanaceae's bark and Nelumbonaceae's water-lily-like habit by dense, brush-like flower clusters and woody, nut-bearing fruit.",
+         "species": [
+          {
+           "common": "Macadamia",
+           "sci": "Macadamia integrifolia"
+          }
+         ]
+        }
+       ],
+       "desc": "A small but ancient order spanning three unrelated-looking families &mdash; sycamores, lotuses, and the showy Proteaceae &mdash; grouped together by DNA rather than any shared appearance, an early-diverging lineage near the base of the eudicots."
       }
      ]
     },
@@ -719,10 +784,23 @@
        "status": "context",
        "quizClue": "A cluster of small overlapping circles hanging together like a bunch.",
        "quizWhy": "Grapes are the signature plant of this order, growing in dense hanging clusters.",
-       "families": [],
-       "plants": [
-        "Grape"
-       ]
+       "families": [
+        {
+         "id": "vitaceae",
+         "name": "Vitaceae",
+         "common": "Grape family",
+         "icon": "<circle cx=\"16\" cy=\"18\" r=\"3\"/><circle cx=\"22\" cy=\"18\" r=\"3\"/><circle cx=\"19\" cy=\"23\" r=\"3\"/><circle cx=\"14\" cy=\"24\" r=\"3\"/><circle cx=\"24\" cy=\"24\" r=\"3\"/><circle cx=\"19\" cy=\"29\" r=\"3\"/><path d=\"M19 12v4\"/>",
+         "trait": "Woody, climbing vines that grip supports with coiling tendrils opposite the leaves; fruit forms in dense hanging clusters of juicy berries.",
+         "differentia": "The order's sole family &mdash; tendril-climbing vines and clustered berry fruit define a growth habit found nowhere else this close to the base of the rosid clade.",
+         "species": [
+          {
+           "common": "Grape",
+           "sci": "Vitis vinifera"
+          }
+         ]
+        }
+       ],
+       "desc": "A single-family order of climbing woody vines, an early-diverging lineage near the base of the rosid clade."
       },
       {
        "name": "Saxifragales",
@@ -732,13 +810,65 @@
        "status": "context",
        "quizClue": "Four thin ribbon-like strips arranged in a plus-sign around a center dot, instead of rounded petals.",
        "quizWhy": "Witch hazel (Hamamelidaceae) has unusually thin, strap-shaped petals instead of the rounded petals typical of most flowers.",
-       "families": [],
-       "plants": [
-        "Peony",
-        "Witch Hazel",
-        "Red Currant",
-        "Sweetgum"
-       ]
+       "families": [
+        {
+         "id": "paeoniaceae",
+         "name": "Paeoniaceae",
+         "common": "Peony family",
+         "icon": "<path d=\"M20 6c-7 0-12 5-12 11 0 4 2 7 5 9-1 3 0 6 3 7 2-2 3-4 4-4s2 2 4 4c3-1 4-4 3-7 3-2 5-5 5-9 0-6-5-11-12-11z\"/><path d=\"M13 15c2-2 4-2 6 0M21 15c2-2 4-2 6 0M14 22c1 2 3 3 5 2M21 24c2 1 4 0 5-2\"/>",
+         "trait": "Large, often ruffled flowers with numerous overlapping petals surrounding a prominent central boss of stamens; herbaceous or woody perennials that die back to a rootstock or persist as a shrub.",
+         "differentia": "The order's showiest bloomer &mdash; its large ruffled flower has nothing in common with Hamamelidaceae's thin ribbon petals, Grossulariaceae's berry racemes, or Altingiaceae's spiky seed balls.",
+         "species": [
+          {
+           "common": "Peony",
+           "sci": "Paeonia lactiflora"
+          }
+         ]
+        },
+        {
+         "id": "hamamelidaceae",
+         "name": "Hamamelidaceae",
+         "common": "Witch hazel family",
+         "icon": "<path d=\"M8 24h24\"/><path d=\"M12 24l-3-4M12 24l-3 4M20 24l-3-4M20 24l-3 4M28 24l-3-4M28 24l-3 4M12 24l3-4M12 24l3 4M20 24l3-4M20 24l3 4M28 24l3-4M28 24l3 4\"/>",
+         "trait": "Small ribbon-like petals, often four per flower, opening directly on bare twigs in late fall or winter when little else blooms; witch hazel extract is distilled from its bark and leaves.",
+         "differentia": "Distinguished from its Saxifragales relatives by unusually thin, strap-shaped petals opening in small clusters directly on leafless winter twigs.",
+         "species": [
+          {
+           "common": "Witch hazel",
+           "sci": "Hamamelis virginiana"
+          }
+         ]
+        },
+        {
+         "id": "grossulariaceae",
+         "name": "Grossulariaceae",
+         "common": "Currant family",
+         "icon": "<path d=\"M20 6v6\"/><path d=\"M20 12v4M20 12l-4 2M20 12l4 2\"/><circle cx=\"16\" cy=\"20\" r=\"2.5\"/><circle cx=\"20\" cy=\"22\" r=\"2.5\"/><circle cx=\"24\" cy=\"20\" r=\"2.5\"/><circle cx=\"15\" cy=\"27\" r=\"2.5\"/><circle cx=\"20\" cy=\"29\" r=\"2.5\"/><circle cx=\"25\" cy=\"27\" r=\"2.5\"/>",
+         "trait": "Small, thornless-to-spiny shrubs bearing translucent berries strung in loose hanging racemes rather than one dense cluster.",
+         "differentia": "Unlike Vitales' tightly packed grape bunches, this family's berries hang individually spaced along a thin raceme.",
+         "species": [
+          {
+           "common": "Red currant",
+           "sci": "Ribes rubrum"
+          }
+         ]
+        },
+        {
+         "id": "altingiaceae",
+         "name": "Altingiaceae",
+         "common": "Sweetgum family",
+         "icon": "<path d=\"M20 6v10\"/><circle cx=\"20\" cy=\"24\" r=\"7\"/><path d=\"M20 17l-3 3M20 17l3 3M14 20l3 2M26 20l-3 2M14 28l3-2M26 28l-3-2M20 31l-3-3M20 31l3-3\"/>",
+         "trait": "Star-shaped, palmately lobed leaves that color brilliantly in autumn; round, spiky woody seed capsules (\"gumballs\") hang from long stalks.",
+         "differentia": "The order's only family with a spiky, ball-shaped woody fruit &mdash; unlike the ribbon petals of Hamamelidaceae, the ruffled blooms of Paeoniaceae, or the currant racemes of Grossulariaceae.",
+         "species": [
+          {
+           "common": "Sweetgum",
+           "sci": "Liquidambar styraciflua"
+          }
+         ]
+        }
+       ],
+       "desc": "A structurally diverse order of shrubs, perennials, and trees with little in common visually &mdash; from ruffled peony blooms to spiky sweetgum seed balls &mdash; grouped together primarily by shared ancestry near the base of the rosid clade."
       },
       {
        "name": "Fabids",
@@ -1250,11 +1380,27 @@
        "status": "context",
        "quizClue": "A sprig with paired leaves and two small round berries, like a mistletoe branch.",
        "quizWhy": "Mistletoe, a partial parasite that grows on host trees, belongs to this order.",
-       "families": [],
-       "plants": [
-        "Sandalwood",
-        "Mistletoe"
-       ]
+       "families": [
+        {
+         "id": "santalaceae",
+         "name": "Santalaceae",
+         "common": "Sandalwood / Mistletoe family",
+         "icon": "<path d=\"M20 34V10\"/><path d=\"M20 14l-6-4M20 14l6-4M20 20l-6-4M20 20l6-4\"/><circle cx=\"14\" cy=\"10\" r=\"1.5\"/><circle cx=\"26\" cy=\"10\" r=\"1.5\"/>",
+         "trait": "Many members are hemiparasitic, tapping into a host tree's roots or branches for water and minerals while still photosynthesizing themselves; includes both fragrant heartwood trees and parasitic shrubs.",
+         "differentia": "The order's defining family, spanning fragrant sandalwood trees and parasitic mistletoe shrubs &mdash; unified by a parasitic or hemiparasitic lifestyle uncommon elsewhere in the Diagram. (Modern classification folds the older mistletoe family, Viscaceae, into Santalaceae.)",
+         "species": [
+          {
+           "common": "Sandalwood",
+           "sci": "Santalum album"
+          },
+          {
+           "common": "Mistletoe",
+           "sci": "Viscum album"
+          }
+         ]
+        }
+       ],
+       "desc": "A largely parasitic or hemiparasitic order that taps into the roots or branches of host plants for water and nutrients while still carrying out its own photosynthesis."
       },
       {
        "name": "Caryophyllales",
@@ -1264,20 +1410,93 @@
        "status": "extension",
        "quizClue": "A rounded vertical capsule shape with a couple of small marks near its base, like a squat cactus.",
        "quizWhy": "This order includes cacti and other succulents, along with beets, spinach, and amaranth &mdash; a chemically distinctive group more than a visually uniform one.",
-       "families": [],
-       "plants": [
-        "Cacti",
-        "Spinach",
-        "Quinoa",
-        "Buckwheat",
-        "Beet",
-        "Chard",
-        "Rhubarb",
-        "Sorrel",
-        "Zeekraal",
-        "Purslane",
-        "Amaranth"
-       ]
+       "families": [
+        {
+         "id": "cactaceae",
+         "name": "Cactaceae",
+         "common": "Cactus family",
+         "icon": "<path d=\"M20 34V16\"/><ellipse cx=\"20\" cy=\"14\" rx=\"6\" ry=\"9\"/><path d=\"M20 6v3M15 8l2 2M25 8l-2 2M14 14h3M26 14h-3M15 20l2-2M25 20l-2-2\"/>",
+         "trait": "Thick, water-storing succulent stems (often leafless) covered in spine clusters derived from modified leaves; flowers large and showy despite the plant's otherwise armored appearance.",
+         "differentia": "The order's most extreme water-storage specialist &mdash; succulent, spine-covered stems set it apart from the leafy, pigment-rich herbs that dominate the rest of Caryophyllales here.",
+         "species": [
+          {
+           "common": "Cacti",
+           "sci": "Cactaceae"
+          }
+         ]
+        },
+        {
+         "id": "amaranthaceae",
+         "name": "Amaranthaceae",
+         "common": "Amaranth / Goosefoot family",
+         "icon": "<path d=\"M20 34V14\"/><circle cx=\"17\" cy=\"16\" r=\"1.3\"/><circle cx=\"23\" cy=\"16\" r=\"1.3\"/><circle cx=\"15\" cy=\"20\" r=\"1.3\"/><circle cx=\"25\" cy=\"20\" r=\"1.3\"/><circle cx=\"17\" cy=\"24\" r=\"1.3\"/><circle cx=\"23\" cy=\"24\" r=\"1.3\"/><circle cx=\"20\" cy=\"14\" r=\"1.3\"/>",
+         "trait": "Small, often colorless flowers packed into dense spikes or clusters; many species store energy in swollen roots, thick leaves, or protein-rich seeds, and several produce the reddish betalain pigments distinctive to this order.",
+         "differentia": "The order's largest and most agriculturally important family here &mdash; small flowers crowded into dense spikes distinguish it from Polygonaceae's papery-sheathed stems and Portulacaceae's fleshy trailing leaves.",
+         "species": [
+          {
+           "common": "Spinach",
+           "sci": "Spinacia oleracea"
+          },
+          {
+           "common": "Quinoa",
+           "sci": "Chenopodium quinoa"
+          },
+          {
+           "common": "Beet",
+           "sci": "Beta vulgaris"
+          },
+          {
+           "common": "Chard",
+           "sci": "Beta vulgaris"
+          },
+          {
+           "common": "Zeekraal",
+           "sci": "Salicornia europaea"
+          },
+          {
+           "common": "Amaranth",
+           "sci": "Amaranthus cruentus"
+          }
+         ]
+        },
+        {
+         "id": "polygonaceae",
+         "name": "Polygonaceae",
+         "common": "Buckwheat / Knotweed family",
+         "icon": "<path d=\"M20 34V6\"/><path d=\"M15 10h10M15 20h10M15 28h10\"/><path d=\"M15 10c0-2 2-2 5-2s5 0 5 2M15 20c0-2 2-2 5-2s5 0 5 2M15 28c0-2 2-2 5-2s5 0 5 2\"/>",
+         "trait": "Jointed stems wrapped at each node by a papery sheath (ocrea); often sour, oxalic-acid-rich leaves, and small flowers clustered in loose spikes.",
+         "differentia": "Set apart from its Caryophyllales relatives by a papery stem-sheath (ocrea) at each leaf node and a characteristically sour, oxalic-acid tang in the leaves.",
+         "species": [
+          {
+           "common": "Buckwheat",
+           "sci": "Fagopyrum esculentum"
+          },
+          {
+           "common": "Rhubarb",
+           "sci": "Rheum rhabarbarum"
+          },
+          {
+           "common": "Sorrel",
+           "sci": "Rumex acetosa"
+          }
+         ]
+        },
+        {
+         "id": "portulacaceae",
+         "name": "Portulacaceae",
+         "common": "Purslane family",
+         "icon": "<path d=\"M8 30c4-2 8-2 12 0s8 2 12 0\"/><ellipse cx=\"14\" cy=\"26\" rx=\"3\" ry=\"1.6\"/><ellipse cx=\"20\" cy=\"28\" rx=\"3\" ry=\"1.6\"/><ellipse cx=\"26\" cy=\"26\" rx=\"3\" ry=\"1.6\"/><circle cx=\"20\" cy=\"20\" r=\"2\"/><path d=\"M20 20l0-4M20 20l3-2M20 20l-3-2\"/>",
+         "trait": "Low, trailing succulent stems with small, fleshy paddle-shaped leaves; short-lived flowers open only in sunlight and close by afternoon.",
+         "differentia": "The order's low, mat-forming succulent &mdash; fleshy paddle leaves on trailing stems distinguish it from the upright spikes of Amaranthaceae and the jointed, sheathed stems of Polygonaceae.",
+         "species": [
+          {
+           "common": "Purslane",
+           "sci": "Portulaca oleracea"
+          }
+         ]
+        }
+       ],
+       "desc": "A chemically distinctive order spanning cacti, succulents, and leafy vegetables, many sharing unusual reddish betalain pigments (instead of the anthocyanins used elsewhere in flowering plants) as well as a tendency toward salt- and drought-tolerance."
       },
       {
        "name": "Asterids",
@@ -1292,11 +1511,37 @@
          "status": "context",
          "quizClue": "Four petal-like ovals arranged in a cross around a center dot.",
          "quizWhy": "Dogwood is known for its four showy petal-like bracts surrounding a small true flower cluster at the center.",
-         "families": [],
-         "plants": [
-          "Dogwood",
-          "Hydrangea"
-         ]
+         "families": [
+          {
+           "id": "cornaceae",
+           "name": "Cornaceae",
+           "common": "Dogwood family",
+           "icon": "<ellipse cx=\"20\" cy=\"10\" rx=\"4\" ry=\"8\"/><ellipse cx=\"30\" cy=\"20\" rx=\"8\" ry=\"4\"/><ellipse cx=\"20\" cy=\"30\" rx=\"4\" ry=\"8\"/><ellipse cx=\"10\" cy=\"20\" rx=\"8\" ry=\"4\"/><circle cx=\"20\" cy=\"20\" r=\"2\"/>",
+           "trait": "Small true flowers clustered tightly at the center, often surrounded by four large petal-like bracts that do the work of attracting pollinators.",
+           "differentia": "The order's namesake family &mdash; its four large petal-like bracts surrounding a tight flower cluster are unlike Hydrangeaceae's ring of sterile florets around a fertile center.",
+           "species": [
+            {
+             "common": "Flowering dogwood",
+             "sci": "Cornus florida"
+            }
+           ]
+          },
+          {
+           "id": "hydrangeaceae",
+           "name": "Hydrangeaceae",
+           "common": "Hydrangea family",
+           "icon": "<circle cx=\"20\" cy=\"20\" r=\"10\"/><circle cx=\"12\" cy=\"14\" r=\"3\"/><circle cx=\"28\" cy=\"14\" r=\"3\"/><circle cx=\"12\" cy=\"26\" r=\"3\"/><circle cx=\"28\" cy=\"26\" r=\"3\"/><circle cx=\"20\" cy=\"8\" r=\"3\"/><circle cx=\"20\" cy=\"32\" r=\"3\"/>",
+           "trait": "Large rounded flower clusters combining small fertile flowers with larger sterile, showy ones around the outer edge; flower color in many species shifts with soil pH.",
+           "differentia": "Distinguished from Cornaceae's bract-and-cluster look by a ring of enlarged sterile florets framing the true flowers, and by flower color that can shift with soil acidity.",
+           "species": [
+            {
+             "common": "Bigleaf hydrangea",
+             "sci": "Hydrangea macrophylla"
+            }
+           ]
+          }
+         ],
+         "desc": "An early-diverging asterid order of shrubs and small trees bearing showy flower clusters, often relying on enlarged bracts or sterile outer florets rather than large true petals to attract pollinators."
         },
         {
          "name": "Ericales",
