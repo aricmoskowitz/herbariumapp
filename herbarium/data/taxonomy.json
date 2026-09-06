@@ -1009,20 +1009,63 @@
            "status": "context",
            "quizClue": "A tall narrow capsule divided into four horizontal sections, like peas visible inside a pod.",
            "quizWhy": "Beans, peas, and lentils are legumes &mdash; their seeds develop in sections inside a single elongated pod.",
-           "families": [],
-           "plants": [
-            "Alfalfa",
-            "Mung Bean",
-            "Indigo",
-            "Lentil",
-            "Wisteria",
-            "Beans",
-            "Carob",
-            "Locust Tree",
-            "Pea",
-            "Legume",
-            "Mimosa"
-           ]
+           "families": [
+            {
+             "id": "fabaceae",
+             "name": "Fabaceae",
+             "common": "Legume / Pea family",
+             "icon": "<path d=\"M20 6c-4 0-6 3-6 7v14c0 4 2 7 6 7s6-3 6-7V13c0-4-2-7-6-7z\"/><path d=\"M14 13h12M14 18h12M14 23h12M14 28h12\"/>",
+             "trait": "Compound leaves and pea-like flowers with five petals arranged into a banner, wings, and keel; seeds develop inside a single elongated pod that splits along two seams; many host nitrogen-fixing bacteria in root nodules.",
+             "differentia": "The order's sole family and one of the plant kingdom's most important nitrogen-fixers &mdash; a trait rare outside this family.",
+             "species": [
+              {
+               "common": "Alfalfa",
+               "sci": "Medicago sativa"
+              },
+              {
+               "common": "Mung bean",
+               "sci": "Vigna radiata"
+              },
+              {
+               "common": "Indigo",
+               "sci": "Indigofera tinctoria"
+              },
+              {
+               "common": "Lentil",
+               "sci": "Lens culinaris"
+              },
+              {
+               "common": "Wisteria",
+               "sci": "Wisteria sinensis"
+              },
+              {
+               "common": "Common bean",
+               "sci": "Phaseolus vulgaris"
+              },
+              {
+               "common": "Carob",
+               "sci": "Ceratonia siliqua"
+              },
+              {
+               "common": "Black locust",
+               "sci": "Robinia pseudoacacia"
+              },
+              {
+               "common": "Pea",
+               "sci": "Pisum sativum"
+              },
+              {
+               "common": "Legume",
+               "sci": "Fabaceae"
+              },
+              {
+               "common": "Mimosa",
+               "sci": "Mimosa pudica"
+              }
+             ]
+            }
+           ],
+           "desc": "The order's sole family, and one of the plant kingdom's most important nitrogen-fixers &mdash; nearly every member here partners with root-nodule bacteria to convert atmospheric nitrogen into usable nutrients."
           },
           {
            "name": "Rosales",
@@ -1032,22 +1075,111 @@
            "status": "context",
            "quizClue": "Five overlapping circles arranged in a ring, forming a simple rounded bloom.",
            "quizWhy": "Roses, apples, and cherries belong to this order, many sharing the layered, overlapping-petal look of the rose family.",
-           "families": [],
-           "plants": [
-            "Rose",
-            "Fig",
-            "Nettle",
-            "Cannabis",
-            "Mulberry",
-            "Elm",
-            "Apricot",
-            "Cherry",
-            "Peach",
-            "Pear",
-            "Apple",
-            "Strawberry",
-            "Almond"
-           ]
+           "families": [
+            {
+             "id": "rosaceae",
+             "name": "Rosaceae",
+             "common": "Rose family",
+             "icon": "<circle cx=\"20\" cy=\"13\" r=\"5\"/><circle cx=\"27\" cy=\"18\" r=\"5\"/><circle cx=\"24\" cy=\"26\" r=\"5\"/><circle cx=\"16\" cy=\"26\" r=\"5\"/><circle cx=\"13\" cy=\"18\" r=\"5\"/>",
+             "trait": "Five-petaled flowers arranged around a central disc of many stamens; an astonishing range of fruit types across the family &mdash; fleshy pomes (apple, pear), stone fruits (cherry, peach, apricot, almond), and aggregate fruits (strawberry, rose hips).",
+             "differentia": "The order's largest and namesake family &mdash; its five-petaled, many-stamened flower is the shared thread beneath a remarkable range of fruit types, unlike the single-seeded fruits of Moraceae, Ulmaceae, and Cannabaceae.",
+             "species": [
+              {
+               "common": "Rose",
+               "sci": "Rosa gallica"
+              },
+              {
+               "common": "Apricot",
+               "sci": "Prunus armeniaca"
+              },
+              {
+               "common": "Cherry",
+               "sci": "Prunus avium"
+              },
+              {
+               "common": "Peach",
+               "sci": "Prunus persica"
+              },
+              {
+               "common": "Pear",
+               "sci": "Pyrus communis"
+              },
+              {
+               "common": "Apple",
+               "sci": "Malus domestica"
+              },
+              {
+               "common": "Strawberry",
+               "sci": "Fragaria x ananassa"
+              },
+              {
+               "common": "Almond",
+               "sci": "Prunus dulcis"
+              }
+             ]
+            },
+            {
+             "id": "moraceae",
+             "name": "Moraceae",
+             "common": "Fig / Mulberry family",
+             "icon": "<circle cx=\"20\" cy=\"20\" r=\"12\"/><circle cx=\"20\" cy=\"20\" r=\"7\"/><path d=\"M20 13v14M13 20h14M15 15l10 10M25 15l-10 10\"/>",
+             "trait": "Milky latex sap throughout; flowers reduced and often clustered inside a fleshy receptacle (as in figs) or along drooping catkins (as in mulberry).",
+             "differentia": "Distinguished by milky latex sap and flowers hidden inside a fleshy structure or catkin, unlike the showy, five-petaled blooms of Rosaceae.",
+             "species": [
+              {
+               "common": "Common fig",
+               "sci": "Ficus carica"
+              },
+              {
+               "common": "White mulberry",
+               "sci": "Morus alba"
+              }
+             ]
+            },
+            {
+             "id": "urticaceae",
+             "name": "Urticaceae",
+             "common": "Nettle family",
+             "icon": "<path d=\"M20 6c-6 4-8 12-4 22 4-2 6-6 4-10 4 2 4 8 0 12-8-2-12-14-6-24z\"/><path d=\"M14 12l-2-1M16 16l-2 0M14 22l-2 1M22 10l2-1M24 16l2 0M22 22l2 1\"/>",
+             "trait": "Leaves and stems covered in stinging hairs (trichomes) that inject irritant compounds on contact; small, inconspicuous wind-pollinated flowers.",
+             "differentia": "The order's only family defined by defensive stinging hairs, unlike the latex of Moraceae or the fibrous stems of Cannabaceae and Ulmaceae.",
+             "species": [
+              {
+               "common": "Stinging nettle",
+               "sci": "Urtica dioica"
+              }
+             ]
+            },
+            {
+             "id": "cannabaceae",
+             "name": "Cannabaceae",
+             "common": "Hemp family",
+             "icon": "<path d=\"M20 34V16\"/><path d=\"M20 16c0-8-3-12-3-12s-2 6 1 11M20 16c0-8 3-12 3-12s2 6-1 11M20 18c-3-6-8-8-8-8s0 6 5 9M20 18c3-6 8-8 8-8s0 6-5 9\"/>",
+             "trait": "Palmately compound leaves with narrow, serrated leaflets radiating from a central point; separate male and female plants, flowers reduced and wind- or insect-pollinated.",
+             "differentia": "Immediately recognizable by its palmate, multi-fingered leaf &mdash; a leaf shape shared by no other family in this order.",
+             "species": [
+              {
+               "common": "Cannabis",
+               "sci": "Cannabis sativa"
+              }
+             ]
+            },
+            {
+             "id": "ulmaceae",
+             "name": "Ulmaceae",
+             "common": "Elm family",
+             "icon": "<path d=\"M12 10c-4 6-4 16 2 22 8 2 14-2 16-10 1-6-2-14-10-16-3 0-6 2-8 4z\"/><circle cx=\"28\" cy=\"30\" r=\"3\"/><path d=\"M25 30h6M28 27v6\"/>",
+             "trait": "Asymmetric leaf bases (one side larger than the other) with doubly toothed margins; small, round, papery-winged seeds (samaras) that disperse on the wind.",
+             "differentia": "Set apart by lopsided, asymmetric leaf bases and small round winged seeds, distinct from the compound leaves and fleshy fruit of its Rosales relatives.",
+             "species": [
+              {
+               "common": "Elm",
+               "sci": "Ulmus americana"
+              }
+             ]
+            }
+           ],
+           "desc": "A remarkably diverse order uniting the classic five-petaled rose-family fruits with the latex-bearing figs, stinging nettles, fibrous hemp, and wind-pollinated elms &mdash; five families with little in common beyond shared ancestry."
           },
           {
            "name": "Cucurbitales",
@@ -1057,11 +1189,27 @@
            "status": "context",
            "quizClue": "A round ridged fruit with a small stem nub on top, like a tiny melon or pumpkin.",
            "quizWhy": "Squash and melons belong to this order, producing large fleshy fruits that are often ridged along their length.",
-           "families": [],
-           "plants": [
-            "Squash",
-            "Melon"
-           ]
+           "families": [
+            {
+             "id": "cucurbitaceae",
+             "name": "Cucurbitaceae",
+             "common": "Gourd family",
+             "icon": "<path d=\"M20 12c7 0 10 7 10 12s-3 12-10 12-10-7-10-12 3-12 10-12z\"/><path d=\"M20 12v24M15 13c-2 4-2 18 0 22M25 13c2 4 2 18 0 22\"/><path d=\"M20 8c1 1 1 3 0 4\"/>",
+             "trait": "Sprawling or climbing vines that grip supports with coiling tendrils; large, often ridged fruits with a thick rind (pepo) enclosing numerous flat seeds.",
+             "differentia": "The order's defining family &mdash; tendril-climbing vines and large ridged pepo fruits are found nowhere else this close to the Fabids clade.",
+             "species": [
+              {
+               "common": "Squash",
+               "sci": "Cucurbita pepo"
+              },
+              {
+               "common": "Melon",
+               "sci": "Cucumis melo"
+              }
+             ]
+            }
+           ],
+           "desc": "The order's defining family &mdash; tendril-climbing vines and large ridged fruits found nowhere else this close to the Fabids clade."
           }
          ]
         },
@@ -1073,16 +1221,97 @@
          "status": "extension",
          "quizClue": "Five short rounded petals around a center dot &mdash; a plain, flat little flower.",
          "quizWhy": "This is one of the largest and most diverse rosid orders &mdash; flax, violets, and cassava all sit here despite looking quite different.",
-         "families": [],
-         "plants": [
-          "Flax",
-          "Pussy Willow",
-          "Violet",
-          "St. John's Wort",
-          "Passion Fruit",
-          "Spurge",
-          "Cassava"
-         ]
+         "families": [
+          {
+           "id": "linaceae",
+           "name": "Linaceae",
+           "common": "Flax family",
+           "icon": "<path d=\"M20 34V10\"/><path d=\"M20 14l-3-2M20 14l3-2M20 20l-3-2M20 20l3-2\"/><circle cx=\"20\" cy=\"8\" r=\"3\"/>",
+           "trait": "Slender, wiry stems yielding strong bast fibers (the source of linen); small, delicate five-petaled flowers, often blue.",
+           "differentia": "The order's fiber specialist &mdash; wiry stems and delicate blue flowers set it apart from the latex, stinging hairs, or elaborate blooms of its Malpighiales relatives here.",
+           "species": [
+            {
+             "common": "Flax",
+             "sci": "Linum usitatissimum"
+            }
+           ]
+          },
+          {
+           "id": "salicaceae",
+           "name": "Salicaceae",
+           "common": "Willow family",
+           "icon": "<path d=\"M14 30c0-10 2-16 2-16M26 30c0-10-2-16-2-16\"/><ellipse cx=\"16\" cy=\"12\" rx=\"2.5\" ry=\"5\"/><ellipse cx=\"24\" cy=\"12\" rx=\"2.5\" ry=\"5\"/><ellipse cx=\"20\" cy=\"8\" rx=\"2.5\" ry=\"5\"/>",
+           "trait": "Separate male and female plants bearing soft, fuzzy catkins in early spring, often before leaves emerge; fast-growing trees and shrubs of moist habitats.",
+           "differentia": "The order's only family with soft, fuzzy spring catkins, unlike the fibrous stems of Linaceae or the showy blooms of Violaceae and Passifloraceae.",
+           "species": [
+            {
+             "common": "Pussy willow",
+             "sci": "Salix discolor"
+            }
+           ]
+          },
+          {
+           "id": "violaceae",
+           "name": "Violaceae",
+           "common": "Violet family",
+           "icon": "<circle cx=\"20\" cy=\"20\" r=\"2\"/><ellipse cx=\"20\" cy=\"12\" rx=\"5\" ry=\"6\"/><ellipse cx=\"12\" cy=\"20\" rx=\"6\" ry=\"5\"/><ellipse cx=\"28\" cy=\"20\" rx=\"6\" ry=\"5\"/><ellipse cx=\"20\" cy=\"28\" rx=\"7\" ry=\"6\"/><path d=\"M20 28v5\"/>",
+           "trait": "Five-petaled flowers with a distinct, enlarged lower petal often extended into a nectar spur, giving many species an asymmetric, face-like bloom.",
+           "differentia": "Distinguished by an asymmetric, face-like flower with one enlarged spurred petal, unlike the radially symmetric blooms elsewhere in this order.",
+           "species": [
+            {
+             "common": "Sweet violet",
+             "sci": "Viola odorata"
+            }
+           ]
+          },
+          {
+           "id": "hypericaceae",
+           "name": "Hypericaceae",
+           "common": "St. John's wort family",
+           "icon": "<circle cx=\"20\" cy=\"20\" r=\"2.5\"/><path d=\"M20 20V9M20 20l7-7M20 20l9 3M20 20l6 8M20 20l-2 9M20 20l-8 4M20 20l-9-4M20 20l-4-8\"/><circle cx=\"20\" cy=\"9\" r=\"1.3\"/><circle cx=\"27\" cy=\"13\" r=\"1.3\"/><circle cx=\"29\" cy=\"23\" r=\"1.3\"/><circle cx=\"26\" cy=\"28\" r=\"1.3\"/><circle cx=\"18\" cy=\"29\" r=\"1.3\"/><circle cx=\"12\" cy=\"24\" r=\"1.3\"/><circle cx=\"11\" cy=\"16\" r=\"1.3\"/><circle cx=\"16\" cy=\"12\" r=\"1.3\"/>",
+           "trait": "Yellow flowers with numerous long, thread-like stamens forming a prominent central tuft; leaves often dotted with translucent oil glands.",
+           "differentia": "Set apart by a dense starburst of long stamens tipped with visible anthers, denser than the simple radiating flowers found elsewhere in the order.",
+           "species": [
+            {
+             "common": "St. John's wort",
+             "sci": "Hypericum perforatum"
+            }
+           ]
+          },
+          {
+           "id": "passifloraceae",
+           "name": "Passifloraceae",
+           "common": "Passionflower family",
+           "icon": "<circle cx=\"20\" cy=\"20\" r=\"9\"/><circle cx=\"20\" cy=\"20\" r=\"5\"/><path d=\"M20 11v3M29 20h-3M20 29v-3M11 20h3M26.4 13.6l-2.1 2.1M26.4 26.4l-2.1-2.1M13.6 26.4l2.1-2.1M13.6 13.6l2.1 2.1\"/>",
+           "trait": "Elaborate flowers with a fringed corona of thread-like filaments encircling the reproductive parts; climbing vines with tendrils, producing a many-seeded pulpy fruit.",
+           "differentia": "Unmistakable for its fringed corona of filaments ringing the flower center, a structure unique to this family in the order.",
+           "species": [
+            {
+             "common": "Passion fruit",
+             "sci": "Passiflora edulis"
+            }
+           ]
+          },
+          {
+           "id": "euphorbiaceae",
+           "name": "Euphorbiaceae",
+           "common": "Spurge family",
+           "icon": "<path d=\"M20 34V20\"/><ellipse cx=\"20\" cy=\"16\" rx=\"6\" ry=\"5\"/><path d=\"M15 16a5 5 0 0110 0\"/><circle cx=\"20\" cy=\"13\" r=\"1.5\"/>",
+           "trait": "Milky, often caustic latex sap throughout; tiny flowers lacking petals, clustered into a cup-shaped structure (cyathium) that mimics a single flower.",
+           "differentia": "The order's only family built around a caustic milky latex and a flower-mimicking cyathium cup, spanning everything from tiny weeds to the starchy cassava root.",
+           "species": [
+            {
+             "common": "Petty spurge",
+             "sci": "Euphorbia peplus"
+            },
+            {
+             "common": "Cassava",
+             "sci": "Manihot esculenta"
+            }
+           ]
+          }
+         ],
+         "desc": "One of the largest and most heterogeneous rosid orders, uniting fiber crops, willows, violets, passionflowers, and spurges with little visual common ground &mdash; a grouping defined almost entirely by DNA rather than shared form."
         },
         {
          "name": "Oxalidales",
@@ -1119,13 +1348,45 @@
          "status": "context",
          "quizClue": "A cluster of fine hair-like lines fanning out from a small circle &mdash; more like stamens than petals.",
          "quizWhy": "Eucalyptus and myrtle flowers often skip showy petals entirely, relying instead on a dense burst of long stamens for color.",
-         "families": [],
-         "plants": [
-          "Pomegranate",
-          "Allspice",
-          "Eucalyptus",
-          "Clove"
-         ]
+         "families": [
+          {
+           "id": "myrtaceae",
+           "name": "Myrtaceae",
+           "common": "Myrtle family",
+           "icon": "<circle cx=\"20\" cy=\"22\" r=\"4\"/><path d=\"M20 18V6M16 18l-8-8M24 18l8-8M14 20l-10 2M26 20l10 2\"/>",
+           "trait": "Aromatic, oil-gland-dotted evergreen leaves; flowers often lacking showy petals, instead displaying a dense burst of long colorful stamens.",
+           "differentia": "The order's namesake and dominant family &mdash; aromatic oil-dotted leaves and a stamen-dominated flower distinguish it from Lythraceae's crown-like, many-seeded fruit.",
+           "species": [
+            {
+             "common": "Allspice",
+             "sci": "Pimenta dioica"
+            },
+            {
+             "common": "Eucalyptus",
+             "sci": "Eucalyptus globulus"
+            },
+            {
+             "common": "Clove",
+             "sci": "Syzygium aromaticum"
+            }
+           ]
+          },
+          {
+           "id": "lythraceae",
+           "name": "Lythraceae",
+           "common": "Loosestrife / Pomegranate family",
+           "icon": "<circle cx=\"20\" cy=\"22\" r=\"10\"/><path d=\"M14 12l2 3M20 10l0 4M26 12l-2 3\"/>",
+           "trait": "Tubular flowers with crinkled, crepe-like petals in many relatives; pomegranate itself bears a tough-skinned fruit crowned by a persistent calyx and packed with juicy seed arils.",
+           "differentia": "The order's only family here with a crown-topped, many-seeded fruit, unlike the stamen-heavy flowers typical of Myrtaceae.",
+           "species": [
+            {
+             "common": "Pomegranate",
+             "sci": "Punica granatum"
+            }
+           ]
+          }
+         ],
+         "desc": "Aromatic trees and shrubs producing some of the world's most prized spices and timbers, dominated by oil-rich Myrtaceae alongside the crown-fruited pomegranate family, Lythraceae."
         },
         {
          "name": "Brassicales",
@@ -1135,20 +1396,103 @@
          "status": "context",
          "quizClue": "Four dots connected by lines forming a perfect cross shape.",
          "quizWhy": "Mustards, cabbages, and radishes are named for their four-petaled &ldquo;cruciform&rdquo; flowers, arranged in a perfect cross.",
-         "families": [],
-         "plants": [
-          "Cabbage",
-          "Moringa",
-          "Horseradish",
-          "Mustard",
-          "Caper",
-          "Nasturtium",
-          "Papaya",
-          "Arugula",
-          "Radish",
-          "Turnip",
-          "Rutabaga"
-         ]
+         "families": [
+          {
+           "id": "brassicaceae",
+           "name": "Brassicaceae",
+           "common": "Mustard / Cabbage family",
+           "icon": "<path d=\"M20 20L20 8M20 20L32 20M20 20L20 32M20 20L8 20\"/><circle cx=\"20\" cy=\"8\" r=\"3\"/><circle cx=\"32\" cy=\"20\" r=\"3\"/><circle cx=\"20\" cy=\"32\" r=\"3\"/><circle cx=\"8\" cy=\"20\" r=\"3\"/>",
+           "trait": "Four petals arranged in a perfect cross (cruciform); pungent mustard-oil glucosinolates throughout the tissue, released as a defense when cells are damaged.",
+           "differentia": "The order's namesake and dominant family &mdash; its four-petaled cruciform flower and mustard-oil chemistry set every cabbage relative apart from the single-species outliers Capparaceae, Moringaceae, Caricaceae, and Tropaeolaceae.",
+           "species": [
+            {
+             "common": "Cabbage",
+             "sci": "Brassica oleracea"
+            },
+            {
+             "common": "Horseradish",
+             "sci": "Armoracia rusticana"
+            },
+            {
+             "common": "Black mustard",
+             "sci": "Brassica nigra"
+            },
+            {
+             "common": "Arugula",
+             "sci": "Eruca vesicaria"
+            },
+            {
+             "common": "Radish",
+             "sci": "Raphanus sativus"
+            },
+            {
+             "common": "Turnip",
+             "sci": "Brassica rapa"
+            },
+            {
+             "common": "Rutabaga",
+             "sci": "Brassica napus"
+            }
+           ]
+          },
+          {
+           "id": "capparaceae",
+           "name": "Capparaceae",
+           "common": "Caper family",
+           "icon": "<circle cx=\"20\" cy=\"10\" r=\"4\"/><path d=\"M20 14v10\"/><path d=\"M20 24l-6 8M20 24l-2 9M20 24l2 9M20 24l6 8\"/>",
+           "trait": "Flower buds are harvested and pickled before opening; mature flowers show four petals and a dramatic burst of long, thread-like stamens.",
+           "differentia": "Distinguished from Brassicaceae's four-petaled cross by a dramatic burst of long stamens on a flower bud that's harvested before it ever opens.",
+           "species": [
+            {
+             "common": "Caper",
+             "sci": "Capparis spinosa"
+            }
+           ]
+          },
+          {
+           "id": "moringaceae",
+           "name": "Moringaceae",
+           "common": "Moringa family",
+           "icon": "<path d=\"M20 6v8\"/><path d=\"M14 10l-2 2M14 10l0 3M26 10l2 2M26 10l0 3\"/><path d=\"M20 14c-2 6-2 14-2 20M20 14c2 6 2 14 2 20\"/>",
+           "trait": "Fast-growing trees with finely divided, fern-like compound leaves and extremely long, slender seed pods nicknamed \"drumsticks.\"",
+           "differentia": "The order's most distinctively shaped member &mdash; fern-like compound leaves and pods stretching over a foot long, unlike anything else in Brassicales.",
+           "species": [
+            {
+             "common": "Moringa",
+             "sci": "Moringa oleifera"
+            }
+           ]
+          },
+          {
+           "id": "caricaceae",
+           "name": "Caricaceae",
+           "common": "Papaya family",
+           "icon": "<path d=\"M20 34V10\"/><path d=\"M20 10c-3-3-3-3-3-3M20 10c3-3 3-3 3-3M20 10c-5 1-6 3-6 3M20 10c5 1 6 3 6 3M20 10c-4-1-7 1-7 1M20 10c4-1 7 1 7 1\"/><ellipse cx=\"20\" cy=\"24\" rx=\"4\" ry=\"6\"/>",
+           "trait": "Fast-growing, mostly unbranched trees with large, deeply lobed palmate leaves and large fleshy fruit borne directly on the trunk.",
+           "differentia": "A fast-growing, nearly unbranched tree bearing fruit directly on its trunk, unlike the low herbs that make up most of this order.",
+           "species": [
+            {
+             "common": "Papaya",
+             "sci": "Carica papaya"
+            }
+           ]
+          },
+          {
+           "id": "tropaeolaceae",
+           "name": "Tropaeolaceae",
+           "common": "Nasturtium family",
+           "icon": "<circle cx=\"20\" cy=\"18\" r=\"9\"/><path d=\"M20 18v10\"/><path d=\"M20 28c2 3 2 6 0 8\"/>",
+           "trait": "Round, shield-shaped leaves with the stem attached at the center (peltate); showy, funnel-shaped flowers trailing a long nectar spur behind the petals.",
+           "differentia": "Set apart by round, center-stalked (peltate) leaves and a flower trailing a long nectar spur, a shape found nowhere else in the order.",
+           "species": [
+            {
+             "common": "Nasturtium",
+             "sci": "Tropaeolum majus"
+            }
+           ]
+          }
+         ],
+         "desc": "A pungent order defined by mustard-oil glucosinolate chemistry, spanning the vast cabbage family alongside a handful of single-species outlier families &mdash; capers, moringa, papaya, and nasturtiums &mdash; each retaining the order's characteristic bite in its own way."
         },
         {
          "name": "Malvales",
@@ -1158,17 +1502,61 @@
          "status": "context",
          "quizClue": "Five large, fully overlapping circles around a center dot &mdash; bigger and fuller than a plain rose-like bloom.",
          "quizWhy": "Hibiscus, cotton, and mallow flowers are typically large, with broad, overlapping rounded petals.",
-         "families": [],
-         "plants": [
-          "Annatto",
-          "Cotton",
-          "Cocoa",
-          "Linden",
-          "Okra",
-          "Hibiscus",
-          "Cola",
-          "Jute"
-         ]
+         "families": [
+          {
+           "id": "malvaceae",
+           "name": "Malvaceae",
+           "common": "Mallow family",
+           "icon": "<circle cx=\"20\" cy=\"20\" r=\"3\"/><circle cx=\"20\" cy=\"10\" r=\"6\"/><circle cx=\"29\" cy=\"16\" r=\"6\"/><circle cx=\"25\" cy=\"27\" r=\"6\"/><circle cx=\"15\" cy=\"27\" r=\"6\"/><circle cx=\"11\" cy=\"16\" r=\"6\"/>",
+           "trait": "Flowers with five petals and numerous stamens fused into a central staminal column; many species yield fiber, chocolate, or cola-nut caffeine from very differently used plant parts.",
+           "differentia": "The order's vastly broadened namesake family (folding in the old cotton, linden, and cacao families) &mdash; united by stamens fused into a central column, unlike Bixaceae's simple exposed stamens.",
+           "species": [
+            {
+             "common": "Cotton",
+             "sci": "Gossypium hirsutum"
+            },
+            {
+             "common": "Cocoa",
+             "sci": "Theobroma cacao"
+            },
+            {
+             "common": "Linden",
+             "sci": "Tilia cordata"
+            },
+            {
+             "common": "Okra",
+             "sci": "Abelmoschus esculentus"
+            },
+            {
+             "common": "Hibiscus",
+             "sci": "Hibiscus rosa-sinensis"
+            },
+            {
+             "common": "Cola",
+             "sci": "Cola acuminata"
+            },
+            {
+             "common": "Jute",
+             "sci": "Corchorus olitorius"
+            }
+           ]
+          },
+          {
+           "id": "bixaceae",
+           "name": "Bixaceae",
+           "common": "Annatto family",
+           "icon": "<path d=\"M20 10c-6 0-9 6-9 12s3 12 9 12 9-6 9-12-3-12-9-12z\"/><path d=\"M14 12l-2-2M26 12l2-2M12 18l-3 0M28 18l3 0M14 26l-2 2M26 26l2 2\"/>",
+           "trait": "Spiny, heart-shaped seed capsules split open to reveal small red-orange seeds coated in a natural dye (bixin) used for centuries as a coloring and spice.",
+           "differentia": "The order's only family here defined by a spiny, dye-producing seed pod, unlike Malvaceae's fused-stamen flower.",
+           "species": [
+            {
+             "common": "Annatto",
+             "sci": "Bixa orellana"
+            }
+           ]
+          }
+         ],
+         "desc": "A fiber-and-chocolate order dominated by a greatly broadened Malvaceae (absorbing the old cotton, linden, and cacao families), united by stamens fused into a distinctive central column."
         },
         {
          "name": "Sapindales",
@@ -1191,6 +1579,10 @@
             {
              "common": "Mango",
              "sci": "Mangifera indica"
+            },
+            {
+             "common": "Staghorn sumac",
+             "sci": "Rhus typhina"
             },
             {
              "common": "Cashew",
@@ -1344,19 +1736,6 @@
             }
            ]
           }
-         ],
-         "plants": [
-          "Frankincense",
-          "Myrrh",
-          "Rambutan",
-          "Sumac",
-          "Mango",
-          "Pistachio",
-          "Cashew",
-          "Citrus",
-          "Horse Chestnut",
-          "Mahogany",
-          "Maple"
          ]
         }
        ]
