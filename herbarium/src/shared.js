@@ -11,18 +11,21 @@ window.Herb = (function () {
   // path markup is trusted inline SVG authored in data/taxonomy.json, not
   // user input, so it is inserted verbatim (never escaped).
   function iconSvg(pathMarkup, cls) {
-    return `<svg class="${cls || 'ic'}" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">${pathMarkup || ''}</svg>`;
+    return `<svg class="${cls || ''}" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">${pathMarkup || ''}</svg>`;
   }
 
-  const STATUS_LABEL = {
-    inguide: '✓ in guide',
-    extension: 'extension pt.',
-    context: 'not in guide',
-  };
-
-  function statusTag(status) {
-    const key = STATUS_LABEL[status] ? status : 'context';
-    return `<span class="status-tag status-${key}">${STATUS_LABEL[key]}</span>`;
+  // Status -> the modifier class on .ph-group/.ph-card, plus the small
+  // label text shown in the tag slot. Absence of both classes (the
+  // "context" case) is the default, muted look.
+  function statusModifierClass(status) {
+    if (status === 'inguide') return 'ph-inguide';
+    if (status === 'extension') return 'ph-extension';
+    return '';
+  }
+  function statusTagHtml(status, tagClass) {
+    if (status === 'inguide') return `<span class="${tagClass}">&check; in guide</span>`;
+    if (status === 'extension') return `<span class="${tagClass}">extension pt.</span>`;
+    return `<span class="${tagClass} ${tagClass}-not">not in guide</span>`;
   }
 
   // Depth-first walk over the taxonomy tree. visit(node, depth, parents)
@@ -47,15 +50,12 @@ window.Herb = (function () {
 
   function eventsRowHtml(events) {
     if (!events || !events.length) return '';
-    return `<div class="ph-events">${events
-      .map((e) => `<span class="ph-event"><b>${esc(e.date)}</b> ${esc(e.label)}</span>`)
+    return `<div class="ph-event-row">${events
+      .map((e) => `<span class="ph-event-chip"><span class="ph-event-chip-date">${esc(e.date)}</span><span class="ph-event-chip-name">${esc(e.label)}</span></span>`)
       .join('')}</div>`;
   }
 
-  function headerEventHtml(headerEvent) {
-    if (!headerEvent) return '';
-    return `<span class="ph-header-event">${esc(headerEvent.date)} · ${esc(headerEvent.label)}</span>`;
-  }
-
-  return { esc, iconSvg, statusTag, STATUS_LABEL, walk, collectOrders, eventsRowHtml, headerEventHtml };
+  return {
+    esc, iconSvg, statusModifierClass, statusTagHtml, walk, collectOrders, eventsRowHtml,
+  };
 })();

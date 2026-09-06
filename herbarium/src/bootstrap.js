@@ -24,7 +24,7 @@
         if (tab === 'guide') window.Herb.renderFieldGuide(panels.guide, tree);
         if (tab === 'diagram') window.Herb.renderDiagram(panels.diagram, tree);
         if (tab === 'trainer') window.Herb.renderTrainer(panels.trainer, tree);
-        if (tab === 'log') window.Herb.renderFieldLog(panels.log);
+        if (tab === 'log') window.Herb.renderFieldLog(panels.log, tree);
       }
     }
 

@@ -6,52 +6,61 @@
 (function () {
   const { esc, iconSvg, collectOrders } = window.Herb;
 
+  function slug(name) { return name.toLowerCase().replace(/\s+/g, '-'); }
+
   function speciesRowHtml(sp) {
-    return `<li><span class="fg-sp-common">${esc(sp.common)}</span><span class="fg-sp-sci">${sp.sci}</span></li>`;
+    return `<li><span class="common">${esc(sp.common)}</span><span class="sci">${sp.sci}</span></li>`;
   }
 
   function familyCardHtml(family) {
-    return `<article class="fg-family" id="fam-${esc(family.id)}">
-      <div class="fg-family-head">
-        ${iconSvg(family.icon, 'fg-icon')}
-        <div>
-          <h4>${esc(family.name)}</h4>
-          <p class="fg-common">${esc(family.common)}</p>
+    return `<article class="family-card" id="fam-${esc(family.id)}" data-family="${esc(family.name)}">
+      <div class="card-top">
+        <div class="fam-titles">
+          <h3 class="fam-name">${esc(family.name)}</h3>
+          <div class="fam-common">${esc(family.common)}</div>
         </div>
+        ${iconSvg(family.icon, 'leaf-icon')}
       </div>
-      <p class="fg-trait"><b>Trait:</b> ${family.trait}</p>
-      <p class="fg-differentia">${family.differentia}</p>
+      <p class="trait">${family.trait}</p>
+      <p class="differentia"><b>Sets it apart:</b> ${family.differentia}</p>
       ${family.species && family.species.length
-        ? `<ul class="fg-species">${family.species.map(speciesRowHtml).join('')}</ul>`
+        ? `<ul class="species-list">${family.species.map(speciesRowHtml).join('')}</ul>`
         : ''}
     </article>`;
   }
 
-  function orderSectionHtml(order) {
-    return `<section class="fg-order" id="order-${esc(order.name.toLowerCase().replace(/\s+/g, '-'))}">
-      <header class="fg-order-head tr-masthead">
-        ${iconSvg(order.icon, 'fg-order-icon')}
-        <div>
-          <span class="fg-rank">Order</span>
-          <h3>${esc(order.name)}</h3>
+  function orderSectionHtml(order, index) {
+    const plate = String(index + 1).padStart(2, '0');
+    return `<section class="order" id="order-${slug(order.name)}" data-order="${esc(order.name)}">
+      <div class="order-head">
+        <div class="order-title-group">
+          ${iconSvg(order.icon, 'order-icon')}
+          <h2 class="order-name">${esc(order.name)}</h2>
         </div>
-      </header>
-      <p class="fg-desc">${order.desc || ''}</p>
-      <div class="fg-family-grid">${(order.families || []).map(familyCardHtml).join('')}</div>
+        <span class="plate">Plate No. ${plate}</span>
+      </div>
+      <p class="order-traits">${order.desc || ''}</p>
+      <div class="family-grid">${(order.families || []).map(familyCardHtml).join('')}</div>
     </section>`;
   }
 
   function renderFieldGuide(container, tree) {
     const built = collectOrders(tree).filter((o) => o.families && o.families.length);
+    const header = `<header class="masthead">
+      <div class="eyebrow">Herbarium Edition &middot; Volume I</div>
+      <h1 class="title">A Field Guide to the <em>Plant Kingdom</em></h1>
+      <div class="subtitle">${built.length} ORDERS <span class="dot">&middot;</span> ${built.reduce((n, o) => n + o.families.length, 0)} FAMILIES <span class="dot">&middot;</span> ${built.reduce((n, o) => n + o.families.reduce((m, f) => m + (f.species ? f.species.length : 0), 0), 0)} SPECIES</div>
+    </header>`;
+
     if (!built.length) {
-      container.innerHTML = '<p class="fg-empty">No orders built out yet.</p>';
+      container.innerHTML = `${header}<p style="text-align:center;color:var(--sage);padding:60px 24px;">No orders built out yet.</p>`;
       return;
     }
+
     container.innerHTML = `
-      <nav class="fg-jump">${built
-        .map((o) => `<a href="#order-${esc(o.name.toLowerCase().replace(/\s+/g, '-'))}">${esc(o.name)}</a>`)
-        .join('')}</nav>
-      <div class="fg-orders">${built.map(orderSectionHtml).join('')}</div>
+      ${header}
+      <nav class="fg-jump">${built.map((o) => `<a href="#order-${slug(o.name)}">${esc(o.name)}</a>`).join('')}</nav>
+      <main>${built.map((o, i) => orderSectionHtml(o, i)).join('')}</main>
     `;
   }
 
