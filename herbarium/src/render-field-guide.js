@@ -21,7 +21,9 @@
       </div>
       <p class="fg-trait"><b>Trait:</b> ${family.trait}</p>
       <p class="fg-differentia">${family.differentia}</p>
-      <ul class="fg-species">${(family.species || []).map(speciesRowHtml).join('')}</ul>
+      ${family.species && family.species.length
+        ? `<ul class="fg-species">${family.species.map(speciesRowHtml).join('')}</ul>`
+        : ''}
     </article>`;
   }
 
