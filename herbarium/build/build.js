@@ -8,6 +8,10 @@ const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
 const OUT = path.join(ROOT, '..', 'herbarium-app.html');
+// Also published to docs/index.html so GitHub Pages (source: main /docs) can
+// serve the exact same self-contained build as a real https:// site -- the
+// single-file download and the live site are never allowed to drift apart.
+const PAGES_OUT = path.join(ROOT, '..', 'docs', 'index.html');
 
 const taxonomy = fs.readFileSync(path.join(ROOT, 'data', 'taxonomy.json'), 'utf8');
 const css = fs.readFileSync(path.join(ROOT, 'styles.css'), 'utf8');
@@ -64,5 +68,8 @@ ${scripts}
 `;
 
 fs.writeFileSync(OUT, html);
+fs.mkdirSync(path.dirname(PAGES_OUT), { recursive: true });
+fs.writeFileSync(PAGES_OUT, html);
 const bytes = Buffer.byteLength(html, 'utf8');
 console.log(`Wrote ${path.relative(process.cwd(), OUT)} (${bytes} bytes, ${(bytes / 1024).toFixed(1)} KB)`);
+console.log(`Wrote ${path.relative(process.cwd(), PAGES_OUT)}`);
