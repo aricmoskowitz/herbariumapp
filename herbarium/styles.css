@@ -169,23 +169,24 @@ h1.title em{ color:var(--gold-bright); font-style:italic; font-weight:500; }
   font-family:'Space Mono', monospace;
   font-size:10px;
   letter-spacing:0.03em;
-  color:var(--sage);
+  color:var(--accent, var(--sage));
   text-decoration:none;
-  border:1px solid var(--line);
+  border:1px solid var(--accent, var(--line));
   border-radius:12px;
   padding:4px 10px;
+  opacity:0.8;
 }
-.fg-jump a:hover{ color:var(--gold-bright); border-color:var(--gold); }
+.fg-jump a:hover{ opacity:1; background:var(--accent, var(--gold)); color:#152018; }
 
 section.order{ max-width:1100px; margin:0 auto; padding:48px 24px 12px; scroll-margin-top:24px; }
 .order-head{
   display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:16px;
-  border-bottom:2px solid var(--gold);
+  border-bottom:2px solid var(--accent, var(--gold));
   padding-bottom:18px; margin-bottom:14px;
 }
 .order-title-group{ display:flex; align-items:center; gap:14px; }
 .order-icon{ width:40px; height:40px; flex-shrink:0; color:var(--gold-bright); }
-.fg-rank{ font-family:'Space Mono', monospace; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--sage); }
+.fg-rank{ font-family:'Space Mono', monospace; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent, var(--sage)); }
 h2.order-name{ font-family:'Fraunces', serif; font-weight:600; font-size:clamp(28px, 4vw, 44px); margin:2px 0 0; color:var(--card); scroll-margin-top:24px; }
 .order-head .plate{
   font-family:'Space Mono', monospace; font-size:12px; color:var(--rust);
@@ -352,6 +353,7 @@ nav.modes button.active{ background:var(--gold); color:#1b2a20; border-color:var
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   gap:2px; min-height:58px; text-align:center;
 }
+.ph-tree > .ph-card{ margin-bottom: max(8px, calc(16px - var(--depth) * 2px)); }
 .ph-card::before{
   content:''; position:absolute; top:-5px; left:50%; transform:translateX(-50%) rotate(-2deg);
   width:26px; height:9px; background:rgba(199,154,43,0.4); border:1px solid rgba(199,154,43,0.55);

@@ -33,7 +33,8 @@
 
   function groupSectionHtml(group, index) {
     const plate = String(index + 1).padStart(2, '0');
-    return `<section class="order" id="order-${slug(group.name)}" data-group="${esc(group.name)}">
+    const accent = group.accent || '#c79a2b';
+    return `<section class="order" id="order-${slug(group.name)}" data-group="${esc(group.name)}" style="--accent:${esc(accent)}">
       <div class="order-head">
         <div class="order-title-group">
           ${iconSvg(group.icon, 'order-icon')}
@@ -66,7 +67,7 @@
 
     container.innerHTML = `
       ${header}
-      <nav class="fg-jump">${built.map((g) => `<a href="#order-${slug(g.name)}">${esc(g.name)}</a>`).join('')}</nav>
+      <nav class="fg-jump">${built.map((g) => `<a href="#order-${slug(g.name)}" style="--accent:${esc(g.accent || '#c79a2b')}">${esc(g.name)}</a>`).join('')}</nav>
       <main>${built.map((g, i) => groupSectionHtml(g, i)).join('')}</main>
     `;
   }

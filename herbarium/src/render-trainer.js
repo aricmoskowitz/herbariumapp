@@ -31,7 +31,7 @@
         families.push({ ...fam, orderName: order.name, orderRank: order.rank });
         for (const sp of fam.species) {
           species.push({
-            ...sp, familyName: fam.common || fam.name, orderName: order.name, orderRank: order.rank,
+            ...sp, familyName: fam.name, orderName: order.name, orderRank: order.rank,
           });
         }
       }
@@ -42,7 +42,7 @@
 
   function questionSpeciesToFamily(pools) {
     const target = pools.species[Math.floor(Math.random() * pools.species.length)];
-    const options = shuffle([target.familyName, ...pick(pools.families.map((f) => f.common || f.name), 3, target.familyName)]);
+    const options = shuffle([target.familyName, ...pick(pools.families.map((f) => f.name), 3, target.familyName)]);
     return {
       label: 'Species &rarr; Family', icon: null,
       main: esc(target.common), sub: target.sci,
@@ -217,7 +217,7 @@
       state.studyOrder = name;
       const order = pools.orders.find((o) => o.name === name);
       container.querySelectorAll('.order-chip').forEach((b) => b.classList.toggle('active', b.dataset.order === name));
-      container.querySelector('#studyOrderDesc').textContent = order.desc || '';
+      container.querySelector('#studyOrderDesc').innerHTML = order.desc || '';
       container.querySelector('#studyGrid').innerHTML = (order.families || []).map(studyCardHtml).join('');
     }
 
