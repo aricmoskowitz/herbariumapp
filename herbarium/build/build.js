@@ -15,6 +15,8 @@ const PAGES_OUT = path.join(ROOT, '..', 'docs', 'index.html');
 
 const taxonomy = fs.readFileSync(path.join(ROOT, 'data', 'taxonomy.json'), 'utf8');
 const css = fs.readFileSync(path.join(ROOT, 'styles.css'), 'utf8');
+const iconBase64 = fs.readFileSync(path.join(ROOT, 'icon.png')).toString('base64');
+const iconDataUri = `data:image/png;base64,${iconBase64}`;
 
 const SRC_ORDER = [
   'shared.js',
@@ -37,6 +39,8 @@ const html = `<!doctype html>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="Herbarium" />
 <title>Herbarium</title>
+<link rel="icon" href="${iconDataUri}" />
+<link rel="apple-touch-icon" href="${iconDataUri}" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
