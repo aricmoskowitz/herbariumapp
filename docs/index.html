@@ -1,0 +1,3835 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#1b2a20" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Herbarium" />
+<title>Herbarium</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --ground: #1b2a20;
+  --card: #f3eedc;
+  --card-shadow: #0c130e;
+  --ink: #24301f;
+  --ink-soft: #4b5940;
+  --gold: #c79a2b;
+  --gold-bright: #e0b74a;
+  --rust: #8b3a2f;
+  --sage: #8a9678;
+  --line: rgba(199,154,43,0.35);
+  --good: #4c7a4c;
+  --bad: #a4453a;
+  --radius: 4px;
+}
+*{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html{ scroll-behavior:smooth; }
+body{
+  margin:0;
+  min-height:100vh;
+  max-width:100vw;
+  overflow-x:hidden;
+  background: radial-gradient(ellipse at top left, #24352a 0%, var(--ground) 45%, #14201a 100%);
+  color:var(--card);
+  font-family:'Source Serif 4', serif;
+  -webkit-font-smoothing:antialiased;
+}
+button{ font-family:inherit; cursor:pointer; touch-action:manipulation; }
+a{ color:inherit; }
+
+/* ---------- App switcher (persistent, floating) ---------- */
+#appSwitch{
+  position:fixed;
+  top:14px; right:14px;
+  z-index:300;
+  display:flex;
+  gap:4px;
+  background:#152018;
+  border:1px solid var(--line);
+  border-radius:3px;
+  padding:4px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.4);
+}
+#appSwitch button{
+  font-family:'Space Mono', monospace;
+  font-size:11px;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+  background:transparent;
+  color:var(--sage);
+  border:none;
+  padding:8px 14px;
+  border-radius:2px;
+}
+#appSwitch button:hover{ color:var(--gold-bright); }
+#appSwitch button.active{
+  background:var(--gold);
+  color:#1b2a20;
+  font-weight:700;
+}
+/* On phones the switcher becomes a real bottom tab bar (thumb-reachable,
+   matches the iOS convention) instead of a floating corner pill. */
+@media (max-width:640px){
+  #appSwitch{
+    top:auto; right:0; bottom:0; left:0;
+    border-radius:0; border:none; border-top:1px solid var(--line);
+    background:#152018;
+    padding:0;
+    padding-bottom:env(safe-area-inset-bottom, 0);
+    box-shadow:0 -8px 20px rgba(0,0,0,0.4);
+  }
+  #appSwitch button{
+    flex:1;
+    padding:12px 4px;
+    font-size:10px;
+    border-radius:0;
+  }
+  #appSwitch button.active{ background:rgba(199,154,43,0.18); color:var(--gold-bright); }
+  body{ padding-bottom:calc(54px + env(safe-area-inset-bottom, 0)); }
+}
+
+.tab-panel{ padding-top:0; }
+
+/* ---------- Shared masthead (Diagram / Trainer / Field Log) ---------- */
+header.tr-masthead{
+  padding:36px 20px 20px;
+  text-align:center;
+  border-bottom:1px solid var(--line);
+}
+h1.tr-title{
+  font-family:'Fraunces', serif;
+  font-weight:600;
+  font-size:clamp(28px, 5vw, 44px);
+  margin:0 0 8px;
+  color:var(--card);
+}
+h1.tr-title em{ color:var(--gold-bright); font-style:italic; font-weight:500; }
+.eyebrow{
+  font-family:'Space Mono', monospace;
+  letter-spacing:0.32em;
+  font-size:11px;
+  color:var(--gold);
+  text-transform:uppercase;
+  margin-bottom:16px;
+}
+.tip{
+  max-width:560px;
+  margin:14px auto 0;
+  font-family:'Source Serif 4', serif;
+  font-style:italic;
+  font-size:13.5px;
+  color:var(--sage);
+  line-height:1.5;
+}
+
+/* ---------- Field Guide masthead ---------- */
+header.masthead{
+  padding:56px 24px 34px;
+  text-align:center;
+  border-bottom:1px solid var(--line);
+  position:relative;
+}
+header.masthead::before{
+  content:"";
+  position:absolute; inset:0;
+  background-image: repeating-linear-gradient(0deg, transparent 0 38px, rgba(199,154,43,0.045) 38px 39px);
+  pointer-events:none;
+}
+h1.title{
+  font-family:'Fraunces', serif;
+  font-optical-sizing:auto;
+  font-weight:600;
+  font-size:clamp(34px, 5vw, 60px);
+  margin:0 0 10px;
+  color:var(--card);
+  letter-spacing:-0.01em;
+}
+h1.title em{ color:var(--gold-bright); font-style:italic; font-weight:500; }
+.subtitle{
+  font-family:'Space Mono', monospace;
+  font-size:13px;
+  color:var(--sage);
+  letter-spacing:0.06em;
+}
+.subtitle .dot{ color:var(--rust); margin:0 8px; }
+
+/* ---------- Stats bar (Trainer / Field Log) ---------- */
+.stats-bar{
+  display:flex;
+  justify-content:center;
+  gap:0;
+  flex-wrap:wrap;
+  border-bottom:1px solid var(--line);
+  background:rgba(0,0,0,0.15);
+}
+.stat{ padding:10px 22px; text-align:center; border-right:1px solid var(--line); }
+.stat:last-child{ border-right:none; }
+.stat-num{ font-family:'Fraunces', serif; font-weight:600; font-size:20px; color:var(--gold-bright); display:block; }
+.stat-label{ font-family:'Space Mono', monospace; font-size:9px; letter-spacing:0.06em; text-transform:uppercase; color:var(--sage); }
+
+.tr-main{ max-width:820px; margin:0 auto; padding:10px 20px 80px; }
+
+/* ================= Field Guide ================= */
+.fg-jump{
+  display:flex; flex-wrap:wrap; gap:6px; justify-content:center;
+  max-width:1100px; margin:24px auto 0; padding:0 24px;
+}
+.fg-jump a{
+  font-family:'Space Mono', monospace;
+  font-size:10px;
+  letter-spacing:0.03em;
+  color:var(--sage);
+  text-decoration:none;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:4px 10px;
+}
+.fg-jump a:hover{ color:var(--gold-bright); border-color:var(--gold); }
+
+section.order{ max-width:1100px; margin:0 auto; padding:48px 24px 12px; scroll-margin-top:24px; }
+.order-head{
+  display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:16px;
+  border-bottom:2px solid var(--gold);
+  padding-bottom:18px; margin-bottom:14px;
+}
+.order-title-group{ display:flex; align-items:center; gap:14px; }
+.order-icon{ width:40px; height:40px; flex-shrink:0; color:var(--gold-bright); }
+h2.order-name{ font-family:'Fraunces', serif; font-weight:600; font-size:clamp(28px, 4vw, 44px); margin:0; color:var(--card); scroll-margin-top:24px; }
+.order-head .plate{
+  font-family:'Space Mono', monospace; font-size:12px; color:var(--rust);
+  background:rgba(139,58,47,0.15); border:1px solid rgba(139,58,47,0.4);
+  padding:3px 9px; border-radius:2px; letter-spacing:0.05em; white-space:nowrap;
+}
+.order-traits{ font-family:'Source Serif 4', serif; font-style:italic; color:var(--sage); font-size:15px; max-width:640px; margin:0 0 36px; line-height:1.55; }
+
+.family-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:22px; }
+.family-card{
+  background:var(--card); color:var(--ink); border-radius:3px;
+  padding:22px 22px 20px; position:relative;
+  box-shadow:0 14px 30px -12px var(--card-shadow), 0 2px 0 rgba(0,0,0,0.15);
+  border:1px solid rgba(36,48,31,0.08);
+  scroll-margin-top:24px;
+}
+.family-card::before{
+  content:""; position:absolute; top:-9px; left:24px; width:56px; height:18px;
+  background:rgba(199,154,43,0.5); transform:rotate(-2deg); box-shadow:0 2px 4px rgba(0,0,0,0.25);
+}
+.card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:10px; }
+.leaf-icon{ width:40px; height:40px; flex-shrink:0; color:var(--rust); }
+.fam-titles{ flex:1; }
+.fam-name{ font-family:'Fraunces', serif; font-weight:600; font-size:19px; margin:0; color:var(--ink); }
+.fam-common{ font-family:'Space Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft); margin-top:2px; }
+.trait{ font-size:13.5px; line-height:1.5; color:var(--ink-soft); border-left:2px solid var(--gold); padding-left:10px; margin:12px 0 10px; }
+.differentia{
+  font-family:'Space Mono', monospace; font-size:11px; line-height:1.55; color:var(--rust);
+  margin:0 0 16px; padding:8px 10px; background:rgba(139,58,47,0.07); border-radius:2px;
+}
+.differentia b{ font-weight:700; }
+.species-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
+.species-list li{ font-size:13.5px; display:flex; justify-content:space-between; gap:10px; border-bottom:1px dotted rgba(36,48,31,0.25); padding-bottom:5px; }
+.species-list .common{ color:var(--ink); }
+.species-list .sci{ font-style:italic; color:var(--ink-soft); text-align:right; white-space:nowrap; }
+
+@media (max-width:600px){
+  .species-list li{ flex-direction:column; gap:1px; }
+  .species-list .sci{ text-align:left; white-space:normal; }
+  .fl-row{ flex-direction:column; gap:14px; }
+  section.order{ padding:36px 16px 8px; }
+  .tr-main, .ph-main{ padding-left:16px; padding-right:16px; }
+  header.masthead, header.tr-masthead{ padding-left:16px; padding-right:16px; }
+}
+
+/* ================= Trainer: mode nav + quiz ================= */
+nav.modes{ display:flex; justify-content:center; gap:2px; flex-wrap:wrap; padding:16px 12px; }
+nav.modes button{
+  font-family:'Space Mono', monospace; font-size:11px; letter-spacing:0.04em; text-transform:uppercase;
+  background:transparent; color:var(--sage); border:1px solid var(--line);
+  padding:9px 15px; border-radius:2px; transition:all .15s ease;
+}
+nav.modes button:hover{ color:var(--gold-bright); border-color:var(--gold); }
+nav.modes button.active{ background:var(--gold); color:#1b2a20; border-color:var(--gold); font-weight:700; }
+
+.quiz-wrap{ display:flex; flex-direction:column; align-items:center; gap:22px; }
+.prompt-card{
+  background:var(--card); color:var(--ink); border-radius:4px; padding:28px 26px;
+  width:100%; max-width:520px; text-align:center;
+  box-shadow:0 16px 34px -14px var(--card-shadow); position:relative;
+}
+.prompt-label{ font-family:'Space Mono', monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; color:var(--rust); margin-bottom:12px; }
+.prompt-icon{ width:56px; height:56px; color:var(--rust); margin:0 auto 10px; }
+.prompt-main{ font-family:'Fraunces', serif; font-weight:600; font-size:24px; color:var(--ink); }
+.prompt-sub{ font-family:'Source Serif 4', serif; font-style:italic; font-size:14px; color:var(--ink-soft); margin-top:4px; }
+.prompt-text{ font-size:14.5px; line-height:1.6; color:var(--ink); }
+
+.answers{ display:grid; grid-template-columns:1fr 1fr; gap:12px; width:100%; max-width:520px; }
+@media (max-width:520px){ .answers{ grid-template-columns:1fr; } }
+.answer-btn{
+  display:flex; align-items:center; gap:10px; background:var(--card); color:var(--ink);
+  border:2px solid transparent; border-radius:3px; padding:12px 14px; text-align:left;
+  font-family:'Source Serif 4', serif; font-size:14px; min-height:44px;
+  transition:transform .1s ease, border-color .15s ease;
+}
+.answer-btn:hover:not(:disabled){ transform:translateY(-2px); border-color:var(--gold); }
+.answer-btn:disabled{ cursor:default; }
+.answer-btn .a-name{ font-weight:600; font-family:'Fraunces', serif; display:block; }
+.answer-btn.correct{ border-color:var(--good); background:#e3ecdd; }
+.answer-btn.wrong{ border-color:var(--bad); background:#f2ddd8; }
+
+.feedback{
+  width:100%; max-width:520px; background:rgba(0,0,0,0.2); border:1px solid var(--line);
+  border-radius:3px; padding:14px 16px; font-size:13.5px; line-height:1.55; color:var(--card);
+}
+.feedback b{ color:var(--gold-bright); }
+.next-btn{
+  font-family:'Space Mono', monospace; font-size:12px; letter-spacing:0.05em; text-transform:uppercase;
+  background:var(--rust); color:var(--card); border:none; padding:12px 26px; border-radius:3px;
+}
+.next-btn:hover{ background:#a4453a; }
+.tr-empty{ color:var(--sage); font-style:italic; }
+
+/* ---------- Study / Browse mode ---------- */
+.order-chips{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:22px; }
+.order-chip{
+  font-family:'Space Mono', monospace; font-size:11px; padding:10px 14px; border-radius:20px;
+  border:1px solid var(--chip-color, var(--gold)); color:var(--chip-color, var(--gold)); background:transparent;
+}
+.order-chip.active{ background:var(--chip-color, var(--gold)); color:#152018; font-weight:700; }
+.study-order-desc{ text-align:center; font-style:italic; color:var(--sage); font-size:13px; max-width:600px; margin:0 auto 22px; line-height:1.5; }
+.study-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px; }
+.study-card{ background:var(--card); color:var(--ink); border-radius:3px; padding:16px 18px; border-left:4px solid var(--chip-color, var(--gold)); }
+.study-card-top{ display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+.study-card-top svg{ width:28px; height:28px; color:var(--rust); flex-shrink:0; }
+.study-fam-name{ font-family:'Fraunces', serif; font-weight:600; font-size:16px; }
+.study-fam-common{ font-family:'Space Mono', monospace; font-size:9.5px; text-transform:uppercase; color:var(--ink-soft); }
+.study-trait{ font-size:12.5px; color:var(--ink-soft); margin:8px 0; line-height:1.5; }
+.study-differentia{ font-family:'Space Mono', monospace; font-size:10.5px; color:var(--rust); background:rgba(139,58,47,0.07); padding:7px 9px; border-radius:2px; line-height:1.5; margin-bottom:8px; }
+.study-species{ display:flex; flex-wrap:wrap; gap:5px; }
+.study-species span{ font-family:'Space Mono', monospace; font-size:9.5px; background:rgba(36,48,31,0.08); padding:3px 7px; border-radius:10px; color:var(--ink); }
+
+/* ================= Diagram ================= */
+.ph-main{ max-width:1040px; margin:0 auto; padding:10px 20px 80px; }
+.ph-caveat{
+  background:rgba(199,154,43,0.08); border-left:3px solid var(--gold); border-radius:2px;
+  padding:16px 20px; margin:0 auto 22px; max-width:800px;
+  font-family:'Source Serif 4', serif; font-size:13px; line-height:1.65; color:var(--sage);
+}
+.ph-caveat b{ color:var(--gold-bright); font-weight:600; }
+
+.ph-event-row{ display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:10px; margin:0 0 14px; }
+.ph-event-chip{
+  background:rgba(139,58,47,0.2); border:1px solid rgba(224,183,74,0.45); border-radius:3px;
+  padding:6px 12px; display:flex; align-items:baseline; gap:7px; white-space:nowrap;
+}
+.ph-event-chip-date{ font-family:'Space Mono', monospace; font-size:10px; font-weight:700; color:var(--gold-bright); }
+.ph-event-chip-name{ font-family:'Source Serif 4', serif; font-style:italic; font-size:11.5px; color:var(--card); }
+
+.ph-tree{ --depth:0; }
+.ph-group{
+  border:1px solid var(--line);
+  border-left-width: max(2px, calc(5px - var(--depth) * 0.7px));
+  border-left-style:solid;
+  border-left-color:var(--accent, var(--gold));
+  border-radius:4px;
+  background: rgba(0,0,0, max(0.05, calc(0.17 - var(--depth) * 0.02)));
+  padding: max(9px, calc(15px - var(--depth) * 2px)) max(10px, calc(17px - var(--depth) * 2px)) max(11px, calc(18px - var(--depth) * 2px));
+  margin-bottom: max(8px, calc(16px - var(--depth) * 2px));
+}
+.ph-group-head{
+  display:flex; align-items:center; gap:9px; flex-wrap:wrap;
+  margin-bottom: max(7px, calc(12px - var(--depth) * 1px));
+  padding-bottom: max(6px, calc(9px - var(--depth) * 1px));
+  border-bottom:1px solid var(--line);
+}
+.ph-group-rank{
+  font-family:'Space Mono', monospace; font-size: max(7.5px, calc(9.5px - var(--depth) * 0.4px));
+  letter-spacing:0.06em; text-transform:uppercase; color:var(--accent, var(--sage)); opacity:0.85;
+}
+.ph-group-title{ font-family:'Fraunces', serif; font-weight:600; font-size: max(13px, calc(20px - var(--depth) * 1.8px)); color:var(--card); margin:0; }
+.ph-group-date{ font-family:'Space Mono', monospace; font-size: max(8px, calc(10.5px - var(--depth) * 0.4px)); color:var(--rust); background:rgba(139,58,47,0.18); border-radius:2px; padding:2px 7px; margin-left:auto; }
+.ph-group-body{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(max(96px, calc(150px - var(--depth) * 14px)), 1fr));
+  gap: max(6px, calc(10px - var(--depth) * 0.6px));
+  align-items:start;
+}
+.ph-group-body > .ph-group{ grid-column:1 / -1; }
+
+.ph-card{
+  position:relative; background:var(--card); color:var(--ink); border-radius:3px;
+  padding:16px 10px 9px; box-shadow:0 5px 12px -5px rgba(0,0,0,0.45);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:2px; min-height:58px; text-align:center;
+}
+.ph-card::before{
+  content:''; position:absolute; top:-5px; left:50%; transform:translateX(-50%) rotate(-2deg);
+  width:26px; height:9px; background:rgba(199,154,43,0.4); border:1px solid rgba(199,154,43,0.55);
+}
+.ph-card-icon{ width:22px; height:22px; flex-shrink:0; color:var(--rust); margin-bottom:2px; }
+.ph-card-rank{ font-family:'Space Mono', monospace; font-size:7px; letter-spacing:0.06em; text-transform:uppercase; color:var(--accent, var(--ink-soft)); opacity:0.8; }
+.ph-card-name{ font-family:'Fraunces', serif; font-weight:600; font-size:13.5px; line-height:1.2; }
+.ph-card-tag{ font-family:'Space Mono', monospace; font-size:7.5px; letter-spacing:0.03em; text-transform:uppercase; }
+.ph-group.ph-inguide{ border-left-color:var(--gold); box-shadow: inset 0 0 0 1px rgba(224,183,74,0.3); }
+.ph-group.ph-extension{ border-left-style:dashed; opacity:0.92; }
+.ph-group.ph-inguide .ph-group-tag{ color:#c79a2b; }
+.ph-group.ph-extension .ph-group-tag{ color:var(--sage); font-style:italic; }
+.ph-group-tag-not{ color:var(--ink-soft); opacity:0.75; font-style:italic; text-transform:none; letter-spacing:0.01em; }
+.ph-card.ph-inguide{ border:1.5px solid var(--gold); }
+.ph-card.ph-inguide .ph-card-tag{ color:#8a6512; }
+.ph-card.ph-extension{ border:1.5px dashed var(--sage); opacity:0.88; }
+.ph-card.ph-extension .ph-card-tag{ color:var(--ink-soft); font-style:italic; }
+.ph-card-tag-not{ color:var(--ink-soft); opacity:0.7; font-style:italic; text-transform:none; letter-spacing:0.01em; }
+
+.ph-species-toggle{ width:100%; margin-top:6px; }
+.ph-species-toggle summary{
+  cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:center; gap:5px;
+  width:fit-content; margin:0 auto;
+  font-family:'Space Mono', monospace; font-size:8px; letter-spacing:0.04em; text-transform:uppercase;
+  color:var(--rust); background:rgba(139,58,47,0.14); border:1px solid rgba(139,58,47,0.35);
+  border-radius:10px; padding:3px 10px;
+}
+.ph-species-toggle summary::-webkit-details-marker{ display:none; }
+.ph-species-toggle summary::marker{ content:''; }
+.ph-species-toggle summary:hover{ background:rgba(139,58,47,0.26); }
+.ph-species-toggle[open] summary{ margin-bottom:8px; }
+.ph-species-list{ display:flex; flex-wrap:wrap; gap:4px; justify-content:center; padding-top:1px; }
+.ph-species-chip{
+  font-family:'Source Serif 4', serif; font-size:9.5px; color:var(--ink); background:rgba(0,0,0,0.06);
+  border:1px solid rgba(0,0,0,0.14); border-radius:3px; padding:2px 7px; white-space:nowrap;
+}
+.ph-species-controls{ display:flex; gap:10px; justify-content:center; margin:0 0 20px; }
+.ph-species-btn{
+  font-family:'Space Mono', monospace; font-size:10.5px; letter-spacing:0.03em; color:var(--gold-bright);
+  background:rgba(199,154,43,0.1); border:1px solid rgba(199,154,43,0.45); border-radius:3px; padding:10px 14px;
+}
+.ph-species-btn:hover{ background:rgba(199,154,43,0.2); }
+
+@media (max-width:520px){
+  .ph-group{ padding:10px 12px 12px; }
+  .ph-group-body{ grid-template-columns:repeat(auto-fill, minmax(96px, 1fr)); }
+}
+
+/* ================= Field Log ================= */
+.fl-form{ background:var(--card); color:var(--ink); border-radius:4px; padding:20px 22px; display:flex; flex-direction:column; gap:14px; margin-bottom:28px; }
+.fl-row{ display:flex; gap:14px; }
+.fl-row .fl-field{ flex:1; }
+.fl-field{ display:flex; flex-direction:column; gap:5px; }
+.fl-field label{ font-family:'Space Mono', monospace; font-size:10px; text-transform:uppercase; letter-spacing:0.05em; color:var(--ink-soft); }
+.fl-field select, .fl-field input, .fl-field textarea{
+  font-family:'Source Serif 4', serif; font-size:16px; padding:11px 10px;
+  border:1px solid rgba(36,48,31,0.25); border-radius:2px; background:#fff; color:var(--ink);
+  min-height:44px;
+}
+.fl-field textarea{ min-height:0; }
+.fl-field textarea{ resize:vertical; }
+.fl-submit{
+  align-self:flex-start; font-family:'Space Mono', monospace; font-size:12px; letter-spacing:0.05em; text-transform:uppercase;
+  background:var(--gold); color:#1b2a20; font-weight:700; border:none; padding:11px 22px; border-radius:3px;
+}
+.fl-submit:hover{ background:var(--gold-bright); }
+.fl-list{ display:flex; flex-direction:column; gap:12px; }
+.fl-card{ background:var(--card); color:var(--ink); border-radius:3px; padding:14px 18px; position:relative; border-left:4px solid var(--gold); }
+.fl-card-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+.fl-name{ font-family:'Fraunces', serif; font-weight:600; font-size:16px; }
+.fl-sci{ font-style:italic; color:var(--ink-soft); font-size:12.5px; }
+.fl-date{ font-family:'Space Mono', monospace; font-size:10.5px; color:var(--rust); white-space:nowrap; }
+.fl-tags{ display:flex; gap:6px; flex-wrap:wrap; margin:6px 0; }
+.fl-tags span{ font-family:'Space Mono', monospace; font-size:9.5px; background:rgba(36,48,31,0.08); padding:3px 8px; border-radius:10px; }
+.fl-location{ font-size:13px; color:var(--ink-soft); margin:4px 0; }
+.fl-notes{ font-size:13px; line-height:1.5; margin-top:4px; }
+.fl-delete{ background:none; border:none; color:var(--rust); font-family:'Space Mono', monospace; font-size:18px; line-height:1; padding:10px 12px; margin:-10px -12px; }
+.fl-delete:hover{ color:#a4453a; }
+.fl-empty{ text-align:center; color:var(--sage); font-style:italic; padding:40px 20px; }
+.hidden{ display:none !important; }
+
+</style>
+</head>
+<body>
+<div id="appSwitch">
+  <button type="button" data-tab="guide" class="active">Field Guide</button>
+  <button type="button" data-tab="diagram">Diagram</button>
+  <button type="button" data-tab="trainer">Trainer</button>
+  <button type="button" data-tab="log">Field Log</button>
+</div>
+
+<main id="panel-field-guide" class="tab-panel"></main>
+<main id="panel-diagram" class="tab-panel" hidden></main>
+<main id="panel-trainer" class="tab-panel" hidden></main>
+<main id="panel-field-log" class="tab-panel" hidden></main>
+
+<script>
+window.TAXONOMY_DATA = {
+ "meta": {
+  "generatedFrom": "herbarium-app.html (current working version, pre-Claude-Code-migration)",
+  "orderCount": 43,
+  "informalGroupCount": 5,
+  "familyCountBuilt": 20,
+  "speciesCountBuilt": 74,
+  "plantsTaggedTotal": 203,
+  "iconCountTotal": 48
+ },
+ "tree": [
+  {
+   "name": "Brown Algae",
+   "rank": "informal group",
+   "accent": "#6f7d5c",
+   "icon": "<path d=\"M17 34c-2-8 2-10 0-16s2-10 0-14M23 34c2-8-2-10 0-16s-2-10 0-14\"/><path d=\"M14 34h12\"/>",
+   "events": [
+    {
+     "date": "~3.7 bya",
+     "label": "Life on Earth"
+    }
+   ],
+   "plants": [
+    "Kelp",
+    "Wakame",
+    "Hijiki"
+   ]
+  },
+  {
+   "name": "Red Algae",
+   "rank": "informal group",
+   "accent": "#6f7d5c",
+   "icon": "<path d=\"M20 34V10\"/><path d=\"M20 26l-6-4M20 26l6-4M20 18l-5-4M20 18l5-4M20 12l-4-3M20 12l4-3\"/>",
+   "events": [
+    {
+     "date": "~1 bya",
+     "label": "First algae (chlorophyll)"
+    }
+   ],
+   "plants": [
+    "Nori",
+    "Dulse",
+    "Agar Agar"
+   ]
+  },
+  {
+   "name": "Green Algae",
+   "rank": "informal group",
+   "accent": "#6f7d5c",
+   "icon": "<path d=\"M20 34V20\"/><path d=\"M20 20c-3-6-1-10-4-14M20 20c3-6 1-10 4-14M20 20c-1-7 2-9 0-16M20 20c1-7-2-9 0-16\"/>"
+  },
+  {
+   "name": "Bryophytes",
+   "rank": "informal group",
+   "accent": "#6f7d5c",
+   "icon": "<path d=\"M14 34V20M20 34V16M26 34V20\"/><ellipse cx=\"14\" cy=\"17\" rx=\"2\" ry=\"3\"/><ellipse cx=\"20\" cy=\"13\" rx=\"2\" ry=\"3\"/><ellipse cx=\"26\" cy=\"17\" rx=\"2\" ry=\"3\"/>",
+   "events": [
+    {
+     "date": "~600 mya",
+     "label": "First animals"
+    },
+    {
+     "date": "~500 mya",
+     "label": "Land plants & Cambrian Explosion"
+    }
+   ]
+  },
+  {
+   "name": "Ferns",
+   "rank": "informal group",
+   "accent": "#6f7d5c",
+   "icon": "<path d=\"M20 34V10\"/><path d=\"M20 28l-8-4M20 24l8-4M20 20l-7-4M20 16l7-3M20 12l-5-3\"/><path d=\"M20 10c1.5-1.5 1.5-3.5-0.5-3.5s-1.5 2.5 0.5 3.5z\"/>",
+   "events": [
+    {
+     "date": "~420 mya",
+     "label": "Vascular plants"
+    }
+   ]
+  },
+  {
+   "name": "Gymnosperms",
+   "rank": "clade",
+   "accent": "#3f5443",
+   "events": [
+    {
+     "date": "~365 mya",
+     "label": "Seeds"
+    }
+   ],
+   "children": [
+    {
+     "name": "Ginkgoales",
+     "rank": "order",
+     "accent": "#3f5443",
+     "icon": "<path d=\"M20 34C11 29 5 21 7 15C8 11 12 8 16 8C18 8 19 9 20 11C21 9 22 8 24 8C28 8 32 11 33 15C35 21 29 29 20 34Z\"/><path d=\"M20 34V12M13 18L20 12M27 18L20 12\"/>",
+     "status": "context",
+     "quizClue": "A fan-shaped leaf with a shallow notch splitting its outer edge into two lobes, and thin veins radiating up from the base &mdash; the same silhouette used on Tokyo's civic emblem.",
+     "quizWhy": "Ginkgo biloba is the only living species in this order, and its fan-shaped leaf with a central notch is one of the most recognizable leaf outlines in the plant kingdom.",
+     "families": [
+      {
+       "id": "ginkgoaceae",
+       "name": "Ginkgoaceae",
+       "common": "Ginkgo family",
+       "trait": "A single living species, Ginkgo biloba, with fan-shaped leaves showing a distinctive central notch and forked (dichotomous) venation unlike any other tree; separate male and female trees, the female producing foul-smelling but historically prized seeds.",
+       "differentia": "The order's only family and one of the most ancient lineages in the plant kingdom &mdash; a living fossil essentially unchanged for over 200 million years.",
+       "icon": "<path d=\"M20 34C11 29 5 21 7 15C8 11 12 8 16 8C18 8 19 9 20 11C21 9 22 8 24 8C28 8 32 11 33 15C35 21 29 29 20 34Z\"/><path d=\"M20 34V12M13 18L20 12M27 18L20 12\"/>",
+       "species": []
+      }
+     ],
+     "desc": "A single living species order &mdash; the most ancient surviving seed-plant lineage, essentially unchanged in the fossil record for over 200 million years."
+    },
+    {
+     "name": "Pinales",
+     "rank": "order",
+     "accent": "#3f5443",
+     "icon": "<path d=\"M20 4l7 10h-4l6 9h-5l6 10H10l6-10h-5l6-9h-4z\"/><path d=\"M20 33v3\"/>",
+     "status": "context",
+     "quizClue": "A stack of triangles narrowing toward the top on a short trunk &mdash; the generic pine-tree silhouette.",
+     "quizWhy": "This order contains essentially all living conifers, so a simple pine-tree silhouette can stand in for the whole group.",
+     "families": [
+      {
+       "id": "pinaceae",
+       "name": "Pinaceae",
+       "common": "Pine family",
+       "icon": "<path d=\"M20 4l7 10h-4l6 9h-5l6 10H10l6-10h-5l6-9h-4z\"/><path d=\"M20 33v3\"/>",
+       "trait": "Needle-like leaves borne singly or in bundles of two to five; large woody cones with overlapping scales, and resin canals running through the wood.",
+       "differentia": "The order's largest family by far &mdash; distinguished from Cupressaceae by true needle leaves (not scale-like) and by cones with separate, overlapping woody scales rather than fused or berry-like ones.",
+       "species": [
+        {
+         "common": "Scots pine",
+         "sci": "Pinus sylvestris"
+        },
+        {
+         "common": "European silver fir",
+         "sci": "Abies alba"
+        },
+        {
+         "common": "Norway spruce",
+         "sci": "Picea abies"
+        },
+        {
+         "common": "Cedar of Lebanon",
+         "sci": "Cedrus libani"
+        }
+       ]
+      },
+      {
+       "id": "cupressaceae",
+       "name": "Cupressaceae",
+       "common": "Cypress family",
+       "icon": "<path d=\"M20 34V8\"/><path d=\"M20 12l-6-3M20 12l6-3M20 18l-6-3M20 18l6-3M20 24l-6-3M20 24l6-3\"/><circle cx=\"14\" cy=\"29\" r=\"2\"/><circle cx=\"26\" cy=\"29\" r=\"2\"/>",
+       "trait": "Small, scale-like or awl-shaped leaves pressed flat against the twig; cones either small and woody or, in junipers, fused into fleshy blue &ldquo;berries.&rdquo;",
+       "differentia": "Unlike Pinaceae's needle bundles and separate-scaled cones, this family's leaves hug the stem in flattened sprays, and its cones can fuse into soft, berry-like structures instead of staying woody.",
+       "species": [
+        {
+         "common": "Common juniper",
+         "sci": "Juniperus communis"
+        },
+        {
+         "common": "Coast redwood",
+         "sci": "Sequoia sempervirens"
+        }
+       ]
+      }
+     ],
+     "desc": "The living conifers &mdash; evergreen, resin-producing trees and shrubs bearing seeds in woody cones rather than flowers, with needle- or scale-like leaves adapted to conserve water through harsh winters."
+    }
+   ]
+  },
+  {
+   "name": "Early Angiosperms",
+   "rank": "clade",
+   "accent": "#a8763a",
+   "events": [
+    {
+     "date": "~250–66 mya",
+     "label": "Dinosaurs & Pangaea breakup"
+    }
+   ],
+   "children": [
+    {
+     "name": "Basal angiosperms",
+     "rank": "grade",
+     "accent": "#a8763a",
+     "children": [
+      {
+       "name": "Amborellales",
+       "rank": "order",
+       "accent": "#a8763a",
+       "icon": "<path d=\"M20 34V14\"/><path d=\"M20 14c-6 0-9-4-9-4M20 14c6 0 9-4 9-4M20 20c-5 0-8-3-8-3M20 20c5 0 8-3 8-3\"/><circle cx=\"11\" cy=\"10\" r=\"1.4\"/><circle cx=\"29\" cy=\"10\" r=\"1.4\"/>",
+       "status": "context",
+       "quizClue": "A small, unremarkable shrub outline with two tiny round berries perched at the tips of its twigs.",
+       "quizWhy": "Amborella trichopoda, the order's only species, is an inconspicuous woody shrub &mdash; often cited as the single earliest-diverging lineage of all living flowering plants.",
+       "families": [
+        {
+         "id": "amborellaceae",
+         "name": "Amborellaceae",
+         "common": "Amborella family",
+         "trait": "A single living species, Amborella trichopoda, an inconspicuous woody shrub native only to New Caledonia, most notable for its position at the very base of the flowering-plant family tree rather than any visible trait.",
+         "differentia": "The order's only family, and by most molecular analyses the single earliest-diverging lineage of all living flowering plants.",
+         "icon": "<path d=\"M20 34V14\"/><path d=\"M20 14c-6 0-9-4-9-4M20 14c6 0 9-4 9-4M20 20c-5 0-8-3-8-3M20 20c5 0 8-3 8-3\"/><circle cx=\"11\" cy=\"10\" r=\"1.4\"/><circle cx=\"29\" cy=\"10\" r=\"1.4\"/>",
+         "species": []
+        }
+       ],
+       "desc": "A single-species order occupying, by most analyses, the earliest-diverging position in the entire flowering-plant family tree."
+      },
+      {
+       "name": "Nymphaeales",
+       "rank": "order",
+       "accent": "#a8763a",
+       "icon": "<ellipse cx=\"20\" cy=\"26\" rx=\"12\" ry=\"4\"/><path d=\"M20 22c-4-6-4-12 0-16 4 4 4 10 0 16z\"/>",
+       "status": "context",
+       "quizClue": "A flat oval pad floating below a teardrop bud rising up out of the water.",
+       "quizWhy": "This order is the water lilies &mdash; aquatic plants with floating pads and flowers that rise up above the water's surface.",
+       "families": [
+        {
+         "id": "nymphaeaceae",
+         "name": "Nymphaeaceae",
+         "common": "Water lily family",
+         "trait": "Aquatic perennials with round, waxy floating leaves and showy flowers that open at or just above the water's surface; among the most ancient surviving flowering-plant lineages, retaining relatively primitive floral structure.",
+         "differentia": "The order's defining family &mdash; true water lilies, floating rather than emergent like the unrelated lotus (Nelumbonaceae) elsewhere in the Diagram.",
+         "icon": "<ellipse cx=\"20\" cy=\"26\" rx=\"12\" ry=\"4\"/><path d=\"M20 22c-4-6-4-12 0-16 4 4 4 10 0 16z\"/>",
+         "species": []
+        }
+       ],
+       "desc": "The water lilies &mdash; aquatic perennials with floating leaves and flowers, among the most ancient surviving lineages of flowering plants."
+      },
+      {
+       "name": "Austrobaileyales",
+       "rank": "order",
+       "accent": "#a8763a",
+       "icon": "<circle cx=\"20\" cy=\"20\" r=\"2\"/><path d=\"M20 20Q22.2 10.0 20.0 3.0Q17.8 10.0 20 20ZM20 20Q28.6 14.5 32.0 8.0Q25.5 11.4 20 20ZM20 20Q30.0 22.2 37.0 20.0Q30.0 17.8 20 20ZM20 20Q25.5 28.6 32.0 32.0Q28.6 25.5 20 20ZM20 20Q17.8 30.0 20.0 37.0Q22.2 30.0 20 20ZM20 20Q11.4 25.5 8.0 32.0Q14.5 28.6 20 20ZM20 20Q10.0 17.8 3.0 20.0Q10.0 22.2 20 20ZM20 20Q14.5 11.4 8.0 8.0Q11.4 14.5 20 20Z\"/>",
+       "status": "context",
+       "quizClue": "Eight thin boat-shaped pods radiating from a central hub, like a dried spice pod split open into a star.",
+       "quizWhy": "This order includes Illiciaceae, the family that produces star anise, whose dried fruit is a star-shaped ring of pointed pods.",
+       "families": [
+        {
+         "id": "schisandraceae",
+         "name": "Schisandraceae",
+         "common": "Star anise family",
+         "icon": "<path d=\"M20 8c-4 2-6 6-6 12s2 10 6 12c4-2 6-6 6-12s-2-10-6-12z\"/><path d=\"M14 20h12\"/><path d=\"M20 8v24\"/>",
+         "trait": "Star-shaped, many-chambered dry fruit that splits open into boat-shaped pods; primitive flowers with numerous spirally arranged tepals and stamens.",
+         "differentia": "The order's only economically important family &mdash; its dry, star-shaped fruit is unlike anything else among the basal angiosperm lineages nearby in the Diagram.",
+         "species": [
+          {
+           "common": "Star anise",
+           "sci": "Illicium verum"
+          }
+         ]
+        }
+       ],
+       "desc": "A small, ancient order of woody plants retaining primitive floral traits from near the base of the flowering-plant family tree, most familiar through the star-shaped dried fruit of star anise."
+      }
+     ]
+    },
+    {
+     "name": "Magnoliids",
+     "rank": "clade",
+     "accent": "#a8763a",
+     "children": [
+      {
+       "name": "Laurales",
+       "rank": "order",
+       "accent": "#a8763a",
+       "icon": "<ellipse cx=\"20\" cy=\"20\" rx=\"8\" ry=\"15\"/><path d=\"M20 5v30\"/>",
+       "status": "context",
+       "quizClue": "A single long oval leaf on a straight stem &mdash; about as plain as a leaf shape gets.",
+       "quizWhy": "This order includes laurel, bay, avocado, and cinnamon &mdash; plants best known for simple, aromatic evergreen leaves.",
+       "families": [
+        {
+         "id": "lauraceae",
+         "name": "Lauraceae",
+         "common": "Laurel family",
+         "icon": "<ellipse cx=\"20\" cy=\"20\" rx=\"8\" ry=\"15\"/><path d=\"M20 5v30\"/>",
+         "trait": "Simple, leathery, often aromatic evergreen leaves; small flowers in clusters; one-seeded berry or drupe fruits.",
+         "differentia": "The family that gives the order its economic identity &mdash; nearly every commercially important Laurales plant, from bay leaves to avocado to cinnamon bark, belongs here.",
+         "species": [
+          {
+           "common": "Avocado",
+           "sci": "Persea americana"
+          },
+          {
+           "common": "Cinnamon",
+           "sci": "Cinnamomum verum"
+          }
+         ]
+        }
+       ],
+       "desc": "Aromatic evergreen trees and shrubs with simple, leathery leaves and small flowers borne in clusters, prized worldwide for the essential oils concentrated in their bark and leaves."
+      },
+      {
+       "name": "Magnoliales",
+       "rank": "order",
+       "accent": "#a8763a",
+       "icon": "<path d=\"M20 8c5 1 7 8 7 12s-2 11-7 12c-5-1-7-8-7-12s2-11 7-12z\"/><path d=\"M14 12c-2 3-2 12 0 16M26 12c2 3 2 12 0 16\"/><path d=\"M20 32v4\"/>",
+       "status": "context",
+       "quizClue": "A closed teardrop-shaped bud with a couple of curved lines peeking out from behind it, as if petals are still wrapped shut.",
+       "quizWhy": "Magnolia flowers are famous for opening from a large, tightly wrapped closed bud with overlapping tepals.",
+       "families": [
+        {
+         "id": "myristicaceae",
+         "name": "Myristicaceae",
+         "common": "Nutmeg family",
+         "icon": "<ellipse cx=\"20\" cy=\"22\" rx=\"7\" ry=\"10\"/><path d=\"M14 14c2 2 3 5 3 8M26 14c-2 2-3 5-3 8M13 18c2 1 4 3 4 6M27 18c-2 1-4 3-4 6M12 24c2 0 4 2 5 4M28 24c-2 0-4 2-5 4\"/>",
+         "trait": "Aromatic seeds enclosed in a fleshy fruit that splits to reveal a bright red, lacy aril wrapped around the true seed within.",
+         "differentia": "The order's only family represented here &mdash; unique for yielding two distinct spices (nutmeg the seed, mace the lacy aril) from a single fruit.",
+         "species": [
+          {
+           "common": "Nutmeg",
+           "sci": "Myristica fragrans"
+          }
+         ]
+        }
+       ],
+       "desc": "Woody trees and shrubs with large, often solitary flowers and numerous spirally arranged floral parts, an early-diverging lineage that predates the split between monocots and eudicots."
+      },
+      {
+       "name": "Piperales",
+       "rank": "order",
+       "accent": "#a8763a",
+       "icon": "<path d=\"M20 6v10\"/><ellipse cx=\"20\" cy=\"24\" rx=\"4\" ry=\"10\"/>",
+       "status": "context",
+       "quizClue": "A thin stem topped by a tall narrow capsule, like a catkin or a dense flower spike.",
+       "quizWhy": "Peppercorns form on a dense, elongated flower spike &mdash; this is the plant family behind black pepper.",
+       "families": [
+        {
+         "id": "piperaceae",
+         "name": "Piperaceae",
+         "common": "Pepper family",
+         "trait": "Jointed, often swollen stem nodes; tiny flowers lacking petals, packed densely onto a narrow upright or hanging spike; many species rich in pungent alkaloids.",
+         "differentia": "The order's defining family &mdash; black pepper's dense flower spike and pungent alkaloid chemistry (piperine) are unique to this lineage among the early-diverging angiosperms nearby in the Diagram.",
+         "icon": "<path d=\"M20 6v10\"/><ellipse cx=\"20\" cy=\"24\" rx=\"4\" ry=\"10\"/>",
+         "species": []
+        }
+       ],
+       "desc": "Herbs, shrubs, and vines with jointed stems and tiny flowers packed onto dense spikes, source of the world's most widely traded spice, black pepper."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Monocots",
+   "rank": "clade",
+   "accent": "#5f7a8a",
+   "headerEvent": {
+    "date": "~140 mya",
+    "label": "crown split"
+   },
+   "children": [
+    {
+     "name": "Lilioid monocots",
+     "rank": "clade",
+     "accent": "#5f7a8a",
+     "children": [
+      {
+       "name": "Liliales",
+       "rank": "order",
+       "accent": "#5f7a8a",
+       "icon": "<path d=\"M20 34V18c-6-2-8-8-6-14 6 2 8 6 6 14zM20 18c6-2 8-8 6-14-6 2-8 6-6 14z\"/>",
+       "status": "context",
+       "quizClue": "Two curved trumpet shapes meeting at a single stem.",
+       "quizWhy": "This order includes true lilies and tulips, known for large trumpet- or bell-shaped flowers with six tepals.",
+       "families": [
+        {
+         "id": "liliaceae",
+         "name": "Liliaceae",
+         "common": "Lily family",
+         "icon": "<path d=\"M20 34V18c-6-2-8-8-6-14 6 2 8 6 6 14zM20 18c6-2 8-8 6-14-6 2-8 6-6 14z\"/>",
+         "trait": "Six-parted, often trumpet- or bell-shaped flowers with parallel-veined leaves; most grow from a true bulb that persists underground between seasons.",
+         "differentia": "The order's namesake and best-known family &mdash; its large, six-tepaled bulb flowers define the classic lily-and-tulip silhouette that gives Liliales its name.",
+         "species": [
+          {
+           "common": "Tulip",
+           "sci": "Tulipa gesneriana"
+          }
+         ]
+        }
+       ],
+       "desc": "Mostly bulb-forming perennial herbs with six-parted, often large and showy flowers displaying parallel venation &mdash; the archetypal lily-and-tulip look of early spring gardens."
+      },
+      {
+       "name": "Asparagales",
+       "rank": "order",
+       "accent": "#5f7a8a",
+       "icon": "<ellipse cx=\"20\" cy=\"18\" rx=\"10\" ry=\"6\"/><path d=\"M20 24v10\"/><ellipse cx=\"20\" cy=\"14\" rx=\"3\" ry=\"5\"/>",
+       "status": "extension",
+       "quizClue": "A wide flattened oval bloom perched on a thin stalk.",
+       "quizWhy": "This order spans orchids, onions, and asparagus &mdash; a huge, morphologically diverse monocot group united more by genetics than by one visible trait.",
+       "families": [
+        {
+         "id": "amaryllidaceae",
+         "name": "Amaryllidaceae",
+         "common": "Amaryllis / Onion family",
+         "icon": "<path d=\"M20 34V16\"/><path d=\"M12 16h16l-2-4H14z\"/><path d=\"M20 12c-2-4-2-6 0-8 2 2 2 4 0 8z\"/>",
+         "trait": "Bulb-forming perennials with strap-shaped leaves and flowers clustered in an umbel beneath a papery bract; many concentrate pungent sulfur compounds in the bulb.",
+         "differentia": "Unlike Iridaceae's fused three-plus-three tepals or Orchidaceae's single asymmetric lip, this family bundles its flowers into an umbel under a papery spathe, and several members (onion, garlic, leek) store pungent sulfur compounds in their bulbs.",
+         "species": [
+          {
+           "common": "Daffodil",
+           "sci": "Narcissus pseudonarcissus"
+          },
+          {
+           "common": "Leek",
+           "sci": "Allium ampeloprasum"
+          },
+          {
+           "common": "Onion",
+           "sci": "Allium cepa"
+          },
+          {
+           "common": "Garlic",
+           "sci": "Allium sativum"
+          }
+         ]
+        },
+        {
+         "id": "iridaceae",
+         "name": "Iridaceae",
+         "common": "Iris family",
+         "icon": "<path d=\"M20 34V16\"/><path d=\"M20 16c-6-2-8-8-6-14 6 2 8 8 6 14zM20 16c6-2 8-8 6-14-6 2-8 8-6 14z\"/><path d=\"M20 16c-4 0-6-3-6-3M20 16c4 0 6-3 6-3\"/>",
+         "trait": "Flowers built from two mirrored sets of three tepals fused at the base into a slender tube; flattened, sword-shaped leaves arranged in a fan.",
+         "differentia": "Distinguished from the bulb-umbels of Amaryllidaceae by fan-shaped, sword-like leaves and a flower built from two whorls of three tepals rather than one true umbel.",
+         "species": [
+          {
+           "common": "Crocus",
+           "sci": "Crocus sativus"
+          },
+          {
+           "common": "Iris",
+           "sci": "Iris germanica"
+          }
+         ]
+        },
+        {
+         "id": "orchidaceae",
+         "name": "Orchidaceae",
+         "common": "Orchid family",
+         "icon": "<path d=\"M20 34c-6-2-9-8-6-13 4 3 5 8 6 13zM20 34c6-2 9-8 6-13-4 3-5 8-6 13z\"/><ellipse cx=\"20\" cy=\"16\" rx=\"5\" ry=\"7\"/><circle cx=\"20\" cy=\"16\" r=\"1.6\"/>",
+         "trait": "Bilaterally symmetric flowers with a single, highly modified lip petal and fused reproductive column; one of the largest flowering-plant families, mostly epiphytic.",
+         "differentia": "The order's most morphologically extreme family here &mdash; a bilaterally symmetric flower with one showy lip petal, unlike the radial symmetry of every other Asparagales family in this set.",
+         "species": [
+          {
+           "common": "Moth orchid",
+           "sci": "Phalaenopsis amabilis"
+          }
+         ]
+        },
+        {
+         "id": "asparagaceae",
+         "name": "Asparagaceae",
+         "common": "Asparagus family",
+         "icon": "<ellipse cx=\"20\" cy=\"18\" rx=\"10\" ry=\"6\"/><path d=\"M20 24v10\"/><ellipse cx=\"20\" cy=\"14\" rx=\"3\" ry=\"5\"/>",
+         "trait": "A family broadened by DNA evidence to span succulent rosette shrubs, tender edible shoots, and small bulbous bloomers.",
+         "differentia": "A catch-all reshaped by genetics rather than looks &mdash; spans succulent Yucca rosettes, tender Asparagus shoots, and small bulbous Muscari blooms with little in common visually.",
+         "species": [
+          {
+           "common": "Grape hyacinth",
+           "sci": "Muscari armeniacum"
+          },
+          {
+           "common": "Asparagus",
+           "sci": "Asparagus officinalis"
+          },
+          {
+           "common": "Yucca",
+           "sci": "Yucca filamentosa"
+          }
+         ]
+        }
+       ],
+       "desc": "The most diverse monocot order in cultivation, spanning bulb flowers, alliums, orchids, and succulent rosette plants &mdash; united more by DNA than by any single shared appearance."
+      },
+      {
+       "name": "Pandanales",
+       "rank": "order",
+       "accent": "#5f7a8a",
+       "icon": "<path d=\"M20 34V10\"/><path d=\"M20 10c-6-2-10 2-10 2s4 6 10 4 10-6 10-6-4-4-10 0z\"/>",
+       "status": "context",
+       "quizClue": "A curling fan of leaf blades spiraling outward from one point.",
+       "quizWhy": "Screw pines (Pandanus) have long strap-like leaves that spiral around the stem in a distinctive corkscrew pattern.",
+       "families": [
+        {
+         "id": "pandanaceae",
+         "name": "Pandanaceae",
+         "common": "Screw pine family",
+         "trait": "Long, strap-like leaves arranged in a spiral around the stem, often edged with sharp spines; aerial prop roots support the trunk in some species; separate male and female plants.",
+         "differentia": "The order's defining family &mdash; screw pines are named for the distinctive corkscrew spiral in which their strap-like leaves wrap around the stem.",
+         "icon": "<path d=\"M20 34V10\"/><path d=\"M20 10c-6-2-10 2-10 2s4 6 10 4 10-6 10-6-4-4-10 0z\"/>",
+         "species": []
+        }
+       ],
+       "desc": "Tropical monocots with spirally arranged, often spine-edged strap leaves, commonly propped up by aerial roots."
+      },
+      {
+       "name": "Dioscoreales",
+       "rank": "order",
+       "accent": "#5f7a8a",
+       "icon": "<path d=\"M20 10c-6 0-9 5-9 9 0 6 9 13 9 13s9-7 9-13c0-4-3-9-9-9z\"/><path d=\"M20 32c0 3-3 4-3 7s3 3 3 0-3-1-3 2 3 4 5 2\"/>",
+       "status": "context",
+       "quizClue": "A heart-shaped leaf with a curling, twining vine looping beneath it.",
+       "quizWhy": "Yams are twining vines with broad heart-shaped leaves, storing their energy in large underground tubers.",
+       "families": [
+        {
+         "id": "dioscoreaceae",
+         "name": "Dioscoreaceae",
+         "common": "Yam family",
+         "icon": "<path d=\"M20 10c-6 0-9 5-9 9 0 6 9 13 9 13s9-7 9-13c0-4-3-9-9-9z\"/><path d=\"M20 32c0 3-3 4-3 7s3 3 3 0-3-1-3 2 3 4 5 2\"/>",
+         "trait": "Twining herbaceous vines with heart-shaped leaves showing networked (reticulate) venation, unusual among monocots; store starch in large underground tubers.",
+         "differentia": "The order's defining family &mdash; its net-veined leaves break the parallel-vein rule that holds across nearly every other monocot order in the Diagram.",
+         "species": [
+          {
+           "common": "Yam",
+           "sci": "Dioscorea alata"
+          }
+         ]
+        }
+       ],
+       "desc": "Mostly twining vines with net-veined leaves (unusual among monocots) that store energy in large underground tubers, cultivated across the tropics as a staple starch crop."
+      }
+     ]
+    },
+    {
+     "name": "Alismatids",
+     "rank": "clade",
+     "accent": "#5f7a8a",
+     "children": [
+      {
+       "name": "Alismatales",
+       "rank": "order",
+       "accent": "#5f7a8a",
+       "icon": "<path d=\"M20 6L29 19C33 24 32 30 27 27C23 25 21 24 20 24C19 24 17 25 13 27C8 30 7 24 11 19Z\"/><path d=\"M20 24V34\"/>",
+       "status": "context",
+       "quizClue": "A sharply pointed spearhead shape with two flaring barbs at its base.",
+       "quizWhy": "This order includes arrowhead (Sagittaria) and taro, many with sagittate (arrow-shaped) leaves adapted to wet or aquatic habitats.",
+       "families": [
+        {
+         "id": "araceae",
+         "name": "Araceae",
+         "common": "Arum family",
+         "icon": "<path d=\"M20 32V10\"/><path d=\"M10 8c2 10 6 16 10 16s8-6 10-16c-4 4-16 4-20 0z\"/>",
+         "trait": "Flowers reduced and densely packed onto a fleshy spike (spadix), often wrapped in a showy modified leaf (spathe); many species carry calcium oxalate crystals that make raw tissue irritating until cooked.",
+         "differentia": "The order's most species-rich and visually distinct family here &mdash; the spadix-and-spathe flower cluster sets it apart from every other flower shape in the Diagram's monocot orders.",
+         "species": [
+          {
+           "common": "Taro",
+           "sci": "Colocasia esculenta"
+          },
+          {
+           "common": "Swiss cheese plant",
+           "sci": "Monstera deliciosa"
+          }
+         ]
+        }
+       ],
+       "desc": "A largely aquatic and wetland order, from floating-leaved marsh plants to houseplant vines, many bearing tiny flowers packed onto a fleshy spike wrapped in a modified leaf."
+      }
+     ]
+    },
+    {
+     "name": "Commelinids",
+     "rank": "clade",
+     "accent": "#5f7a8a",
+     "children": [
+      {
+       "name": "Poales",
+       "rank": "order",
+       "accent": "#5f7a8a",
+       "icon": "<path d=\"M20 34V6\"/><path d=\"M20 10l-4-4M20 14l4-4M20 18l-4-4M20 22l4-4\"/>",
+       "status": "context",
+       "quizClue": "A tall thin stem with small diagonal marks along it, like blades of grass.",
+       "quizWhy": "This order is the grasses &mdash; wheat, rice, corn, bamboo &mdash; all sharing narrow blade-like leaves and wind-pollinated flower spikes.",
+       "families": [
+        {
+         "id": "poaceae",
+         "name": "Poaceae",
+         "common": "Grass family",
+         "icon": "<path d=\"M20 34V6\"/><path d=\"M20 10l-4-4M20 14l4-4M20 18l-4-4M20 22l4-4\"/>",
+         "trait": "Hollow, jointed stems (culms) with narrow, parallel-veined leaves sheathing the stem at each node; tiny wind-pollinated flowers clustered into spikelets.",
+         "differentia": "The family that gives the order its name and dominates it by sheer numbers &mdash; hollow jointed stems and wind-pollinated spikelets set every grass apart from Bromeliaceae's water-holding leaf rosette.",
+         "species": [
+          {
+           "common": "Pearl millet",
+           "sci": "Pennisetum glaucum"
+          },
+          {
+           "common": "Sorghum",
+           "sci": "Sorghum bicolor"
+          },
+          {
+           "common": "Grasses",
+           "sci": "Poaceae"
+          },
+          {
+           "common": "Corn",
+           "sci": "Zea mays"
+          },
+          {
+           "common": "Rice",
+           "sci": "Oryza sativa"
+          },
+          {
+           "common": "Wheat",
+           "sci": "Triticum aestivum"
+          },
+          {
+           "common": "Sugar cane",
+           "sci": "Saccharum officinarum"
+          },
+          {
+           "common": "Common bamboo",
+           "sci": "Bambusa vulgaris"
+          },
+          {
+           "common": "Lemongrass",
+           "sci": "Cymbopogon citratus"
+          }
+         ]
+        },
+        {
+         "id": "bromeliaceae",
+         "name": "Bromeliaceae",
+         "common": "Pineapple family",
+         "icon": "<path d=\"M20 6c2 4 2 6 0 8M16 6c1 5 2 7 2 8M24 6c-1 5-2 7-2 8\"/><ellipse cx=\"20\" cy=\"24\" rx=\"8\" ry=\"11\"/><path d=\"M14 18l4 4M26 18l-4 4M14 26l4-4M26 26l-4-4\"/>",
+         "trait": "Rosettes of stiff, often spiny-edged leaves that channel rainwater to a central tank; many species are epiphytic, and the fruit forms from an entire flower spike fusing together.",
+         "differentia": "Unlike the hollow stems and wind-pollinated spikelets of Poaceae, this family holds water in a leaf-rosette tank and fuses a whole flower cluster into one compound fruit &mdash; the pineapple.",
+         "species": [
+          {
+           "common": "Pineapple",
+           "sci": "Ananas comosus"
+          }
+         ]
+        }
+       ],
+       "desc": "The wind-pollinated backbone of human agriculture &mdash; grasses, cereals, and their bromeliad relatives, defined by reduced, tightly clustered flowers adapted for pollination without insects."
+      },
+      {
+       "name": "Zingiberales",
+       "rank": "order",
+       "accent": "#5f7a8a",
+       "icon": "<path d=\"M20 34V20\"/><path d=\"M20 20c0-8 6-14 6-14s2 8-2 12-4 2-4 2z\"/><path d=\"M20 20c0-8-6-14-6-14s-2 8 2 12 4 2 4 2z\"/>",
+       "status": "context",
+       "quizClue": "Two broad curved fronds arcing away from a central stem, like a banana leaf.",
+       "quizWhy": "Bananas, ginger, and cardamom all belong here, typically with broad paddle-shaped leaves growing from a central stalk.",
+       "families": [
+        {
+         "id": "zingiberaceae",
+         "name": "Zingiberaceae",
+         "common": "Ginger family",
+         "icon": "<path d=\"M20 34V20\"/><path d=\"M20 20c0-8 6-14 6-14s2 8-2 12-4 2-4 2z\"/><path d=\"M20 20c0-8-6-14-6-14s-2 8 2 12 4 2 4 2z\"/>",
+         "trait": "Aromatic rhizomes packed with essential oils; asymmetric flowers with a single showy petal-like staminode, growing from reed-like pseudostems.",
+         "differentia": "Named for and dominated by its aromatic rhizome spices &mdash; ginger and the two cardamoms &mdash; unlike Musaceae's starchy, fruit-bearing pseudostem.",
+         "species": [
+          {
+           "common": "Ginger",
+           "sci": "Zingiber officinale"
+          },
+          {
+           "common": "Black cardamom",
+           "sci": "Amomum subulatum"
+          },
+          {
+           "common": "Green cardamom",
+           "sci": "Elettaria cardamomum"
+          }
+         ]
+        },
+        {
+         "id": "musaceae",
+         "name": "Musaceae",
+         "common": "Banana family",
+         "icon": "<path d=\"M20 6v20\"/><path d=\"M14 8c2 4 2 8 0 12M26 8c-2 4-2 8 0 12\"/><path d=\"M20 26c-3 3-3 7 0 9M20 26c3 3 3 7 0 9\"/>",
+         "trait": "Giant herbaceous plants with a false trunk (pseudostem) built from tightly rolled leaf sheaths, topped by huge paddle-shaped leaves and a hanging flower spike that develops into a cluster of fruit.",
+         "differentia": "The order's giant, unmistakably fruit-bearing herb &mdash; its rolled-leaf pseudostem trunk has nothing in common with the low aromatic rhizomes of Zingiberaceae.",
+         "species": [
+          {
+           "common": "Banana",
+           "sci": "Musa acuminata"
+          }
+         ]
+        }
+       ],
+       "desc": "Large-leaved tropical herbs with asymmetric, showy flowers and aromatic rhizomes or fruit-bearing pseudostems, source of most of the world's culinary spices from tropical Asia."
+      },
+      {
+       "name": "Arecales",
+       "rank": "order",
+       "accent": "#5f7a8a",
+       "icon": "<path d=\"M20 34V16\"/><path d=\"M20 16l-12-6M20 16l12-6M20 16l-13 2M20 16l13 2M20 16l-10-10M20 16l10-10\"/>",
+       "status": "context",
+       "quizClue": "Several lines fanning out symmetrically from the top of a trunk.",
+       "quizWhy": "This order is the palms, whose leaves (fronds) fan out symmetrically from the crown of an unbranched trunk.",
+       "families": [
+        {
+         "id": "arecaceae",
+         "name": "Arecaceae",
+         "common": "Palm family",
+         "icon": "<path d=\"M20 34V16\"/><path d=\"M20 16l-12-6M20 16l12-6M20 16l-13 2M20 16l13 2M20 16l-10-10M20 16l10-10\"/>",
+         "trait": "Unbranched trunk crowned by a rosette of large fan- or feather-shaped fronds; flowers cluster on a branched inflorescence emerging from among the leaf bases.",
+         "differentia": "The order's sole family and one of the most recognizable growth forms in the plant kingdom &mdash; an unbranched trunk topped by a permanent crown of fronds, found nowhere else among Poales' commelinid relatives.",
+         "species": [
+          {
+           "common": "Coconut palm",
+           "sci": "Cocos nucifera"
+          }
+         ]
+        }
+       ],
+       "desc": "The palms &mdash; unbranched, long-lived trees and shrubs topped by a permanent crown of large fronds, dominant across tropical and subtropical landscapes worldwide."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Eudicots",
+   "rank": "clade",
+   "accent": "#8b3a2f",
+   "headerEvent": {
+    "date": "~125 mya",
+    "label": "crown split"
+   },
+   "children": [
+    {
+     "name": "Early Eudicots",
+     "rank": "grade",
+     "accent": "#8b3a2f",
+     "children": [
+      {
+       "name": "Ranunculales",
+       "rank": "order",
+       "accent": "#8b3a2f",
+       "icon": "<circle cx=\"20\" cy=\"20\" r=\"3\"/><path d=\"M20 17c0-6 3-10 3-10M20 17c0-6-3-10-3-10M20 23c0 6 3 10 3 10M20 23c0 6-3 10-3 10M17 20c-6 0-10-3-10-3M17 20c-6 0-10 3-10 3M23 20c6 0 10-3 10-3M23 20c6 0 10 3 10 3\"/>",
+       "status": "context",
+       "quizClue": "A simple flower made of eight thin lines radiating from a center dot.",
+       "quizWhy": "Buttercups and poppies are classic examples of this early-diverging eudicot order, often with simple, radially symmetric flowers.",
+       "families": [
+        {
+         "id": "ranunculaceae",
+         "name": "Ranunculaceae",
+         "common": "Buttercup family",
+         "icon": "<circle cx=\"20\" cy=\"20\" r=\"3\"/><path d=\"M20 17c0-6 3-10 3-10M20 17c0-6-3-10-3-10M20 23c0 6 3 10 3 10M20 23c0 6-3 10-3 10M17 20c-6 0-10-3-10-3M17 20c-6 0-10 3-10 3M23 20c6 0 10-3 10-3M23 20c6 0 10 3 10 3\"/>",
+         "trait": "Simple, often deeply lobed leaves and radially symmetric flowers with numerous separate stamens and pistils spiraling around a raised center; many contain acrid, mildly toxic compounds.",
+         "differentia": "The order's namesake family &mdash; flowers built from many separate, spirally arranged stamens and pistils rather than the fused, latex-bearing capsule fruit of Papaveraceae.",
+         "species": [
+          {
+           "common": "Meadow buttercup",
+           "sci": "Ranunculus acris"
+          }
+         ]
+        },
+        {
+         "id": "papaveraceae",
+         "name": "Papaveraceae",
+         "common": "Poppy family",
+         "icon": "<ellipse cx=\"20\" cy=\"23\" rx=\"8\" ry=\"9\"/><path d=\"M14 16c2-2 4-3 6-3s4 1 6 3\"/><path d=\"M20 13v-5\"/>",
+         "trait": "Milky or colored latex sap in stems and leaves; four delicate, crumpled petals opening from a nodding bud, with seeds housed in a capsule that shakes them out through pores.",
+         "differentia": "Distinguished from Ranunculaceae's many-parted spiral flowers by milky latex sap and a four-petaled bloom that opens from a distinctively crumpled, nodding bud.",
+         "species": [
+          {
+           "common": "Common poppy",
+           "sci": "Papaver rhoeas"
+          }
+         ]
+        }
+       ],
+       "desc": "Herbaceous plants near the base of the eudicot family tree, retaining relatively primitive flowers with numerous separate floral parts rather than the fused structures common in later-diverging orders."
+      },
+      {
+       "name": "Proteales",
+       "rank": "order",
+       "accent": "#8b3a2f",
+       "icon": "<circle cx=\"20\" cy=\"22\" r=\"5\"/><path d=\"M20 17V4M15 19l-9-6M25 19l9-6M15 25l-9 6M25 25l9 6\"/>",
+       "status": "context",
+       "quizClue": "A spiky burst of lines around a solid center circle.",
+       "quizWhy": "This order is a botanical grab-bag &mdash; sycamores, lotus, and the spiky-flowered Proteaceae &mdash; united by DNA more than by shared looks.",
+       "families": [
+        {
+         "id": "platanaceae",
+         "name": "Platanaceae",
+         "common": "Plane / Sycamore family",
+         "icon": "<path d=\"M20 6v10\"/><circle cx=\"16\" cy=\"22\" r=\"5\"/><circle cx=\"24\" cy=\"28\" r=\"5\"/><path d=\"M16 17v0M24 23v0\"/>",
+         "trait": "Mottled, flaking bark that peels away in patches; ball-shaped clusters of tiny fruits (achenes) dangling on long stalks; large, palmately lobed leaves.",
+         "differentia": "Unlike the aquatic Nelumbonaceae or nut-bearing Proteaceae, this family is built around mottled, exfoliating bark and ball-shaped fruit clusters dangling from waterside trees.",
+         "species": [
+          {
+           "common": "Sycamore/Plane",
+           "sci": "Platanus x acerifolia"
+          }
+         ]
+        },
+        {
+         "id": "nelumbonaceae",
+         "name": "Nelumbonaceae",
+         "common": "Lotus family",
+         "icon": "<circle cx=\"14\" cy=\"14\" r=\"6\"/><path d=\"M14 20v14\"/><ellipse cx=\"27\" cy=\"18\" rx=\"4\" ry=\"7\"/><path d=\"M27 25v9\"/>",
+         "trait": "Aquatic perennials with rounded, waxy leaves and flower stalks held well above the water; unlike true water lilies, both leaf and flower rise clear of the surface on separate stalks.",
+         "differentia": "The order's only aquatic family &mdash; both leaf and flower rise on separate stalks well above the water, unlike the streamside trees of Platanaceae or the woody shrubs of Proteaceae.",
+         "species": [
+          {
+           "common": "Sacred lotus",
+           "sci": "Nelumbo nucifera"
+          }
+         ]
+        },
+        {
+         "id": "proteaceae",
+         "name": "Proteaceae",
+         "common": "Protea family",
+         "icon": "<circle cx=\"20\" cy=\"22\" r=\"5\"/><path d=\"M20 17V4M15 19l-9-6M25 19l9-6M15 25l-9 6M25 25l9 6\"/>",
+         "trait": "Flowers packed into dense, often brush- or cone-like inflorescences with narrow, radiating floral parts; woody, nut- or cone-like fruiting structures typical of nutrient-poor soils.",
+         "differentia": "The order's namesake family &mdash; distinguished from Platanaceae's bark and Nelumbonaceae's water-lily-like habit by dense, brush-like flower clusters and woody, nut-bearing fruit.",
+         "species": [
+          {
+           "common": "Macadamia",
+           "sci": "Macadamia integrifolia"
+          }
+         ]
+        }
+       ],
+       "desc": "A small but ancient order spanning three unrelated-looking families &mdash; sycamores, lotuses, and the showy Proteaceae &mdash; grouped together by DNA rather than any shared appearance, an early-diverging lineage near the base of the eudicots."
+      }
+     ]
+    },
+    {
+     "name": "Super Rosids",
+     "rank": "clade",
+     "accent": "#8b3a2f",
+     "headerEvent": {
+      "date": "~100 mya",
+      "label": "split"
+     },
+     "children": [
+      {
+       "name": "Vitales",
+       "rank": "order",
+       "accent": "#8b3a2f",
+       "icon": "<circle cx=\"16\" cy=\"18\" r=\"3\"/><circle cx=\"22\" cy=\"18\" r=\"3\"/><circle cx=\"19\" cy=\"23\" r=\"3\"/><circle cx=\"14\" cy=\"24\" r=\"3\"/><circle cx=\"24\" cy=\"24\" r=\"3\"/><circle cx=\"19\" cy=\"29\" r=\"3\"/><path d=\"M19 12v4\"/>",
+       "status": "context",
+       "quizClue": "A cluster of small overlapping circles hanging together like a bunch.",
+       "quizWhy": "Grapes are the signature plant of this order, growing in dense hanging clusters.",
+       "families": [
+        {
+         "id": "vitaceae",
+         "name": "Vitaceae",
+         "common": "Grape family",
+         "icon": "<circle cx=\"16\" cy=\"18\" r=\"3\"/><circle cx=\"22\" cy=\"18\" r=\"3\"/><circle cx=\"19\" cy=\"23\" r=\"3\"/><circle cx=\"14\" cy=\"24\" r=\"3\"/><circle cx=\"24\" cy=\"24\" r=\"3\"/><circle cx=\"19\" cy=\"29\" r=\"3\"/><path d=\"M19 12v4\"/>",
+         "trait": "Woody, climbing vines that grip supports with coiling tendrils opposite the leaves; fruit forms in dense hanging clusters of juicy berries.",
+         "differentia": "The order's sole family &mdash; tendril-climbing vines and clustered berry fruit define a growth habit found nowhere else this close to the base of the rosid clade.",
+         "species": [
+          {
+           "common": "Grape",
+           "sci": "Vitis vinifera"
+          }
+         ]
+        }
+       ],
+       "desc": "A single-family order of climbing woody vines, an early-diverging lineage near the base of the rosid clade."
+      },
+      {
+       "name": "Saxifragales",
+       "rank": "order",
+       "accent": "#8b3a2f",
+       "icon": "<circle cx=\"20\" cy=\"20\" r=\"2.5\"/><path d=\"M18 4h4v11h-4zM25 18v4h11v-4zM18 25h4v11h-4zM4 18v4h11v-4z\"/>",
+       "status": "context",
+       "quizClue": "Four thin ribbon-like strips arranged in a plus-sign around a center dot, instead of rounded petals.",
+       "quizWhy": "Witch hazel (Hamamelidaceae) has unusually thin, strap-shaped petals instead of the rounded petals typical of most flowers.",
+       "families": [
+        {
+         "id": "paeoniaceae",
+         "name": "Paeoniaceae",
+         "common": "Peony family",
+         "icon": "<path d=\"M20 6c-7 0-12 5-12 11 0 4 2 7 5 9-1 3 0 6 3 7 2-2 3-4 4-4s2 2 4 4c3-1 4-4 3-7 3-2 5-5 5-9 0-6-5-11-12-11z\"/><path d=\"M13 15c2-2 4-2 6 0M21 15c2-2 4-2 6 0M14 22c1 2 3 3 5 2M21 24c2 1 4 0 5-2\"/>",
+         "trait": "Large, often ruffled flowers with numerous overlapping petals surrounding a prominent central boss of stamens; herbaceous or woody perennials that die back to a rootstock or persist as a shrub.",
+         "differentia": "The order's showiest bloomer &mdash; its large ruffled flower has nothing in common with Hamamelidaceae's thin ribbon petals, Grossulariaceae's berry racemes, or Altingiaceae's spiky seed balls.",
+         "species": [
+          {
+           "common": "Peony",
+           "sci": "Paeonia lactiflora"
+          }
+         ]
+        },
+        {
+         "id": "hamamelidaceae",
+         "name": "Hamamelidaceae",
+         "common": "Witch hazel family",
+         "icon": "<path d=\"M8 24h24\"/><path d=\"M12 24l-3-4M12 24l-3 4M20 24l-3-4M20 24l-3 4M28 24l-3-4M28 24l-3 4M12 24l3-4M12 24l3 4M20 24l3-4M20 24l3 4M28 24l3-4M28 24l3 4\"/>",
+         "trait": "Small ribbon-like petals, often four per flower, opening directly on bare twigs in late fall or winter when little else blooms; witch hazel extract is distilled from its bark and leaves.",
+         "differentia": "Distinguished from its Saxifragales relatives by unusually thin, strap-shaped petals opening in small clusters directly on leafless winter twigs.",
+         "species": [
+          {
+           "common": "Witch hazel",
+           "sci": "Hamamelis virginiana"
+          }
+         ]
+        },
+        {
+         "id": "grossulariaceae",
+         "name": "Grossulariaceae",
+         "common": "Currant family",
+         "icon": "<path d=\"M20 6v6\"/><path d=\"M20 12v4M20 12l-4 2M20 12l4 2\"/><circle cx=\"16\" cy=\"20\" r=\"2.5\"/><circle cx=\"20\" cy=\"22\" r=\"2.5\"/><circle cx=\"24\" cy=\"20\" r=\"2.5\"/><circle cx=\"15\" cy=\"27\" r=\"2.5\"/><circle cx=\"20\" cy=\"29\" r=\"2.5\"/><circle cx=\"25\" cy=\"27\" r=\"2.5\"/>",
+         "trait": "Small, thornless-to-spiny shrubs bearing translucent berries strung in loose hanging racemes rather than one dense cluster.",
+         "differentia": "Unlike Vitales' tightly packed grape bunches, this family's berries hang individually spaced along a thin raceme.",
+         "species": [
+          {
+           "common": "Red currant",
+           "sci": "Ribes rubrum"
+          }
+         ]
+        },
+        {
+         "id": "altingiaceae",
+         "name": "Altingiaceae",
+         "common": "Sweetgum family",
+         "icon": "<path d=\"M20 6v10\"/><circle cx=\"20\" cy=\"24\" r=\"7\"/><path d=\"M20 17l-3 3M20 17l3 3M14 20l3 2M26 20l-3 2M14 28l3-2M26 28l-3-2M20 31l-3-3M20 31l3-3\"/>",
+         "trait": "Star-shaped, palmately lobed leaves that color brilliantly in autumn; round, spiky woody seed capsules (\"gumballs\") hang from long stalks.",
+         "differentia": "The order's only family with a spiky, ball-shaped woody fruit &mdash; unlike the ribbon petals of Hamamelidaceae, the ruffled blooms of Paeoniaceae, or the currant racemes of Grossulariaceae.",
+         "species": [
+          {
+           "common": "Sweetgum",
+           "sci": "Liquidambar styraciflua"
+          }
+         ]
+        }
+       ],
+       "desc": "A structurally diverse order of shrubs, perennials, and trees with little in common visually &mdash; from ruffled peony blooms to spiky sweetgum seed balls &mdash; grouped together primarily by shared ancestry near the base of the rosid clade."
+      },
+      {
+       "name": "Fabids",
+       "rank": "clade",
+       "accent": "#8b3a2f",
+       "children": [
+        {
+         "name": "Nitrogen-fixing clade",
+         "rank": "clade",
+         "accent": "#8b3a2f",
+         "children": [
+          {
+           "name": "Fagales",
+           "rank": "order",
+           "accent": "#8b3a2f",
+           "icon": "<path d=\"M20 6c-6 2-6 7-3 8-5 1-6 6-2 8-4 2-4 7 1 8 2 1 6 1 4-2M20 6c6 2 6 7 3 8 5 1 6 6 2 8 4 2 4 7-1 8-2 1-6 1-4-2\"/>",
+           "status": "inguide",
+           "quizClue": "Two mirrored curling lobes that together suggest a leaf, or an acorn cap.",
+           "quizWhy": "Oaks, beeches, and chestnuts are classic members of this order, known for lobed leaves and nuts held in a cupule or husk.",
+           "desc": "Wind-pollinated trees and shrubs of temperate and montane forests, bearing catkins and one-seeded nuts often cradled in a cupule, husk, or spiny bur.",
+           "families": [
+            {
+             "id": "fagaceae",
+             "name": "Fagaceae",
+             "common": "Beech / Oak family",
+             "icon": "<path d=\"M20 6c-6 2-6 7-3 8-5 1-6 6-2 8-4 2-4 7 1 8 2 1 6 1 4-2M20 6c6 2 6 7 3 8 5 1 6 6 2 8 4 2 4 7-1 8-2 1-6 1-4-2\"/>",
+             "trait": "Nuts (acorns, beechnuts, chestnuts) seated in a scaly or spiny cupule; lobed or toothed simple leaves.",
+             "differentia": "The only family here with nuts seated in a true cupule (acorn cap, beech husk, chestnut bur) &mdash; Betulaceae and Juglandaceae both drop that structure for catkin-borne nutlets or fleshy husks instead.",
+             "species": [
+              {
+               "common": "English oak",
+               "sci": "Quercus robur"
+              },
+              {
+               "common": "Cork oak",
+               "sci": "Quercus suber"
+              },
+              {
+               "common": "European beech",
+               "sci": "Fagus sylvatica"
+              },
+              {
+               "common": "Sweet chestnut",
+               "sci": "Castanea sativa"
+              },
+              {
+               "common": "Tanoak",
+               "sci": "Notholithocarpus densiflorus"
+              }
+             ]
+            },
+            {
+             "id": "betulaceae",
+             "name": "Betulaceae",
+             "common": "Birch family",
+             "icon": "<path d=\"M20 4c7 8 9 16 6 26-2 4-8 6-12 2-3-3-2-8 1-10\" /><path d=\"M14 20c2 4 6 6 10 4\"/>",
+             "trait": "Papery, often peeling bark; separate male and female catkins on the same tree, small winged nutlets.",
+             "differentia": "Shares catkins with Fagaceae but skips the cupule entirely; known instead for thin, often peeling bark and small winged nutlets.",
+             "species": [
+              {
+               "common": "Silver birch",
+               "sci": "Betula pendula"
+              },
+              {
+               "common": "Common hazel",
+               "sci": "Corylus avellana"
+              },
+              {
+               "common": "Black alder",
+               "sci": "Alnus glutinosa"
+              },
+              {
+               "common": "European hornbeam",
+               "sci": "Carpinus betulus"
+              }
+             ]
+            },
+            {
+             "id": "juglandaceae",
+             "name": "Juglandaceae",
+             "common": "Walnut family",
+             "icon": "<path d=\"M6 20h6l3-6 3 6h4l3-6 3 6h6\"/>",
+             "trait": "Pinnately compound aromatic leaves; drupe-like nuts encased in a fleshy husk over a hard shell.",
+             "differentia": "Sets itself apart with aromatic pinnately compound leaves and a fleshy husk over a hard-shelled nut, unlike the cupule- or catkin-only fruiting of its relatives.",
+             "species": [
+              {
+               "common": "English walnut",
+               "sci": "Juglans regia"
+              },
+              {
+               "common": "Black walnut",
+               "sci": "Juglans nigra"
+              },
+              {
+               "common": "Pecan",
+               "sci": "Carya illinoinensis"
+              },
+              {
+               "common": "Shagbark hickory",
+               "sci": "Carya ovata"
+              }
+             ]
+            },
+            {
+             "id": "myricaceae",
+             "name": "Myricaceae",
+             "common": "Bayberry family",
+             "icon": "<path d=\"M20 8c-5 6-5 18 0 24 5-6 5-18 0-24z\"/><path d=\"M20 12l-3 2M20 16l-4 2M20 20l-4 2M20 24l-3 2\"/>",
+             "trait": "Resin-dotted, fragrant leaves; small waxy drupes historically boiled for candle tallow.",
+             "differentia": "The order's outlier: small, resin-dotted shrubs with waxy drupes rather than the nuts that define the three larger Fagales families.",
+             "species": [
+              {
+               "common": "Bayberry",
+               "sci": "Morella pensylvanica"
+              },
+              {
+               "common": "Sweetgale",
+               "sci": "Myrica gale"
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "name": "Fabales",
+           "rank": "order",
+           "accent": "#8b3a2f",
+           "icon": "<path d=\"M20 6c-4 0-6 3-6 7v14c0 4 2 7 6 7s6-3 6-7V13c0-4-2-7-6-7z\"/><path d=\"M14 13h12M14 18h12M14 23h12M14 28h12\"/>",
+           "status": "context",
+           "quizClue": "A tall narrow capsule divided into four horizontal sections, like peas visible inside a pod.",
+           "quizWhy": "Beans, peas, and lentils are legumes &mdash; their seeds develop in sections inside a single elongated pod.",
+           "families": [
+            {
+             "id": "fabaceae",
+             "name": "Fabaceae",
+             "common": "Legume / Pea family",
+             "icon": "<path d=\"M20 6c-4 0-6 3-6 7v14c0 4 2 7 6 7s6-3 6-7V13c0-4-2-7-6-7z\"/><path d=\"M14 13h12M14 18h12M14 23h12M14 28h12\"/>",
+             "trait": "Compound leaves and pea-like flowers with five petals arranged into a banner, wings, and keel; seeds develop inside a single elongated pod that splits along two seams; many host nitrogen-fixing bacteria in root nodules.",
+             "differentia": "The order's sole family and one of the plant kingdom's most important nitrogen-fixers &mdash; a trait rare outside this family.",
+             "species": [
+              {
+               "common": "Alfalfa",
+               "sci": "Medicago sativa"
+              },
+              {
+               "common": "Mung bean",
+               "sci": "Vigna radiata"
+              },
+              {
+               "common": "Indigo",
+               "sci": "Indigofera tinctoria"
+              },
+              {
+               "common": "Lentil",
+               "sci": "Lens culinaris"
+              },
+              {
+               "common": "Wisteria",
+               "sci": "Wisteria sinensis"
+              },
+              {
+               "common": "Common bean",
+               "sci": "Phaseolus vulgaris"
+              },
+              {
+               "common": "Carob",
+               "sci": "Ceratonia siliqua"
+              },
+              {
+               "common": "Black locust",
+               "sci": "Robinia pseudoacacia"
+              },
+              {
+               "common": "Pea",
+               "sci": "Pisum sativum"
+              },
+              {
+               "common": "Legume",
+               "sci": "Fabaceae"
+              },
+              {
+               "common": "Mimosa",
+               "sci": "Mimosa pudica"
+              }
+             ]
+            }
+           ],
+           "desc": "The order's sole family, and one of the plant kingdom's most important nitrogen-fixers &mdash; nearly every member here partners with root-nodule bacteria to convert atmospheric nitrogen into usable nutrients."
+          },
+          {
+           "name": "Rosales",
+           "rank": "order",
+           "accent": "#8b3a2f",
+           "icon": "<circle cx=\"20\" cy=\"13\" r=\"5\"/><circle cx=\"27\" cy=\"18\" r=\"5\"/><circle cx=\"24\" cy=\"26\" r=\"5\"/><circle cx=\"16\" cy=\"26\" r=\"5\"/><circle cx=\"13\" cy=\"18\" r=\"5\"/>",
+           "status": "context",
+           "quizClue": "Five overlapping circles arranged in a ring, forming a simple rounded bloom.",
+           "quizWhy": "Roses, apples, and cherries belong to this order, many sharing the layered, overlapping-petal look of the rose family.",
+           "families": [
+            {
+             "id": "rosaceae",
+             "name": "Rosaceae",
+             "common": "Rose family",
+             "icon": "<circle cx=\"20\" cy=\"13\" r=\"5\"/><circle cx=\"27\" cy=\"18\" r=\"5\"/><circle cx=\"24\" cy=\"26\" r=\"5\"/><circle cx=\"16\" cy=\"26\" r=\"5\"/><circle cx=\"13\" cy=\"18\" r=\"5\"/>",
+             "trait": "Five-petaled flowers arranged around a central disc of many stamens; an astonishing range of fruit types across the family &mdash; fleshy pomes (apple, pear), stone fruits (cherry, peach, apricot, almond), and aggregate fruits (strawberry, rose hips).",
+             "differentia": "The order's largest and namesake family &mdash; its five-petaled, many-stamened flower is the shared thread beneath a remarkable range of fruit types, unlike the single-seeded fruits of Moraceae, Ulmaceae, and Cannabaceae.",
+             "species": [
+              {
+               "common": "Rose",
+               "sci": "Rosa gallica"
+              },
+              {
+               "common": "Apricot",
+               "sci": "Prunus armeniaca"
+              },
+              {
+               "common": "Cherry",
+               "sci": "Prunus avium"
+              },
+              {
+               "common": "Peach",
+               "sci": "Prunus persica"
+              },
+              {
+               "common": "Pear",
+               "sci": "Pyrus communis"
+              },
+              {
+               "common": "Apple",
+               "sci": "Malus domestica"
+              },
+              {
+               "common": "Strawberry",
+               "sci": "Fragaria x ananassa"
+              },
+              {
+               "common": "Almond",
+               "sci": "Prunus dulcis"
+              }
+             ]
+            },
+            {
+             "id": "moraceae",
+             "name": "Moraceae",
+             "common": "Fig / Mulberry family",
+             "icon": "<circle cx=\"20\" cy=\"20\" r=\"12\"/><circle cx=\"20\" cy=\"20\" r=\"7\"/><path d=\"M20 13v14M13 20h14M15 15l10 10M25 15l-10 10\"/>",
+             "trait": "Milky latex sap throughout; flowers reduced and often clustered inside a fleshy receptacle (as in figs) or along drooping catkins (as in mulberry).",
+             "differentia": "Distinguished by milky latex sap and flowers hidden inside a fleshy structure or catkin, unlike the showy, five-petaled blooms of Rosaceae.",
+             "species": [
+              {
+               "common": "Common fig",
+               "sci": "Ficus carica"
+              },
+              {
+               "common": "White mulberry",
+               "sci": "Morus alba"
+              }
+             ]
+            },
+            {
+             "id": "urticaceae",
+             "name": "Urticaceae",
+             "common": "Nettle family",
+             "icon": "<path d=\"M20 6c-6 4-8 12-4 22 4-2 6-6 4-10 4 2 4 8 0 12-8-2-12-14-6-24z\"/><path d=\"M14 12l-2-1M16 16l-2 0M14 22l-2 1M22 10l2-1M24 16l2 0M22 22l2 1\"/>",
+             "trait": "Leaves and stems covered in stinging hairs (trichomes) that inject irritant compounds on contact; small, inconspicuous wind-pollinated flowers.",
+             "differentia": "The order's only family defined by defensive stinging hairs, unlike the latex of Moraceae or the fibrous stems of Cannabaceae and Ulmaceae.",
+             "species": [
+              {
+               "common": "Stinging nettle",
+               "sci": "Urtica dioica"
+              }
+             ]
+            },
+            {
+             "id": "cannabaceae",
+             "name": "Cannabaceae",
+             "common": "Hemp family",
+             "icon": "<path d=\"M20 34V16\"/><path d=\"M20 16c0-8-3-12-3-12s-2 6 1 11M20 16c0-8 3-12 3-12s2 6-1 11M20 18c-3-6-8-8-8-8s0 6 5 9M20 18c3-6 8-8 8-8s0 6-5 9\"/>",
+             "trait": "Palmately compound leaves with narrow, serrated leaflets radiating from a central point; separate male and female plants, flowers reduced and wind- or insect-pollinated.",
+             "differentia": "Immediately recognizable by its palmate, multi-fingered leaf &mdash; a leaf shape shared by no other family in this order.",
+             "species": [
+              {
+               "common": "Cannabis",
+               "sci": "Cannabis sativa"
+              }
+             ]
+            },
+            {
+             "id": "ulmaceae",
+             "name": "Ulmaceae",
+             "common": "Elm family",
+             "icon": "<path d=\"M12 10c-4 6-4 16 2 22 8 2 14-2 16-10 1-6-2-14-10-16-3 0-6 2-8 4z\"/><circle cx=\"28\" cy=\"30\" r=\"3\"/><path d=\"M25 30h6M28 27v6\"/>",
+             "trait": "Asymmetric leaf bases (one side larger than the other) with doubly toothed margins; small, round, papery-winged seeds (samaras) that disperse on the wind.",
+             "differentia": "Set apart by lopsided, asymmetric leaf bases and small round winged seeds, distinct from the compound leaves and fleshy fruit of its Rosales relatives.",
+             "species": [
+              {
+               "common": "Elm",
+               "sci": "Ulmus americana"
+              }
+             ]
+            }
+           ],
+           "desc": "A remarkably diverse order uniting the classic five-petaled rose-family fruits with the latex-bearing figs, stinging nettles, fibrous hemp, and wind-pollinated elms &mdash; five families with little in common beyond shared ancestry."
+          },
+          {
+           "name": "Cucurbitales",
+           "rank": "order",
+           "accent": "#8b3a2f",
+           "icon": "<path d=\"M20 12c7 0 10 7 10 12s-3 12-10 12-10-7-10-12 3-12 10-12z\"/><path d=\"M20 12v24M15 13c-2 4-2 18 0 22M25 13c2 4 2 18 0 22\"/><path d=\"M20 8c1 1 1 3 0 4\"/>",
+           "status": "context",
+           "quizClue": "A round ridged fruit with a small stem nub on top, like a tiny melon or pumpkin.",
+           "quizWhy": "Squash and melons belong to this order, producing large fleshy fruits that are often ridged along their length.",
+           "families": [
+            {
+             "id": "cucurbitaceae",
+             "name": "Cucurbitaceae",
+             "common": "Gourd family",
+             "icon": "<path d=\"M20 12c7 0 10 7 10 12s-3 12-10 12-10-7-10-12 3-12 10-12z\"/><path d=\"M20 12v24M15 13c-2 4-2 18 0 22M25 13c2 4 2 18 0 22\"/><path d=\"M20 8c1 1 1 3 0 4\"/>",
+             "trait": "Sprawling or climbing vines that grip supports with coiling tendrils; large, often ridged fruits with a thick rind (pepo) enclosing numerous flat seeds.",
+             "differentia": "The order's defining family &mdash; tendril-climbing vines and large ridged pepo fruits are found nowhere else this close to the Fabids clade.",
+             "species": [
+              {
+               "common": "Squash",
+               "sci": "Cucurbita pepo"
+              },
+              {
+               "common": "Melon",
+               "sci": "Cucumis melo"
+              }
+             ]
+            }
+           ],
+           "desc": "The order's defining family &mdash; tendril-climbing vines and large ridged fruits found nowhere else this close to the Fabids clade."
+          }
+         ]
+        },
+        {
+         "name": "Malpighiales",
+         "rank": "order",
+         "accent": "#8b3a2f",
+         "icon": "<circle cx=\"20\" cy=\"20\" r=\"2\"/><path d=\"M20 20Q24.2 13.0 20.0 8.0Q15.8 13.0 20 20ZM20 20Q28.0 21.8 31.4 16.3Q25.4 13.8 20 20ZM20 20Q20.7 28.1 27.1 29.7Q27.5 23.2 20 20ZM20 20Q12.5 23.2 12.9 29.7Q19.3 28.1 20 20ZM20 20Q14.6 13.8 8.6 16.3Q12.0 21.8 20 20Z\"/>",
+         "status": "extension",
+         "quizClue": "Five short rounded petals around a center dot &mdash; a plain, flat little flower.",
+         "quizWhy": "This is one of the largest and most diverse rosid orders &mdash; flax, violets, and cassava all sit here despite looking quite different.",
+         "families": [
+          {
+           "id": "linaceae",
+           "name": "Linaceae",
+           "common": "Flax family",
+           "icon": "<path d=\"M20 34V10\"/><path d=\"M20 14l-3-2M20 14l3-2M20 20l-3-2M20 20l3-2\"/><circle cx=\"20\" cy=\"8\" r=\"3\"/>",
+           "trait": "Slender, wiry stems yielding strong bast fibers (the source of linen); small, delicate five-petaled flowers, often blue.",
+           "differentia": "The order's fiber specialist &mdash; wiry stems and delicate blue flowers set it apart from the latex, stinging hairs, or elaborate blooms of its Malpighiales relatives here.",
+           "species": [
+            {
+             "common": "Flax",
+             "sci": "Linum usitatissimum"
+            }
+           ]
+          },
+          {
+           "id": "salicaceae",
+           "name": "Salicaceae",
+           "common": "Willow family",
+           "icon": "<path d=\"M14 30c0-10 2-16 2-16M26 30c0-10-2-16-2-16\"/><ellipse cx=\"16\" cy=\"12\" rx=\"2.5\" ry=\"5\"/><ellipse cx=\"24\" cy=\"12\" rx=\"2.5\" ry=\"5\"/><ellipse cx=\"20\" cy=\"8\" rx=\"2.5\" ry=\"5\"/>",
+           "trait": "Separate male and female plants bearing soft, fuzzy catkins in early spring, often before leaves emerge; fast-growing trees and shrubs of moist habitats.",
+           "differentia": "The order's only family with soft, fuzzy spring catkins, unlike the fibrous stems of Linaceae or the showy blooms of Violaceae and Passifloraceae.",
+           "species": [
+            {
+             "common": "Pussy willow",
+             "sci": "Salix discolor"
+            }
+           ]
+          },
+          {
+           "id": "violaceae",
+           "name": "Violaceae",
+           "common": "Violet family",
+           "icon": "<circle cx=\"20\" cy=\"20\" r=\"2\"/><ellipse cx=\"20\" cy=\"12\" rx=\"5\" ry=\"6\"/><ellipse cx=\"12\" cy=\"20\" rx=\"6\" ry=\"5\"/><ellipse cx=\"28\" cy=\"20\" rx=\"6\" ry=\"5\"/><ellipse cx=\"20\" cy=\"28\" rx=\"7\" ry=\"6\"/><path d=\"M20 28v5\"/>",
+           "trait": "Five-petaled flowers with a distinct, enlarged lower petal often extended into a nectar spur, giving many species an asymmetric, face-like bloom.",
+           "differentia": "Distinguished by an asymmetric, face-like flower with one enlarged spurred petal, unlike the radially symmetric blooms elsewhere in this order.",
+           "species": [
+            {
+             "common": "Sweet violet",
+             "sci": "Viola odorata"
+            }
+           ]
+          },
+          {
+           "id": "hypericaceae",
+           "name": "Hypericaceae",
+           "common": "St. John's wort family",
+           "icon": "<circle cx=\"20\" cy=\"20\" r=\"2.5\"/><path d=\"M20 20V9M20 20l7-7M20 20l9 3M20 20l6 8M20 20l-2 9M20 20l-8 4M20 20l-9-4M20 20l-4-8\"/><circle cx=\"20\" cy=\"9\" r=\"1.3\"/><circle cx=\"27\" cy=\"13\" r=\"1.3\"/><circle cx=\"29\" cy=\"23\" r=\"1.3\"/><circle cx=\"26\" cy=\"28\" r=\"1.3\"/><circle cx=\"18\" cy=\"29\" r=\"1.3\"/><circle cx=\"12\" cy=\"24\" r=\"1.3\"/><circle cx=\"11\" cy=\"16\" r=\"1.3\"/><circle cx=\"16\" cy=\"12\" r=\"1.3\"/>",
+           "trait": "Yellow flowers with numerous long, thread-like stamens forming a prominent central tuft; leaves often dotted with translucent oil glands.",
+           "differentia": "Set apart by a dense starburst of long stamens tipped with visible anthers, denser than the simple radiating flowers found elsewhere in the order.",
+           "species": [
+            {
+             "common": "St. John's wort",
+             "sci": "Hypericum perforatum"
+            }
+           ]
+          },
+          {
+           "id": "passifloraceae",
+           "name": "Passifloraceae",
+           "common": "Passionflower family",
+           "icon": "<circle cx=\"20\" cy=\"20\" r=\"9\"/><circle cx=\"20\" cy=\"20\" r=\"5\"/><path d=\"M20 11v3M29 20h-3M20 29v-3M11 20h3M26.4 13.6l-2.1 2.1M26.4 26.4l-2.1-2.1M13.6 26.4l2.1-2.1M13.6 13.6l2.1 2.1\"/>",
+           "trait": "Elaborate flowers with a fringed corona of thread-like filaments encircling the reproductive parts; climbing vines with tendrils, producing a many-seeded pulpy fruit.",
+           "differentia": "Unmistakable for its fringed corona of filaments ringing the flower center, a structure unique to this family in the order.",
+           "species": [
+            {
+             "common": "Passion fruit",
+             "sci": "Passiflora edulis"
+            }
+           ]
+          },
+          {
+           "id": "euphorbiaceae",
+           "name": "Euphorbiaceae",
+           "common": "Spurge family",
+           "icon": "<path d=\"M20 34V20\"/><ellipse cx=\"20\" cy=\"16\" rx=\"6\" ry=\"5\"/><path d=\"M15 16a5 5 0 0110 0\"/><circle cx=\"20\" cy=\"13\" r=\"1.5\"/>",
+           "trait": "Milky, often caustic latex sap throughout; tiny flowers lacking petals, clustered into a cup-shaped structure (cyathium) that mimics a single flower.",
+           "differentia": "The order's only family built around a caustic milky latex and a flower-mimicking cyathium cup, spanning everything from tiny weeds to the starchy cassava root.",
+           "species": [
+            {
+             "common": "Petty spurge",
+             "sci": "Euphorbia peplus"
+            },
+            {
+             "common": "Cassava",
+             "sci": "Manihot esculenta"
+            }
+           ]
+          }
+         ],
+         "desc": "One of the largest and most heterogeneous rosid orders, uniting fiber crops, willows, violets, passionflowers, and spurges with little visual common ground &mdash; a grouping defined almost entirely by DNA rather than shared form."
+        },
+        {
+         "name": "Oxalidales",
+         "rank": "order",
+         "accent": "#8b3a2f",
+         "icon": "<circle cx=\"20\" cy=\"12\" r=\"6\"/><circle cx=\"12\" cy=\"24\" r=\"6\"/><circle cx=\"28\" cy=\"24\" r=\"6\"/><path d=\"M20 18v16\"/>",
+         "status": "context",
+         "quizClue": "Three overlapping circles arranged like a three-part clover leaf.",
+         "quizWhy": "Wood sorrel (Oxalis) is famous for its three-part, clover-like leaves, which fold up at night.",
+         "families": [
+          {
+           "id": "oxalidaceae",
+           "name": "Oxalidaceae",
+           "common": "Wood sorrel family",
+           "trait": "Compound leaves typically divided into three heart-shaped leaflets that fold downward at night or in low light (nyctinasty); sour, oxalic-acid-rich tissue gives the family its name.",
+           "differentia": "The order's defining family &mdash; its three-part, light-sensitive clover-like leaves are a distinctive trait not shared by the order's other, more obscure families.",
+           "icon": "<circle cx=\"20\" cy=\"12\" r=\"6\"/><circle cx=\"12\" cy=\"24\" r=\"6\"/><circle cx=\"28\" cy=\"24\" r=\"6\"/><path d=\"M20 18v16\"/>",
+           "species": []
+          }
+         ],
+         "desc": "Mostly herbaceous plants with light-sensitive, clover-like compound leaves and a sharp, oxalic-acid tang."
+        }
+       ]
+      },
+      {
+       "name": "Malvids",
+       "rank": "clade",
+       "accent": "#8b3a2f",
+       "children": [
+        {
+         "name": "Geraniales",
+         "rank": "order",
+         "accent": "#8b3a2f",
+         "icon": "<path d=\"M20 20l0-10M20 20l9-3M20 20l6 8M20 20l-6 8M20 20l-9-3\"/><circle cx=\"20\" cy=\"20\" r=\"2\"/>",
+         "status": "context",
+         "quizClue": "Five uneven lines radiating from a center dot, an asymmetric little flower.",
+         "quizWhy": "Geraniums have asymmetric five-petaled flowers with visible dark veining, unlike the more uniform flowers of related orders.",
+         "families": [
+          {
+           "id": "geraniaceae",
+           "name": "Geraniaceae",
+           "common": "Geranium family",
+           "trait": "Palmately lobed or deeply dissected leaves; flowers with five separate petals, often with fine dark veining, followed by a distinctive long, beak-shaped seed capsule that springs open to fling seeds away from the parent plant.",
+           "differentia": "The order's defining family &mdash; its beaked seed capsule (the source of the common name \"cranesbill\") is unique among the Diagram's rosid orders.",
+           "icon": "<path d=\"M20 20l0-10M20 20l9-3M20 20l6 8M20 20l-6 8M20 20l-9-3\"/><circle cx=\"20\" cy=\"20\" r=\"2\"/>",
+           "species": []
+          }
+         ],
+         "desc": "Herbs and shrubs with lobed leaves and five-petaled flowers, known for a distinctive beaked seed capsule that catapults seeds away from the parent plant."
+        },
+        {
+         "name": "Myrtales",
+         "rank": "order",
+         "accent": "#8b3a2f",
+         "icon": "<circle cx=\"20\" cy=\"22\" r=\"4\"/><path d=\"M20 18V6M16 18l-8-8M24 18l8-8M14 20l-10 2M26 20l10 2\"/>",
+         "status": "context",
+         "quizClue": "A cluster of fine hair-like lines fanning out from a small circle &mdash; more like stamens than petals.",
+         "quizWhy": "Eucalyptus and myrtle flowers often skip showy petals entirely, relying instead on a dense burst of long stamens for color.",
+         "families": [
+          {
+           "id": "myrtaceae",
+           "name": "Myrtaceae",
+           "common": "Myrtle family",
+           "icon": "<circle cx=\"20\" cy=\"22\" r=\"4\"/><path d=\"M20 18V6M16 18l-8-8M24 18l8-8M14 20l-10 2M26 20l10 2\"/>",
+           "trait": "Aromatic, oil-gland-dotted evergreen leaves; flowers often lacking showy petals, instead displaying a dense burst of long colorful stamens.",
+           "differentia": "The order's namesake and dominant family &mdash; aromatic oil-dotted leaves and a stamen-dominated flower distinguish it from Lythraceae's crown-like, many-seeded fruit.",
+           "species": [
+            {
+             "common": "Allspice",
+             "sci": "Pimenta dioica"
+            },
+            {
+             "common": "Eucalyptus",
+             "sci": "Eucalyptus globulus"
+            },
+            {
+             "common": "Clove",
+             "sci": "Syzygium aromaticum"
+            }
+           ]
+          },
+          {
+           "id": "lythraceae",
+           "name": "Lythraceae",
+           "common": "Loosestrife / Pomegranate family",
+           "icon": "<circle cx=\"20\" cy=\"22\" r=\"10\"/><path d=\"M14 12l2 3M20 10l0 4M26 12l-2 3\"/>",
+           "trait": "Tubular flowers with crinkled, crepe-like petals in many relatives; pomegranate itself bears a tough-skinned fruit crowned by a persistent calyx and packed with juicy seed arils.",
+           "differentia": "The order's only family here with a crown-topped, many-seeded fruit, unlike the stamen-heavy flowers typical of Myrtaceae.",
+           "species": [
+            {
+             "common": "Pomegranate",
+             "sci": "Punica granatum"
+            }
+           ]
+          }
+         ],
+         "desc": "Aromatic trees and shrubs producing some of the world's most prized spices and timbers, dominated by oil-rich Myrtaceae alongside the crown-fruited pomegranate family, Lythraceae."
+        },
+        {
+         "name": "Brassicales",
+         "rank": "order",
+         "accent": "#8b3a2f",
+         "icon": "<path d=\"M20 20L20 8M20 20L32 20M20 20L20 32M20 20L8 20\"/><circle cx=\"20\" cy=\"8\" r=\"3\"/><circle cx=\"32\" cy=\"20\" r=\"3\"/><circle cx=\"20\" cy=\"32\" r=\"3\"/><circle cx=\"8\" cy=\"20\" r=\"3\"/>",
+         "status": "context",
+         "quizClue": "Four dots connected by lines forming a perfect cross shape.",
+         "quizWhy": "Mustards, cabbages, and radishes are named for their four-petaled &ldquo;cruciform&rdquo; flowers, arranged in a perfect cross.",
+         "families": [
+          {
+           "id": "brassicaceae",
+           "name": "Brassicaceae",
+           "common": "Mustard / Cabbage family",
+           "icon": "<path d=\"M20 20L20 8M20 20L32 20M20 20L20 32M20 20L8 20\"/><circle cx=\"20\" cy=\"8\" r=\"3\"/><circle cx=\"32\" cy=\"20\" r=\"3\"/><circle cx=\"20\" cy=\"32\" r=\"3\"/><circle cx=\"8\" cy=\"20\" r=\"3\"/>",
+           "trait": "Four petals arranged in a perfect cross (cruciform); pungent mustard-oil glucosinolates throughout the tissue, released as a defense when cells are damaged.",
+           "differentia": "The order's namesake and dominant family &mdash; its four-petaled cruciform flower and mustard-oil chemistry set every cabbage relative apart from the single-species outliers Capparaceae, Moringaceae, Caricaceae, and Tropaeolaceae.",
+           "species": [
+            {
+             "common": "Cabbage",
+             "sci": "Brassica oleracea"
+            },
+            {
+             "common": "Horseradish",
+             "sci": "Armoracia rusticana"
+            },
+            {
+             "common": "Black mustard",
+             "sci": "Brassica nigra"
+            },
+            {
+             "common": "Arugula",
+             "sci": "Eruca vesicaria"
+            },
+            {
+             "common": "Radish",
+             "sci": "Raphanus sativus"
+            },
+            {
+             "common": "Turnip",
+             "sci": "Brassica rapa"
+            },
+            {
+             "common": "Rutabaga",
+             "sci": "Brassica napus"
+            }
+           ]
+          },
+          {
+           "id": "capparaceae",
+           "name": "Capparaceae",
+           "common": "Caper family",
+           "icon": "<circle cx=\"20\" cy=\"10\" r=\"4\"/><path d=\"M20 14v10\"/><path d=\"M20 24l-6 8M20 24l-2 9M20 24l2 9M20 24l6 8\"/>",
+           "trait": "Flower buds are harvested and pickled before opening; mature flowers show four petals and a dramatic burst of long, thread-like stamens.",
+           "differentia": "Distinguished from Brassicaceae's four-petaled cross by a dramatic burst of long stamens on a flower bud that's harvested before it ever opens.",
+           "species": [
+            {
+             "common": "Caper",
+             "sci": "Capparis spinosa"
+            }
+           ]
+          },
+          {
+           "id": "moringaceae",
+           "name": "Moringaceae",
+           "common": "Moringa family",
+           "icon": "<path d=\"M20 6v8\"/><path d=\"M14 10l-2 2M14 10l0 3M26 10l2 2M26 10l0 3\"/><path d=\"M20 14c-2 6-2 14-2 20M20 14c2 6 2 14 2 20\"/>",
+           "trait": "Fast-growing trees with finely divided, fern-like compound leaves and extremely long, slender seed pods nicknamed \"drumsticks.\"",
+           "differentia": "The order's most distinctively shaped member &mdash; fern-like compound leaves and pods stretching over a foot long, unlike anything else in Brassicales.",
+           "species": [
+            {
+             "common": "Moringa",
+             "sci": "Moringa oleifera"
+            }
+           ]
+          },
+          {
+           "id": "caricaceae",
+           "name": "Caricaceae",
+           "common": "Papaya family",
+           "icon": "<path d=\"M20 34V10\"/><path d=\"M20 10c-3-3-3-3-3-3M20 10c3-3 3-3 3-3M20 10c-5 1-6 3-6 3M20 10c5 1 6 3 6 3M20 10c-4-1-7 1-7 1M20 10c4-1 7 1 7 1\"/><ellipse cx=\"20\" cy=\"24\" rx=\"4\" ry=\"6\"/>",
+           "trait": "Fast-growing, mostly unbranched trees with large, deeply lobed palmate leaves and large fleshy fruit borne directly on the trunk.",
+           "differentia": "A fast-growing, nearly unbranched tree bearing fruit directly on its trunk, unlike the low herbs that make up most of this order.",
+           "species": [
+            {
+             "common": "Papaya",
+             "sci": "Carica papaya"
+            }
+           ]
+          },
+          {
+           "id": "tropaeolaceae",
+           "name": "Tropaeolaceae",
+           "common": "Nasturtium family",
+           "icon": "<circle cx=\"20\" cy=\"18\" r=\"9\"/><path d=\"M20 18v10\"/><path d=\"M20 28c2 3 2 6 0 8\"/>",
+           "trait": "Round, shield-shaped leaves with the stem attached at the center (peltate); showy, funnel-shaped flowers trailing a long nectar spur behind the petals.",
+           "differentia": "Set apart by round, center-stalked (peltate) leaves and a flower trailing a long nectar spur, a shape found nowhere else in the order.",
+           "species": [
+            {
+             "common": "Nasturtium",
+             "sci": "Tropaeolum majus"
+            }
+           ]
+          }
+         ],
+         "desc": "A pungent order defined by mustard-oil glucosinolate chemistry, spanning the vast cabbage family alongside a handful of single-species outlier families &mdash; capers, moringa, papaya, and nasturtiums &mdash; each retaining the order's characteristic bite in its own way."
+        },
+        {
+         "name": "Malvales",
+         "rank": "order",
+         "accent": "#8b3a2f",
+         "icon": "<circle cx=\"20\" cy=\"20\" r=\"3\"/><circle cx=\"20\" cy=\"10\" r=\"6\"/><circle cx=\"29\" cy=\"16\" r=\"6\"/><circle cx=\"25\" cy=\"27\" r=\"6\"/><circle cx=\"15\" cy=\"27\" r=\"6\"/><circle cx=\"11\" cy=\"16\" r=\"6\"/>",
+         "status": "context",
+         "quizClue": "Five large, fully overlapping circles around a center dot &mdash; bigger and fuller than a plain rose-like bloom.",
+         "quizWhy": "Hibiscus, cotton, and mallow flowers are typically large, with broad, overlapping rounded petals.",
+         "families": [
+          {
+           "id": "malvaceae",
+           "name": "Malvaceae",
+           "common": "Mallow family",
+           "icon": "<circle cx=\"20\" cy=\"20\" r=\"3\"/><circle cx=\"20\" cy=\"10\" r=\"6\"/><circle cx=\"29\" cy=\"16\" r=\"6\"/><circle cx=\"25\" cy=\"27\" r=\"6\"/><circle cx=\"15\" cy=\"27\" r=\"6\"/><circle cx=\"11\" cy=\"16\" r=\"6\"/>",
+           "trait": "Flowers with five petals and numerous stamens fused into a central staminal column; many species yield fiber, chocolate, or cola-nut caffeine from very differently used plant parts.",
+           "differentia": "The order's vastly broadened namesake family (folding in the old cotton, linden, and cacao families) &mdash; united by stamens fused into a central column, unlike Bixaceae's simple exposed stamens.",
+           "species": [
+            {
+             "common": "Cotton",
+             "sci": "Gossypium hirsutum"
+            },
+            {
+             "common": "Cocoa",
+             "sci": "Theobroma cacao"
+            },
+            {
+             "common": "Linden",
+             "sci": "Tilia cordata"
+            },
+            {
+             "common": "Okra",
+             "sci": "Abelmoschus esculentus"
+            },
+            {
+             "common": "Hibiscus",
+             "sci": "Hibiscus rosa-sinensis"
+            },
+            {
+             "common": "Cola",
+             "sci": "Cola acuminata"
+            },
+            {
+             "common": "Jute",
+             "sci": "Corchorus olitorius"
+            }
+           ]
+          },
+          {
+           "id": "bixaceae",
+           "name": "Bixaceae",
+           "common": "Annatto family",
+           "icon": "<path d=\"M20 10c-6 0-9 6-9 12s3 12 9 12 9-6 9-12-3-12-9-12z\"/><path d=\"M14 12l-2-2M26 12l2-2M12 18l-3 0M28 18l3 0M14 26l-2 2M26 26l2 2\"/>",
+           "trait": "Spiny, heart-shaped seed capsules split open to reveal small red-orange seeds coated in a natural dye (bixin) used for centuries as a coloring and spice.",
+           "differentia": "The order's only family here defined by a spiny, dye-producing seed pod, unlike Malvaceae's fused-stamen flower.",
+           "species": [
+            {
+             "common": "Annatto",
+             "sci": "Bixa orellana"
+            }
+           ]
+          }
+         ],
+         "desc": "A fiber-and-chocolate order dominated by a greatly broadened Malvaceae (absorbing the old cotton, linden, and cacao families), united by stamens fused into a distinctive central column."
+        },
+        {
+         "name": "Sapindales",
+         "rank": "order",
+         "accent": "#8b3a2f",
+         "icon": "<path d=\"M20 6v28M20 6c-8 2-11 9-14 13 5 2 10-1 14-6 4 5 9 8 14 6-3-4-6-11-14-13z\"/>",
+         "status": "inguide",
+         "quizClue": "A single winged seed shape split by a line down the middle, like a maple seed spinning to the ground.",
+         "quizWhy": "Maple, mango, and citrus belong here; the winged maple samara is one of the order's most recognizable seed shapes.",
+         "desc": "Woody, mostly compound-leaved trees bearing a nectar-producing floral disc; unified less by any single trait than by a cluster of resin canals, bitter terpenoids, and saponins scattered across its families.",
+         "families": [
+          {
+           "id": "anacardiaceae",
+           "name": "Anacardiaceae",
+           "common": "Cashew / Sumac family",
+           "icon": "<path d=\"M20 4c9 4 13 12 13 20-5 3-9 3-13 0-4 3-8 3-13 0 0-8 4-16 13-20z\"/><path d=\"M20 4v30\"/>",
+           "trait": "Resin canals bearing irritant compounds (urushiol); drupe fruits, often with milky or resinous sap.",
+           "differentia": "Unlike Rutaceae's oil glands or Burseraceae's clear resin, this family's sap contains irritant urushiols &mdash; the trait that separates mango and cashew from their more benign Sapindales cousins.",
+           "species": [
+            {
+             "common": "Mango",
+             "sci": "Mangifera indica"
+            },
+            {
+             "common": "Staghorn sumac",
+             "sci": "Rhus typhina"
+            },
+            {
+             "common": "Cashew",
+             "sci": "Anacardium occidentale"
+            },
+            {
+             "common": "Pistachio",
+             "sci": "Pistacia vera"
+            },
+            {
+             "common": "Poison ivy",
+             "sci": "Toxicodendron radicans"
+            },
+            {
+             "common": "Smoke tree",
+             "sci": "Cotinus coggygria"
+            }
+           ]
+          },
+          {
+           "id": "rutaceae",
+           "name": "Rutaceae",
+           "common": "Citrus family",
+           "icon": "<ellipse cx=\"20\" cy=\"20\" rx=\"11\" ry=\"16\"/><circle cx=\"15\" cy=\"14\" r=\"1\"/><circle cx=\"24\" cy=\"16\" r=\"1\"/><circle cx=\"17\" cy=\"24\" r=\"1\"/><circle cx=\"23\" cy=\"26\" r=\"1\"/>",
+           "trait": "Aromatic oil glands dotting the leaves; flower parts in 4s or 5s around a prominent nectary disc.",
+           "differentia": "Distinguished from the other resin-bearing families here by aromatic oil glands (not resin canals) and a citrus-type fruit found nowhere else in the order.",
+           "species": [
+            {
+             "common": "Sweet orange",
+             "sci": "Citrus sinensis"
+            },
+            {
+             "common": "Lemon",
+             "sci": "Citrus limon"
+            },
+            {
+             "common": "Kumquat",
+             "sci": "Citrus japonica"
+            },
+            {
+             "common": "Common rue",
+             "sci": "Ruta graveolens"
+            },
+            {
+             "common": "Curry leaf tree",
+             "sci": "Murraya koenigii"
+            }
+           ]
+          },
+          {
+           "id": "sapindaceae",
+           "name": "Sapindaceae",
+           "common": "Soapberry family",
+           "icon": "<path d=\"M20 6v28M20 6c-8 2-11 9-14 13 5 2 10-1 14-6 4 5 9 8 14 6-3-4-6-11-14-13z\"/>",
+           "trait": "Saponins concentrated in fruit and seed; the maple lineage contributes winged, paired samaras.",
+           "differentia": "The only family in this order built around saponins and winged samaras &mdash; a fruit and chemistry profile distinct from the resins of Anacardiaceae/Burseraceae and the bitters of Meliaceae/Simaroubaceae.",
+           "species": [
+            {
+             "common": "Sugar maple",
+             "sci": "Acer saccharum"
+            },
+            {
+             "common": "Horse chestnut",
+             "sci": "Aesculus hippocastanum"
+            },
+            {
+             "common": "Lychee",
+             "sci": "Litchi chinensis"
+            },
+            {
+             "common": "Rambutan",
+             "sci": "Nephelium lappaceum"
+            },
+            {
+             "common": "Golden rain tree",
+             "sci": "Koelreuteria paniculata"
+            }
+           ]
+          },
+          {
+           "id": "meliaceae",
+           "name": "Meliaceae",
+           "common": "Mahogany family",
+           "icon": "<path d=\"M6 20h28\"/><path d=\"M9 20l6-6M9 20l6 6M15 20l6-6M15 20l6 6M21 20l6-6M21 20l6 6M27 20l6-6M27 20l6 6\"/>",
+           "trait": "Bitter limonoid compounds throughout bark and wood; prized timber, pinnately compound leaves.",
+           "differentia": "Shares bitter terpenoids with Simaroubaceae, but Meliaceae's are limonoids concentrated in prized timber wood, not the quassinoids of bark seen in its bitter-tasting sibling.",
+           "species": [
+            {
+             "common": "Honduran mahogany",
+             "sci": "Swietenia macrophylla"
+            },
+            {
+             "common": "Neem",
+             "sci": "Azadirachta indica"
+            },
+            {
+             "common": "Chinaberry",
+             "sci": "Melia azedarach"
+            },
+            {
+             "common": "Spanish cedar",
+             "sci": "Cedrela odorata"
+            }
+           ]
+          },
+          {
+           "id": "burseraceae",
+           "name": "Burseraceae",
+           "common": "Frankincense / Myrrh family",
+           "icon": "<path d=\"M20 6c0 10-8 8-8 16a8 8 0 0016 0c0-8-8-6-8-16z\"/>",
+           "trait": "Aromatic resins exuded from wounded bark, which peels in papery layers; resin canals run throughout.",
+           "differentia": "Closest chemically to Anacardiaceae, but its resin is aromatic and historically prized (frankincense, myrrh) rather than irritant, and bark peels papery instead of staying intact.",
+           "species": [
+            {
+             "common": "Frankincense tree",
+             "sci": "Boswellia sacra"
+            },
+            {
+             "common": "Myrrh tree",
+             "sci": "Commiphora myrrha"
+            },
+            {
+             "common": "Elephant tree",
+             "sci": "Bursera microphylla"
+            },
+            {
+             "common": "Copal tree",
+             "sci": "Bursera bipinnata"
+            }
+           ]
+          },
+          {
+           "id": "simaroubaceae",
+           "name": "Simaroubaceae",
+           "common": "Quassia family",
+           "icon": "<path d=\"M6 22h10l4-8 4 8h10\"/><path d=\"M20 14v-8\"/>",
+           "trait": "Intensely bitter quassinoids in bark and wood; historically the family's namesake medicinal bitters.",
+           "differentia": "The order's bitterest family by far &mdash; quassinoids here are intense enough for medicinal bitters, well beyond the milder limonoids of Meliaceae.",
+           "species": [
+            {
+             "common": "Tree of heaven",
+             "sci": "Ailanthus altissima"
+            },
+            {
+             "common": "Bitterwood",
+             "sci": "Quassia amara"
+            },
+            {
+             "common": "Jamaican quassia",
+             "sci": "Picrasma excelsa"
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "Super Asterids",
+     "rank": "clade",
+     "accent": "#8b3a2f",
+     "headerEvent": {
+      "date": "~90 mya",
+      "label": "split"
+     },
+     "children": [
+      {
+       "name": "Santalales",
+       "rank": "order",
+       "accent": "#8b3a2f",
+       "icon": "<path d=\"M20 34V10\"/><path d=\"M20 14l-6-4M20 14l6-4M20 20l-6-4M20 20l6-4\"/><circle cx=\"14\" cy=\"10\" r=\"1.5\"/><circle cx=\"26\" cy=\"10\" r=\"1.5\"/>",
+       "status": "context",
+       "quizClue": "A sprig with paired leaves and two small round berries, like a mistletoe branch.",
+       "quizWhy": "Mistletoe, a partial parasite that grows on host trees, belongs to this order.",
+       "families": [
+        {
+         "id": "santalaceae",
+         "name": "Santalaceae",
+         "common": "Sandalwood / Mistletoe family",
+         "icon": "<path d=\"M20 34V10\"/><path d=\"M20 14l-6-4M20 14l6-4M20 20l-6-4M20 20l6-4\"/><circle cx=\"14\" cy=\"10\" r=\"1.5\"/><circle cx=\"26\" cy=\"10\" r=\"1.5\"/>",
+         "trait": "Many members are hemiparasitic, tapping into a host tree's roots or branches for water and minerals while still photosynthesizing themselves; includes both fragrant heartwood trees and parasitic shrubs.",
+         "differentia": "The order's defining family, spanning fragrant sandalwood trees and parasitic mistletoe shrubs &mdash; unified by a parasitic or hemiparasitic lifestyle uncommon elsewhere in the Diagram. (Modern classification folds the older mistletoe family, Viscaceae, into Santalaceae.)",
+         "species": [
+          {
+           "common": "Sandalwood",
+           "sci": "Santalum album"
+          },
+          {
+           "common": "Mistletoe",
+           "sci": "Viscum album"
+          }
+         ]
+        }
+       ],
+       "desc": "A largely parasitic or hemiparasitic order that taps into the roots or branches of host plants for water and nutrients while still carrying out its own photosynthesis."
+      },
+      {
+       "name": "Caryophyllales",
+       "rank": "order",
+       "accent": "#8b3a2f",
+       "icon": "<rect x=\"16\" y=\"10\" width=\"8\" height=\"24\" rx=\"4\"/><path d=\"M20 6v4M14 16h-4M30 20h-4\"/>",
+       "status": "extension",
+       "quizClue": "A rounded vertical capsule shape with a couple of small marks near its base, like a squat cactus.",
+       "quizWhy": "This order includes cacti and other succulents, along with beets, spinach, and amaranth &mdash; a chemically distinctive group more than a visually uniform one.",
+       "families": [
+        {
+         "id": "cactaceae",
+         "name": "Cactaceae",
+         "common": "Cactus family",
+         "icon": "<path d=\"M20 34V16\"/><ellipse cx=\"20\" cy=\"14\" rx=\"6\" ry=\"9\"/><path d=\"M20 6v3M15 8l2 2M25 8l-2 2M14 14h3M26 14h-3M15 20l2-2M25 20l-2-2\"/>",
+         "trait": "Thick, water-storing succulent stems (often leafless) covered in spine clusters derived from modified leaves; flowers large and showy despite the plant's otherwise armored appearance.",
+         "differentia": "The order's most extreme water-storage specialist &mdash; succulent, spine-covered stems set it apart from the leafy, pigment-rich herbs that dominate the rest of Caryophyllales here.",
+         "species": [
+          {
+           "common": "Cacti",
+           "sci": "Cactaceae"
+          }
+         ]
+        },
+        {
+         "id": "amaranthaceae",
+         "name": "Amaranthaceae",
+         "common": "Amaranth / Goosefoot family",
+         "icon": "<path d=\"M20 34V14\"/><circle cx=\"17\" cy=\"16\" r=\"1.3\"/><circle cx=\"23\" cy=\"16\" r=\"1.3\"/><circle cx=\"15\" cy=\"20\" r=\"1.3\"/><circle cx=\"25\" cy=\"20\" r=\"1.3\"/><circle cx=\"17\" cy=\"24\" r=\"1.3\"/><circle cx=\"23\" cy=\"24\" r=\"1.3\"/><circle cx=\"20\" cy=\"14\" r=\"1.3\"/>",
+         "trait": "Small, often colorless flowers packed into dense spikes or clusters; many species store energy in swollen roots, thick leaves, or protein-rich seeds, and several produce the reddish betalain pigments distinctive to this order.",
+         "differentia": "The order's largest and most agriculturally important family here &mdash; small flowers crowded into dense spikes distinguish it from Polygonaceae's papery-sheathed stems and Portulacaceae's fleshy trailing leaves.",
+         "species": [
+          {
+           "common": "Spinach",
+           "sci": "Spinacia oleracea"
+          },
+          {
+           "common": "Quinoa",
+           "sci": "Chenopodium quinoa"
+          },
+          {
+           "common": "Beet",
+           "sci": "Beta vulgaris"
+          },
+          {
+           "common": "Chard",
+           "sci": "Beta vulgaris"
+          },
+          {
+           "common": "Zeekraal",
+           "sci": "Salicornia europaea"
+          },
+          {
+           "common": "Amaranth",
+           "sci": "Amaranthus cruentus"
+          }
+         ]
+        },
+        {
+         "id": "polygonaceae",
+         "name": "Polygonaceae",
+         "common": "Buckwheat / Knotweed family",
+         "icon": "<path d=\"M20 34V6\"/><path d=\"M15 10h10M15 20h10M15 28h10\"/><path d=\"M15 10c0-2 2-2 5-2s5 0 5 2M15 20c0-2 2-2 5-2s5 0 5 2M15 28c0-2 2-2 5-2s5 0 5 2\"/>",
+         "trait": "Jointed stems wrapped at each node by a papery sheath (ocrea); often sour, oxalic-acid-rich leaves, and small flowers clustered in loose spikes.",
+         "differentia": "Set apart from its Caryophyllales relatives by a papery stem-sheath (ocrea) at each leaf node and a characteristically sour, oxalic-acid tang in the leaves.",
+         "species": [
+          {
+           "common": "Buckwheat",
+           "sci": "Fagopyrum esculentum"
+          },
+          {
+           "common": "Rhubarb",
+           "sci": "Rheum rhabarbarum"
+          },
+          {
+           "common": "Sorrel",
+           "sci": "Rumex acetosa"
+          }
+         ]
+        },
+        {
+         "id": "portulacaceae",
+         "name": "Portulacaceae",
+         "common": "Purslane family",
+         "icon": "<path d=\"M8 30c4-2 8-2 12 0s8 2 12 0\"/><ellipse cx=\"14\" cy=\"26\" rx=\"3\" ry=\"1.6\"/><ellipse cx=\"20\" cy=\"28\" rx=\"3\" ry=\"1.6\"/><ellipse cx=\"26\" cy=\"26\" rx=\"3\" ry=\"1.6\"/><circle cx=\"20\" cy=\"20\" r=\"2\"/><path d=\"M20 20l0-4M20 20l3-2M20 20l-3-2\"/>",
+         "trait": "Low, trailing succulent stems with small, fleshy paddle-shaped leaves; short-lived flowers open only in sunlight and close by afternoon.",
+         "differentia": "The order's low, mat-forming succulent &mdash; fleshy paddle leaves on trailing stems distinguish it from the upright spikes of Amaranthaceae and the jointed, sheathed stems of Polygonaceae.",
+         "species": [
+          {
+           "common": "Purslane",
+           "sci": "Portulaca oleracea"
+          }
+         ]
+        }
+       ],
+       "desc": "A chemically distinctive order spanning cacti, succulents, and leafy vegetables, many sharing unusual reddish betalain pigments (instead of the anthocyanins used elsewhere in flowering plants) as well as a tendency toward salt- and drought-tolerance."
+      },
+      {
+       "name": "Asterids",
+       "rank": "clade",
+       "accent": "#8b3a2f",
+       "children": [
+        {
+         "name": "Cornales",
+         "rank": "order",
+         "accent": "#8b3a2f",
+         "icon": "<ellipse cx=\"20\" cy=\"10\" rx=\"4\" ry=\"8\"/><ellipse cx=\"30\" cy=\"20\" rx=\"8\" ry=\"4\"/><ellipse cx=\"20\" cy=\"30\" rx=\"4\" ry=\"8\"/><ellipse cx=\"10\" cy=\"20\" rx=\"8\" ry=\"4\"/><circle cx=\"20\" cy=\"20\" r=\"2\"/>",
+         "status": "context",
+         "quizClue": "Four petal-like ovals arranged in a cross around a center dot.",
+         "quizWhy": "Dogwood is known for its four showy petal-like bracts surrounding a small true flower cluster at the center.",
+         "families": [
+          {
+           "id": "cornaceae",
+           "name": "Cornaceae",
+           "common": "Dogwood family",
+           "icon": "<ellipse cx=\"20\" cy=\"10\" rx=\"4\" ry=\"8\"/><ellipse cx=\"30\" cy=\"20\" rx=\"8\" ry=\"4\"/><ellipse cx=\"20\" cy=\"30\" rx=\"4\" ry=\"8\"/><ellipse cx=\"10\" cy=\"20\" rx=\"8\" ry=\"4\"/><circle cx=\"20\" cy=\"20\" r=\"2\"/>",
+           "trait": "Small true flowers clustered tightly at the center, often surrounded by four large petal-like bracts that do the work of attracting pollinators.",
+           "differentia": "The order's namesake family &mdash; its four large petal-like bracts surrounding a tight flower cluster are unlike Hydrangeaceae's ring of sterile florets around a fertile center.",
+           "species": [
+            {
+             "common": "Flowering dogwood",
+             "sci": "Cornus florida"
+            }
+           ]
+          },
+          {
+           "id": "hydrangeaceae",
+           "name": "Hydrangeaceae",
+           "common": "Hydrangea family",
+           "icon": "<circle cx=\"20\" cy=\"20\" r=\"10\"/><circle cx=\"12\" cy=\"14\" r=\"3\"/><circle cx=\"28\" cy=\"14\" r=\"3\"/><circle cx=\"12\" cy=\"26\" r=\"3\"/><circle cx=\"28\" cy=\"26\" r=\"3\"/><circle cx=\"20\" cy=\"8\" r=\"3\"/><circle cx=\"20\" cy=\"32\" r=\"3\"/>",
+           "trait": "Large rounded flower clusters combining small fertile flowers with larger sterile, showy ones around the outer edge; flower color in many species shifts with soil pH.",
+           "differentia": "Distinguished from Cornaceae's bract-and-cluster look by a ring of enlarged sterile florets framing the true flowers, and by flower color that can shift with soil acidity.",
+           "species": [
+            {
+             "common": "Bigleaf hydrangea",
+             "sci": "Hydrangea macrophylla"
+            }
+           ]
+          }
+         ],
+         "desc": "An early-diverging asterid order of shrubs and small trees bearing showy flower clusters, often relying on enlarged bracts or sterile outer florets rather than large true petals to attract pollinators."
+        },
+        {
+         "name": "Ericales",
+         "rank": "order",
+         "accent": "#8b3a2f",
+         "icon": "<path d=\"M20 34c0-14 6-14 6-22a6 6 0 00-12 0c0 8 6 8 6 22z\"/>",
+         "status": "inguide",
+         "quizClue": "A single urn- or bell-shaped outline, narrow at the top and swelling toward the bottom.",
+         "quizWhy": "Blueberries, heather, and azaleas all share the order's signature urn- or bell-shaped fused petals.",
+         "desc": "A structurally varied order, from acid-loving heathland shrubs to tropical timber trees, loosely bound by fused, urn- or bell-shaped petals and a preference for nutrient-poor soils.",
+         "families": [
+          {
+           "id": "ericaceae",
+           "name": "Ericaceae",
+           "common": "Heath family",
+           "icon": "<path d=\"M20 34c0-14 6-14 6-22a6 6 0 00-12 0c0 8 6 8 6 22z\"/>",
+           "trait": "Urn-shaped, fused petals; thrive in acidic soils, often partnered with mycorrhizal fungi.",
+           "differentia": "The order's acid-soil specialist, with fused urn-shaped petals and obligate mycorrhizal partnerships not shared by the more generalist Theaceae or Primulaceae.",
+           "species": [
+            {
+             "common": "Highbush blueberry",
+             "sci": "Vaccinium corymbosum"
+            },
+            {
+             "common": "Cranberry",
+             "sci": "Vaccinium macrocarpon"
+            },
+            {
+             "common": "Rhododendron",
+             "sci": "Rhododendron ponticum"
+            },
+            {
+             "common": "Heather",
+             "sci": "Calluna vulgaris"
+            },
+            {
+             "common": "Strawberry tree",
+             "sci": "Arbutus unedo"
+            },
+            {
+             "common": "Huckleberry",
+             "sci": "Gaylussacia baccata"
+            }
+           ]
+          },
+          {
+           "id": "theaceae",
+           "name": "Theaceae",
+           "common": "Tea family",
+           "icon": "<ellipse cx=\"20\" cy=\"20\" rx=\"10\" ry=\"15\"/><line x1=\"20\" y1=\"5\" x2=\"20\" y2=\"35\"/><line x1=\"14\" y1=\"12\" x2=\"20\" y2=\"16\"/><line x1=\"26\" y1=\"12\" x2=\"20\" y2=\"16\"/><line x1=\"14\" y1=\"24\" x2=\"20\" y2=\"20\"/><line x1=\"26\" y1=\"24\" x2=\"20\" y2=\"20\"/>",
+           "trait": "Glossy evergreen leaves and showy, waxy-petaled flowers with a dense central boss of stamens.",
+           "differentia": "Marked by glossy evergreen leaves and waxy, stamen-heavy flowers &mdash; showier and less soil-specific than the heath-loving Ericaceae.",
+           "species": [
+            {
+             "common": "Tea plant",
+             "sci": "Camellia sinensis"
+            },
+            {
+             "common": "Japanese camellia",
+             "sci": "Camellia japonica"
+            },
+            {
+             "common": "Loblolly bay",
+             "sci": "Gordonia lasianthus"
+            }
+           ]
+          },
+          {
+           "id": "primulaceae",
+           "name": "Primulaceae",
+           "common": "Primrose family",
+           "icon": "<ellipse cx=\"20\" cy=\"31\" rx=\"11\" ry=\"3.5\"/><path d=\"M20 27V15\"/><circle cx=\"20\" cy=\"11\" r=\"2\"/><path d=\"M20 11l0-4M20 11l4-2M20 11l3 3M20 11l-3 3M20 11l-4-2\"/>",
+           "trait": "Low-growing herbs with basal leaf rosettes; five-petaled flowers radiating from a central eye.",
+           "differentia": "Low herbaceous rosettes with radially symmetric five-petaled flowers, lacking the woody habit of Theaceae or Sapotaceae.",
+           "species": [
+            {
+             "common": "Common primrose",
+             "sci": "Primula vulgaris"
+            },
+            {
+             "common": "Cyclamen",
+             "sci": "Cyclamen persicum"
+            },
+            {
+             "common": "Scarlet pimpernel",
+             "sci": "Anagallis arvensis"
+            }
+           ]
+          },
+          {
+           "id": "sapotaceae",
+           "name": "Sapotaceae",
+           "common": "Sapodilla family",
+           "icon": "<ellipse cx=\"20\" cy=\"20\" rx=\"9\" ry=\"14\"/><path d=\"M20 6v28\"/><path d=\"M13 14a10 10 0 0014 0M13 26a10 10 0 0014 0\"/>",
+           "trait": "Milky latex sap throughout; tropical trees valued for edible fruit, oils, and natural rubber-like gums.",
+           "differentia": "The only Ericales family here defined by milky latex sap running through leathery, tropical trees.",
+           "species": [
+            {
+             "common": "Sapodilla",
+             "sci": "Manilkara zapota"
+            },
+            {
+             "common": "Argan tree",
+             "sci": "Argania spinosa"
+            },
+            {
+             "common": "Shea tree",
+             "sci": "Vitellaria paradoxa"
+            }
+           ]
+          },
+          {
+           "id": "actinidiaceae",
+           "name": "Actinidiaceae",
+           "common": "Kiwifruit family",
+           "icon": "<circle cx=\"20\" cy=\"20\" r=\"12\"/><circle cx=\"20\" cy=\"20\" r=\"4\"/><path d=\"M20 8v24M8 20h24M11 11l18 18M29 11L11 29\"/>",
+           "trait": "Woody, twining vines with fuzzy-skinned berries packed with tiny radiating seeds.",
+           "differentia": "A woody, twining vine habit unique among this set &mdash; none of the other Ericales families here climb.",
+           "species": [
+            {
+             "common": "Kiwifruit",
+             "sci": "Actinidia deliciosa"
+            }
+           ]
+          },
+          {
+           "id": "ebenaceae",
+           "name": "Ebenaceae",
+           "common": "Ebony / Persimmon family",
+           "icon": "<ellipse cx=\"20\" cy=\"22\" rx=\"9\" ry=\"8\"/><path d=\"M14 15c2-2 4-2 6 0M20 15c2-2 4-2 6 0\"/><path d=\"M20 15v-4\"/>",
+           "trait": "Dense, dark heartwood (the source of true ebony timber) or, in persimmon, sweet orange fruit that ripens from astringent to sweet; simple, often glossy leaves.",
+           "differentia": "Unlike the acid-soil Ericaceae or milky-latex Sapotaceae, this family is defined by dense dark heartwood (ebony) or a fruit crowned with a papery calyx (persimmon).",
+           "species": [
+            {
+             "common": "Ebony",
+             "sci": "Diospyros ebenum"
+            },
+            {
+             "common": "Persimmon",
+             "sci": "Diospyros kaki"
+            }
+           ]
+          },
+          {
+           "id": "polemoniaceae",
+           "name": "Polemoniaceae",
+           "common": "Phlox family",
+           "icon": "<circle cx=\"14\" cy=\"16\" r=\"4\"/><circle cx=\"26\" cy=\"16\" r=\"4\"/><circle cx=\"20\" cy=\"24\" r=\"4\"/><circle cx=\"14\" cy=\"28\" r=\"4\"/><circle cx=\"26\" cy=\"28\" r=\"4\"/><path d=\"M20 24v-6\"/>",
+           "trait": "Flat, five-lobed, star-shaped flowers fused into a narrow tube at the base, typically clustered into showy rounded heads; leaves often opposite and simple.",
+           "differentia": "Distinguished from Primulaceae's single radiating bloom by flat five-lobed flowers clustered into showy rounded heads, and from Ericaceae's urn shape by an open, star-like corolla.",
+           "species": [
+            {
+             "common": "Phlox",
+             "sci": "Phlox paniculata"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "name": "Core Asterids",
+         "rank": "clade",
+         "accent": "#8b3a2f",
+         "children": [
+          {
+           "name": "Lamiids",
+           "rank": "clade",
+           "accent": "#8b3a2f",
+           "children": [
+            {
+             "name": "Gentianales",
+             "rank": "order",
+             "accent": "#8b3a2f",
+             "icon": "<path d=\"M20 20L20 6M20 20l13 4M20 20l-8 12M20 20l8 12M20 20l-13 4\"/><circle cx=\"20\" cy=\"20\" r=\"2\"/>",
+             "status": "context",
+             "quizClue": "A five-pointed star shape radiating out from a center dot.",
+             "quizWhy": "Coffee, milkweed, and gentians often have five-parted, star-shaped tubular flowers.",
+             "families": [
+              {
+               "id": "apocynaceae",
+               "name": "Apocynaceae",
+               "common": "Milkweed / Dogbane family",
+               "icon": "<path d=\"M20 8c-4 2-6 8-6 14s2 10 6 12c4-2 6-6 6-12s-2-12-6-14z\"/><path d=\"M15 14l-2-1M25 14l2-1M14 20l-2 0M26 20l2 0M16 26l-2 1M24 26l2 1\"/>",
+               "trait": "Milky latex sap in stems and leaves; flowers with petals twisted or fused into a tube, often with an elaborate corona; many produce cardiac glycosides toxic to most animals but tolerated by specialist insects like monarch caterpillars.",
+               "differentia": "Distinguished from Rubiaceae's four-parted tubular flowers by milky latex sap and a warty, silk-haired seed pod, a hallmark of milkweed and its dogbane relatives.",
+               "species": [
+                {
+                 "common": "Common milkweed",
+                 "sci": "Asclepias syriaca"
+                },
+                {
+                 "common": "Dogbane",
+                 "sci": "Apocynum cannabinum"
+                }
+               ]
+              },
+              {
+               "id": "rubiaceae",
+               "name": "Rubiaceae",
+               "common": "Coffee family",
+               "icon": "<path d=\"M20 34V16\"/><ellipse cx=\"14\" cy=\"14\" rx=\"5\" ry=\"8\" transform=\"rotate(-20 14 14)\"/><ellipse cx=\"26\" cy=\"14\" rx=\"5\" ry=\"8\" transform=\"rotate(20 26 14)\"/><circle cx=\"16\" cy=\"26\" r=\"3\"/><circle cx=\"24\" cy=\"26\" r=\"3\"/>",
+               "trait": "Opposite leaves joined at the base by a stipule; small, four- or five-lobed tubular flowers followed by fleshy berries, each containing two seeds.",
+               "differentia": "The order's most economically important family here &mdash; opposite leaves with fused basal stipules and paired fleshy berries distinguish it from the milky, pod-bearing Apocynaceae.",
+               "species": [
+                {
+                 "common": "Coffee",
+                 "sci": "Coffea arabica"
+                }
+               ]
+              }
+             ],
+             "desc": "Mostly tropical trees, shrubs, and vines with opposite leaves and fused, tubular flower parts, spanning both milky-latex milkweeds and the world's coffee supply."
+            },
+            {
+             "name": "Boraginales",
+             "rank": "order",
+             "accent": "#8b3a2f",
+             "icon": "<circle cx=\"20\" cy=\"20\" r=\"2\"/><circle cx=\"20\" cy=\"13\" r=\"4\"/><circle cx=\"26\" cy=\"17\" r=\"4\"/><circle cx=\"24\" cy=\"24\" r=\"4\"/><circle cx=\"16\" cy=\"24\" r=\"4\"/><circle cx=\"14\" cy=\"17\" r=\"4\"/>",
+             "status": "context",
+             "quizClue": "Five small overlapping circles around a center dot &mdash; more delicate and compact than a rose-like bloom.",
+             "quizWhy": "Forget-me-nots and borage have small, delicate five-petaled flowers, often blue or purple.",
+             "families": [
+              {
+               "id": "boraginaceae",
+               "name": "Boraginaceae",
+               "common": "Borage family",
+               "icon": "<circle cx=\"20\" cy=\"20\" r=\"2\"/><circle cx=\"20\" cy=\"13\" r=\"4\"/><circle cx=\"26\" cy=\"17\" r=\"4\"/><circle cx=\"24\" cy=\"24\" r=\"4\"/><circle cx=\"16\" cy=\"24\" r=\"4\"/><circle cx=\"14\" cy=\"17\" r=\"4\"/>",
+               "trait": "Coiled flower clusters (cymes) that unfurl like a fiddlehead as they bloom; leaves and stems often bristly with rough hairs; five-petaled flowers, frequently blue.",
+               "differentia": "The order's defining family &mdash; a distinctive coiled, unfurling flower cluster (scorpioid cyme) sets it apart from the flower arrangements of neighboring Lamiid orders.",
+               "species": [
+                {
+                 "common": "Borage",
+                 "sci": "Borago officinalis"
+                },
+                {
+                 "common": "Forget-me-not",
+                 "sci": "Myosotis scorpioides"
+                }
+               ]
+              }
+             ],
+             "desc": "Herbs and shrubs with a distinctive coiled flower cluster that unfurls as it blooms, most familiar through garden borage and forget-me-nots."
+            },
+            {
+             "name": "Solanales",
+             "rank": "order",
+             "accent": "#8b3a2f",
+             "icon": "<path d=\"M20 20L20 8M20 20l11 6M20 20l-4 13M20 20l4 13M20 20l-11 6\"/><circle cx=\"20\" cy=\"20\" r=\"3\"/>",
+             "status": "context",
+             "quizClue": "A five-line star with an unusually large, prominent center circle.",
+             "quizWhy": "Tomatoes, potatoes, and petunias have flowers with a prominent, cone-like cluster of stamens at the center.",
+             "families": [
+              {
+               "id": "solanaceae",
+               "name": "Solanaceae",
+               "common": "Nightshade family",
+               "icon": "<path d=\"M20 20L20 8M20 20l11 6M20 20l-4 13M20 20l4 13M20 20l-11 6\"/><circle cx=\"20\" cy=\"20\" r=\"3\"/>",
+               "trait": "Flowers with five fused petals forming a star or funnel shape around a prominent central cone of stamens; many species contain alkaloids (nicotine, solanine, capsaicin) ranging from toxic to intensely flavorful.",
+               "differentia": "The order's namesake and largest family &mdash; a star-shaped flower with a prominent stamen cone, and alkaloid chemistry absent from the twining vines of Convolvulaceae.",
+               "species": [
+                {
+                 "common": "Potato",
+                 "sci": "Solanum tuberosum"
+                },
+                {
+                 "common": "Aubergine",
+                 "sci": "Solanum melongena"
+                },
+                {
+                 "common": "Tobacco",
+                 "sci": "Nicotiana tabacum"
+                },
+                {
+                 "common": "Tomato",
+                 "sci": "Solanum lycopersicum"
+                },
+                {
+                 "common": "Chili",
+                 "sci": "Capsicum annuum"
+                }
+               ]
+              },
+              {
+               "id": "convolvulaceae",
+               "name": "Convolvulaceae",
+               "common": "Morning glory family",
+               "icon": "<path d=\"M10 32c4-10 8-16 10-20\"/><ellipse cx=\"26\" cy=\"14\" rx=\"8\" ry=\"6\" transform=\"rotate(-30 26 14)\"/><circle cx=\"26\" cy=\"14\" r=\"2\"/>",
+               "trait": "Twining or trailing vines with funnel-shaped flowers that typically open at dawn and wilt by midday; often exude a milky sap.",
+               "differentia": "Distinguished from Solanaceae's star-shaped, stamen-coned flower by a smooth funnel-shaped bloom on a twining vine, and by lacking the order's characteristic alkaloids.",
+               "species": [
+                {
+                 "common": "Morning glory",
+                 "sci": "Ipomoea purpurea"
+                },
+                {
+                 "common": "Ensai (water spinach)",
+                 "sci": "Ipomoea aquatica"
+                }
+               ]
+              }
+             ],
+             "desc": "Herbs and vines producing some of the world's most important food crops and a few of its most potent alkaloids, spanning the nightshades and the twining morning-glory vines."
+            },
+            {
+             "name": "Lamiales",
+             "rank": "order",
+             "accent": "#8b3a2f",
+             "icon": "<rect x=\"14\" y=\"6\" width=\"4\" height=\"28\"/><rect x=\"22\" y=\"6\" width=\"4\" height=\"28\"/><ellipse cx=\"16\" cy=\"14\" rx=\"7\" ry=\"4\"/><ellipse cx=\"24\" cy=\"24\" rx=\"7\" ry=\"4\"/>",
+             "status": "inguide",
+             "quizClue": "Two vertical bars flanked by a pair of small oval blooms, like a square-stemmed mint sprig.",
+             "quizWhy": "Mint, sage, and lavender are known for square stems and two-lipped (bilabiate) tubular flowers.",
+             "desc": "Mostly herbs and shrubs with fused, often two-lipped (bilabiate) flowers and opposite leaves; square stems and aromatic oils recur across several families.",
+             "families": [
+              {
+               "id": "lamiaceae",
+               "name": "Lamiaceae",
+               "common": "Mint family",
+               "icon": "<rect x=\"14\" y=\"6\" width=\"4\" height=\"28\"/><rect x=\"22\" y=\"6\" width=\"4\" height=\"28\"/><ellipse cx=\"16\" cy=\"14\" rx=\"7\" ry=\"4\"/><ellipse cx=\"24\" cy=\"24\" rx=\"7\" ry=\"4\"/>",
+               "trait": "Square stems, opposite aromatic leaves rich in essential oils, and two-lipped tubular flowers.",
+               "differentia": "The only family in this order with square stems and paired opposite leaves both saturated in aromatic oil &mdash; Oleaceae and Plantaginaceae lack the square-stem trait entirely.",
+               "species": [
+                {
+                 "common": "Common sage",
+                 "sci": "Salvia officinalis"
+                },
+                {
+                 "common": "Sweet basil",
+                 "sci": "Ocimum basilicum"
+                },
+                {
+                 "common": "Lavender",
+                 "sci": "Lavandula angustifolia"
+                },
+                {
+                 "common": "Peppermint",
+                 "sci": "Mentha &times; piperita"
+                },
+                {
+                 "common": "Rosemary",
+                 "sci": "Salvia rosmarinus"
+                },
+                {
+                 "common": "Shiso",
+                 "sci": "Perilla frutescens"
+                }
+               ]
+              },
+              {
+               "id": "oleaceae",
+               "name": "Oleaceae",
+               "common": "Olive family",
+               "icon": "<ellipse cx=\"14\" cy=\"16\" rx=\"8\" ry=\"3.5\"/><ellipse cx=\"26\" cy=\"16\" rx=\"8\" ry=\"3.5\"/><line x1=\"6\" y1=\"16\" x2=\"34\" y2=\"16\"/><ellipse cx=\"20\" cy=\"28\" rx=\"4\" ry=\"6\"/>",
+               "trait": "Opposite leaves (often paired leaflets); four-petaled flowers, many wind- or insect-pollinated trees.",
+               "differentia": "Woody where most Lamiales relatives are herbaceous; four-petaled flowers and paired leaflets mark it apart from the two-lipped blooms typical elsewhere in the order.",
+               "species": [
+                {
+                 "common": "Common olive",
+                 "sci": "Olea europaea"
+                },
+                {
+                 "common": "Common lilac",
+                 "sci": "Syringa vulgaris"
+                },
+                {
+                 "common": "White ash",
+                 "sci": "Fraxinus americana"
+                },
+                {
+                 "common": "Forsythia",
+                 "sci": "Forsythia &times; intermedia"
+                },
+                {
+                 "common": "Jasmine",
+                 "sci": "Jasminum officinale"
+                }
+               ]
+              },
+              {
+               "id": "plantaginaceae",
+               "name": "Plantaginaceae",
+               "common": "Plantain family",
+               "icon": "<path d=\"M20 34c0-16-10-20-10-26 6 2 10 8 10 12 0-4 4-10 10-12 0 6-10 10-10 26z\"/>",
+               "trait": "Diverse habit from lawn weeds to garden ornamentals, united by asymmetric, often spurred flowers.",
+               "differentia": "United by asymmetric, often spurred flowers rather than the strict bilabiate (two-lipped) shape seen in Lamiaceae, spanning everything from lawn weeds to foxgloves.",
+               "species": [
+                {
+                 "common": "Common foxglove",
+                 "sci": "Digitalis purpurea"
+                },
+                {
+                 "common": "Snapdragon",
+                 "sci": "Antirrhinum majus"
+                },
+                {
+                 "common": "Common plantain",
+                 "sci": "Plantago major"
+                }
+               ]
+              },
+              {
+               "id": "bignoniaceae",
+               "name": "Bignoniaceae",
+               "common": "Trumpet vine family",
+               "icon": "<path d=\"M8 28c8-2 8-18 12-22 4 4 4 20 12 22\"/><path d=\"M20 6v24\"/>",
+               "trait": "Large, showy trumpet-shaped flowers; many climbing lianas or flowering trees of warm climates.",
+               "differentia": "Defined by unusually large, trumpet-shaped flowers and a climbing or tree habit not found among the smaller-flowered herbs of Lamiaceae or Verbenaceae.",
+               "species": [
+                {
+                 "common": "Southern catalpa",
+                 "sci": "Catalpa bignonioides"
+                },
+                {
+                 "common": "Trumpet vine",
+                 "sci": "Campsis radicans"
+                },
+                {
+                 "common": "Jacaranda",
+                 "sci": "Jacaranda mimosifolia"
+                }
+               ]
+              },
+              {
+               "id": "verbenaceae",
+               "name": "Verbenaceae",
+               "common": "Verbena family",
+               "icon": "<line x1=\"20\" y1=\"4\" x2=\"20\" y2=\"34\"/><circle cx=\"17\" cy=\"8\" r=\"1.6\"/><circle cx=\"23\" cy=\"8\" r=\"1.6\"/><circle cx=\"15\" cy=\"14\" r=\"1.6\"/><circle cx=\"25\" cy=\"14\" r=\"1.6\"/><circle cx=\"14\" cy=\"20\" r=\"1.6\"/><circle cx=\"26\" cy=\"20\" r=\"1.6\"/>",
+               "trait": "Small flowers clustered in dense spikes; leaves often rough-textured, some yield durable timber.",
+               "differentia": "Similar square stems to Lamiaceae, but flowers are packed into dense spikes rather than paired whorls, and several members are timber trees rather than herbs.",
+               "species": [
+                {
+                 "common": "Lemon verbena",
+                 "sci": "Aloysia citrodora"
+                },
+                {
+                 "common": "Common verbena",
+                 "sci": "Verbena officinalis"
+                },
+                {
+                 "common": "Teak",
+                 "sci": "Tectona grandis"
+                }
+               ]
+              },
+              {
+               "id": "pedaliaceae",
+               "name": "Pedaliaceae",
+               "common": "Sesame family",
+               "icon": "<path d=\"M20 34V18\"/><ellipse cx=\"20\" cy=\"14\" rx=\"5\" ry=\"7\"/><path d=\"M20 7v3\"/><path d=\"M16 10l1 2M24 10l-1 2\"/>",
+               "trait": "Sticky, mucilage-covered capsules split open at maturity to release small, oil-rich seeds; opposite leaves often glandular-hairy.",
+               "differentia": "The order's oilseed specialist &mdash; small pods packed with tiny oil-rich seeds distinguish it from the square-stemmed herbs of Lamiaceae and the woody Oleaceae.",
+               "species": [
+                {
+                 "common": "Sesame",
+                 "sci": "Sesamum indicum"
+                }
+               ]
+              },
+              {
+               "id": "paulowniaceae",
+               "name": "Paulowniaceae",
+               "common": "Empress tree family",
+               "icon": "<path d=\"M20 14c-4-4-9-2-9 2 0 4 9 10 9 10s9-6 9-10c0-4-5-6-9-2z\"/><path d=\"M20 26v8\"/><path d=\"M20 26l-3 3M20 26l3 3M20 30l-3 3M20 30l3 3\"/>",
+               "trait": "Large heart-shaped leaves and showy, upright clusters of tubular purple flowers blooming before the leaves emerge; among the fastest-growing hardwood trees known.",
+               "differentia": "The order's fastest-growing tree &mdash; large heart-shaped leaves and an upright spike of purple tubular flowers set it apart from the smaller herbs and shrubs typical of Lamiales.",
+               "species": [
+                {
+                 "common": "Empress tree",
+                 "sci": "Paulownia tomentosa"
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "name": "Campanulids",
+           "rank": "clade",
+           "accent": "#8b3a2f",
+           "children": [
+            {
+             "name": "Aquifoliales",
+             "rank": "order",
+             "accent": "#8b3a2f",
+             "icon": "<path d=\"M20 8c6 4 8 10 6 16-2-1-4-3-6-6-2 3-4 5-6 6-2-6 0-12 6-16z\"/><circle cx=\"20\" cy=\"30\" r=\"2.5\"/>",
+             "status": "context",
+             "quizClue": "A pointed leaf shape with a single berry hanging beneath it.",
+             "quizWhy": "Holly is instantly recognizable by its pointed leaves and bright red berries.",
+             "families": [
+              {
+               "id": "aquifoliaceae",
+               "name": "Aquifoliaceae",
+               "common": "Holly family",
+               "icon": "<path d=\"M20 8c6 4 8 10 6 16-2-1-4-3-6-6-2 3-4 5-6 6-2-6 0-12 6-16z\"/><circle cx=\"20\" cy=\"30\" r=\"2.5\"/>",
+               "trait": "Simple, often spiny-toothed evergreen leaves; small white flowers followed by bright, berry-like drupes; several species (mate, guayusa) are brewed into caffeinated infusions.",
+               "differentia": "The order's sole family &mdash; every Aquifoliales species tagged here, ornamental holly and caffeinated mate alike, belongs to the single genus Ilex.",
+               "species": [
+                {
+                 "common": "Holly",
+                 "sci": "Ilex aquifolium"
+                },
+                {
+                 "common": "Yerba mate",
+                 "sci": "Ilex paraguariensis"
+                }
+               ]
+              }
+             ],
+             "desc": "A single-genus order &mdash; every species here, ornamental holly and caffeinated mate alike, belongs to Ilex."
+            },
+            {
+             "name": "Apiales",
+             "rank": "order",
+             "accent": "#8b3a2f",
+             "icon": "<path d=\"M20 34V18M20 18l-9-6M20 18l9-6M20 18l-9 3M20 18l9 3\"/><circle cx=\"11\" cy=\"12\" r=\"1.3\"/><circle cx=\"29\" cy=\"12\" r=\"1.3\"/><circle cx=\"11\" cy=\"21\" r=\"1.3\"/><circle cx=\"29\" cy=\"21\" r=\"1.3\"/>",
+             "status": "context",
+             "quizClue": "An umbrella-like spray of lines ending in small dots, like an umbel of tiny flowers.",
+             "quizWhy": "Carrots, dill, and parsley all produce their tiny flowers in umbrella-shaped clusters called umbels.",
+             "families": [
+              {
+               "id": "apiaceae",
+               "name": "Apiaceae",
+               "common": "Carrot family",
+               "icon": "<path d=\"M20 34V18M20 18l-9-6M20 18l9-6M20 18l-9 3M20 18l9 3\"/><circle cx=\"11\" cy=\"12\" r=\"1.3\"/><circle cx=\"29\" cy=\"12\" r=\"1.3\"/><circle cx=\"11\" cy=\"21\" r=\"1.3\"/><circle cx=\"29\" cy=\"21\" r=\"1.3\"/>",
+               "trait": "Tiny five-petaled flowers clustered into umbrella-shaped compound umbels; hollow, ridged stems and finely divided, aromatic leaves; many produce essential oils used as spices.",
+               "differentia": "The order's namesake and dominant family &mdash; umbrella-shaped flower clusters (umbels) on hollow ridged stems distinguish nearly every Apiales species here from the woody Araliaceae.",
+               "species": [
+                {
+                 "common": "Fennel",
+                 "sci": "Foeniculum vulgare"
+                },
+                {
+                 "common": "Cumin",
+                 "sci": "Cuminum cyminum"
+                },
+                {
+                 "common": "Parsnip",
+                 "sci": "Pastinaca sativa"
+                },
+                {
+                 "common": "Dill",
+                 "sci": "Anethum graveolens"
+                },
+                {
+                 "common": "Anise",
+                 "sci": "Pimpinella anisum"
+                },
+                {
+                 "common": "Parsley",
+                 "sci": "Petroselinum crispum"
+                },
+                {
+                 "common": "Carrot",
+                 "sci": "Daucus carota"
+                },
+                {
+                 "common": "Celery",
+                 "sci": "Apium graveolens"
+                }
+               ]
+              },
+              {
+               "id": "araliaceae",
+               "name": "Araliaceae",
+               "common": "Ginseng family",
+               "icon": "<path d=\"M20 20V8\"/><circle cx=\"20\" cy=\"8\" r=\"1.5\"/><path d=\"M20 20c-2 4-3 8-2 12M20 20c2 4 3 8 2 12M20 20c-4 2-6 5-6 9M20 20c4 2 6 5 6 9\"/>",
+               "trait": "Often woody shrubs, trees, or vines with palmately compound leaves; small flowers in umbel-like clusters, and in ginseng, a slow-growing forked root prized in traditional medicine.",
+               "differentia": "The order's only woody family here &mdash; distinguished from Apiaceae's herbaceous umbels by a shrub or tree habit and, in ginseng, a slow-growing forked taproot.",
+               "species": [
+                {
+                 "common": "Ginseng",
+                 "sci": "Panax ginseng"
+                }
+               ]
+              }
+             ],
+             "desc": "Aromatic herbs (and a few woody outliers) known for umbrella-shaped flower clusters and essential oils, supplying much of the world's savory spice cabinet."
+            },
+            {
+             "name": "Dipsacales",
+             "rank": "order",
+             "accent": "#8b3a2f",
+             "icon": "<path d=\"M20 34V22\"/><path d=\"M20 22c-6-2-8-8-4-12 4 3 5 8 4 12z\"/><path d=\"M20 22c6-2 8-8 4-12-4 3-5 8-4 12z\"/>",
+             "status": "context",
+             "quizClue": "Two curved trumpet shapes branching together from one stem, like paired honeysuckle blooms.",
+             "quizWhy": "Honeysuckle produces paired tubular flowers that grow directly from the same point on the stem.",
+             "families": [
+              {
+               "id": "caprifoliaceae",
+               "name": "Caprifoliaceae",
+               "common": "Honeysuckle family",
+               "icon": "<path d=\"M12 34c0-14 4-22 4-22M28 34c0-14-4-22-4-22\"/><ellipse cx=\"16\" cy=\"10\" rx=\"3\" ry=\"5\"/><ellipse cx=\"24\" cy=\"10\" rx=\"3\" ry=\"5\"/>",
+               "trait": "Paired, often fragrant tubular flowers with fused petals opening into flaring lobes; many are climbing or scrambling shrubs, though the family (broadened by DNA evidence) also includes the low herbaceous valerian.",
+               "differentia": "Distinguished from Adoxaceae's flat-topped flower clusters by paired, fused tubular flowers and (in honeysuckle) a climbing, twining habit.",
+               "species": [
+                {
+                 "common": "Honeysuckle",
+                 "sci": "Lonicera periclymenum"
+                },
+                {
+                 "common": "Valerian",
+                 "sci": "Valeriana officinalis"
+                }
+               ]
+              },
+              {
+               "id": "adoxaceae",
+               "name": "Adoxaceae",
+               "common": "Elderflower family",
+               "icon": "<path d=\"M20 34V22\"/><circle cx=\"20\" cy=\"14\" r=\"2\"/><circle cx=\"13\" cy=\"16\" r=\"2\"/><circle cx=\"27\" cy=\"16\" r=\"2\"/><circle cx=\"9\" cy=\"20\" r=\"2\"/><circle cx=\"31\" cy=\"20\" r=\"2\"/><circle cx=\"16\" cy=\"12\" r=\"2\"/><circle cx=\"24\" cy=\"12\" r=\"2\"/><path d=\"M20 22l0-8M20 14l-7 2M20 14l7 2M13 16l-4 4M27 16l4 4M20 14l-4-2M20 14l4-2\"/>",
+               "trait": "Small white flowers packed into broad, flat-topped clusters (corymbs), followed by clusters of small dark berries; compound, opposite leaves.",
+               "differentia": "The order's flat-topped bloomer &mdash; broad clusters of tiny white flowers set it apart from Caprifoliaceae's larger, paired tubular blooms.",
+               "species": [
+                {
+                 "common": "Elderflower",
+                 "sci": "Sambucus nigra"
+                }
+               ]
+              }
+             ],
+             "desc": "Shrubs, vines, and herbs of the northern temperate zone bearing clustered tubular or flat-topped flowers, spanning ornamental honeysuckle, medicinal valerian, and elderflower."
+            },
+            {
+             "name": "Asterales",
+             "rank": "order",
+             "accent": "#8b3a2f",
+             "icon": "<circle cx=\"20\" cy=\"20\" r=\"4\"/><path d=\"M20 12V6M20 34v-6M12 20H6M34 20h-6M14 14l-4-4M30 14l4-4M14 26l-4 4M30 26l4 4\"/>",
+             "status": "extension",
+             "quizClue": "A center disc ringed by many thin radiating lines &mdash; the most literal daisy shape in the set.",
+             "quizWhy": "Daisies and sunflowers are composite flowers &mdash; what looks like one bloom is really a disc of many tiny flowers ringed by petal-like rays.",
+             "families": [
+              {
+               "id": "asteraceae",
+               "name": "Asteraceae",
+               "common": "Daisy / Sunflower family",
+               "icon": "<circle cx=\"20\" cy=\"20\" r=\"4\"/><path d=\"M20 12V6M20 34v-6M12 20H6M34 20h-6M14 14l-4-4M30 14l4-4M14 26l-4 4M30 26l4 4\"/>",
+               "trait": "Flower heads that are actually dense clusters of many tiny florets packed onto a single receptacle, surrounded by protective bracts, giving the appearance of one large bloom; among the largest of all flowering-plant families.",
+               "differentia": "The order's sole family and one of the two largest plant families on Earth &mdash; what looks like a single flower is really a composite head of dozens to hundreds of tiny florets.",
+               "species": [
+                {
+                 "common": "Artichoke",
+                 "sci": "Cynara cardunculus"
+                },
+                {
+                 "common": "Burdock",
+                 "sci": "Arctium lappa"
+                },
+                {
+                 "common": "Topinambur",
+                 "sci": "Helianthus tuberosus"
+                },
+                {
+                 "common": "Sunflower",
+                 "sci": "Helianthus annuus"
+                },
+                {
+                 "common": "Chamomile",
+                 "sci": "Matricaria chamomilla"
+                },
+                {
+                 "common": "Chicory",
+                 "sci": "Cichorium intybus"
+                },
+                {
+                 "common": "Dandelion",
+                 "sci": "Taraxacum officinale"
+                },
+                {
+                 "common": "Marigold",
+                 "sci": "Tagetes erecta"
+                },
+                {
+                 "common": "Chrysanthemum",
+                 "sci": "Chrysanthemum morifolium"
+                },
+                {
+                 "common": "Daisy",
+                 "sci": "Bellis perennis"
+                },
+                {
+                 "common": "Lettuce",
+                 "sci": "Lactuca sativa"
+                },
+                {
+                 "common": "Feverfew",
+                 "sci": "Tanacetum parthenium"
+                }
+               ]
+              }
+             ],
+             "desc": "The daisy order &mdash; composite flower heads built from many tiny florets crowded onto a single receptacle, spanning garden ornamentals, salad greens, and the towering sunflower."
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+};
+</script>
+<script>
+// Shared helpers used by all four tab renderers. Single place for icon
+// wrapping, escaping, and the order status-tag vocabulary so nothing is
+// hand-duplicated per tab.
+window.Herb = (function () {
+  function esc(str) {
+    return String(str == null ? '' : str).replace(/[&<>"']/g, (c) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+    }[c]));
+  }
+
+  // path markup is trusted inline SVG authored in data/taxonomy.json, not
+  // user input, so it is inserted verbatim (never escaped).
+  function iconSvg(pathMarkup, cls) {
+    return `<svg class="${cls || ''}" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">${pathMarkup || ''}</svg>`;
+  }
+
+  // Status -> the modifier class on .ph-group/.ph-card, plus the small
+  // label text shown in the tag slot. Absence of both classes (the
+  // "context" case) is the default, muted look.
+  function statusModifierClass(status) {
+    if (status === 'inguide') return 'ph-inguide';
+    if (status === 'extension') return 'ph-extension';
+    return '';
+  }
+  function statusTagHtml(status, tagClass) {
+    if (status === 'inguide') return `<span class="${tagClass}">&check; in guide</span>`;
+    if (status === 'extension') return `<span class="${tagClass}">extension pt.</span>`;
+    return `<span class="${tagClass} ${tagClass}-not">not in guide</span>`;
+  }
+
+  // Depth-first walk over the taxonomy tree. visit(node, depth, parents)
+  // may return false to skip descending into node.children.
+  function walk(nodes, visit, depth = 0, parents = []) {
+    for (const node of nodes) {
+      const cont = visit(node, depth, parents);
+      if (cont !== false && node.children) {
+        walk(node.children, visit, depth + 1, [...parents, node]);
+      }
+    }
+  }
+
+  // Collect every rank:"order" node in document order.
+  function collectOrders(tree) {
+    const orders = [];
+    walk(tree, (node) => {
+      if (node.rank === 'order') orders.push(node);
+    });
+    return orders;
+  }
+
+  function eventsRowHtml(events) {
+    if (!events || !events.length) return '';
+    return `<div class="ph-event-row">${events
+      .map((e) => `<span class="ph-event-chip"><span class="ph-event-chip-date">${esc(e.date)}</span><span class="ph-event-chip-name">${esc(e.label)}</span></span>`)
+      .join('')}</div>`;
+  }
+
+  return {
+    esc, iconSvg, statusModifierClass, statusTagHtml, walk, collectOrders, eventsRowHtml,
+  };
+})();
+
+
+// Field Guide tab: reference browser for plant taxonomy. Every order with
+// a non-empty families[] is "built" and gets a header + family cards;
+// orders without built families simply do not appear here. This keeps the
+// Field Guide's membership a pure function of taxonomy.json - no separate
+// "which orders are in the guide" list to keep in sync.
+(function () {
+  const { esc, iconSvg, collectOrders } = window.Herb;
+
+  function slug(name) { return name.toLowerCase().replace(/\s+/g, '-'); }
+
+  function speciesRowHtml(sp) {
+    return `<li><span class="common">${esc(sp.common)}</span><span class="sci">${sp.sci}</span></li>`;
+  }
+
+  function familyCardHtml(family) {
+    return `<article class="family-card" id="fam-${esc(family.id)}" data-family="${esc(family.name)}">
+      <div class="card-top">
+        <div class="fam-titles">
+          <h3 class="fam-name">${esc(family.name)}</h3>
+          <div class="fam-common">${esc(family.common)}</div>
+        </div>
+        ${iconSvg(family.icon, 'leaf-icon')}
+      </div>
+      <p class="trait">${family.trait}</p>
+      <p class="differentia"><b>Sets it apart:</b> ${family.differentia}</p>
+      ${family.species && family.species.length
+        ? `<ul class="species-list">${family.species.map(speciesRowHtml).join('')}</ul>`
+        : ''}
+    </article>`;
+  }
+
+  function orderSectionHtml(order, index) {
+    const plate = String(index + 1).padStart(2, '0');
+    return `<section class="order" id="order-${slug(order.name)}" data-order="${esc(order.name)}">
+      <div class="order-head">
+        <div class="order-title-group">
+          ${iconSvg(order.icon, 'order-icon')}
+          <h2 class="order-name">${esc(order.name)}</h2>
+        </div>
+        <span class="plate">Plate No. ${plate}</span>
+      </div>
+      <p class="order-traits">${order.desc || ''}</p>
+      <div class="family-grid">${(order.families || []).map(familyCardHtml).join('')}</div>
+    </section>`;
+  }
+
+  function renderFieldGuide(container, tree) {
+    const built = collectOrders(tree).filter((o) => o.families && o.families.length);
+    const header = `<header class="masthead">
+      <div class="eyebrow">Herbarium Edition &middot; Volume I</div>
+      <h1 class="title">A Field Guide to the <em>Plant Kingdom</em></h1>
+      <div class="subtitle">${built.length} ORDERS <span class="dot">&middot;</span> ${built.reduce((n, o) => n + o.families.length, 0)} FAMILIES <span class="dot">&middot;</span> ${built.reduce((n, o) => n + o.families.reduce((m, f) => m + (f.species ? f.species.length : 0), 0), 0)} SPECIES</div>
+    </header>`;
+
+    if (!built.length) {
+      container.innerHTML = `${header}<p style="text-align:center;color:var(--sage);padding:60px 24px;">No orders built out yet.</p>`;
+      return;
+    }
+
+    container.innerHTML = `
+      ${header}
+      <nav class="fg-jump">${built.map((o) => `<a href="#order-${slug(o.name)}">${esc(o.name)}</a>`).join('')}</nav>
+      <main>${built.map((o, i) => orderSectionHtml(o, i)).join('')}</main>
+    `;
+  }
+
+  window.Herb = window.Herb || {};
+  window.Herb.renderFieldGuide = renderFieldGuide;
+})();
+
+
+// Diagram tab: recursive nested-box map of the plant kingdom. One function,
+// renderNode(node, depth, inheritedAccent) - a node with `children` becomes
+// a bordered container (.ph-group), a node without becomes a specimen card
+// (.ph-card). Depth-based sizing is driven entirely by the CSS custom
+// property --depth (see styles.css); this function never special-cases
+// rendering by rank or by hand-picked pixel values, so adding a family
+// under an order, or a species under a family, needs zero changes here.
+(function () {
+  const { esc, iconSvg, statusModifierClass, statusTagHtml, eventsRowHtml } = window.Herb;
+
+  function chipsToggleHtml(labels, summaryText) {
+    if (!labels || !labels.length) return '';
+    return `<details class="ph-species-toggle">
+      <summary><span class="ph-species-chevron">&#9662;</span>${summaryText}</summary>
+      <div class="ph-species-list">${labels.map((l) => `<span class="ph-species-chip">${esc(l)}</span>`).join('')}</div>
+    </details>`;
+  }
+
+  function leafExtrasHtml(node) {
+    if (node.rank === 'order' && node.families && node.families.length) {
+      const labels = node.families.map((f) => f.common || f.name);
+      return chipsToggleHtml(labels, `${labels.length} famil${labels.length === 1 ? 'y' : 'ies'}`);
+    }
+    if (node.plants && node.plants.length) {
+      return chipsToggleHtml(node.plants, `${node.plants.length} tagged plant${node.plants.length === 1 ? '' : 's'}`);
+    }
+    return '';
+  }
+
+  function renderNode(node, depth, inheritedAccent) {
+    const accent = node.accent || inheritedAccent;
+    const isOrder = node.rank === 'order';
+    const modClass = isOrder ? statusModifierClass(node.status) : '';
+    const eventsHtml = eventsRowHtml(node.events);
+    const dateTag = node.headerEvent ? `<span class="ph-group-date">${esc(node.headerEvent.date)} &middot; ${esc(node.headerEvent.label)}</span>` : '';
+
+    if (node.children && node.children.length) {
+      const inner = node.children.map((child) => renderNode(child, depth + 1, accent)).join('');
+      return `${eventsHtml}<div class="ph-group ${modClass}" style="--depth:${depth};${accent ? `--accent:${esc(accent)}` : ''}">
+        <div class="ph-group-head">
+          <span class="ph-group-rank">${esc(node.rank)}</span>
+          <h3 class="ph-group-title">${esc(node.name)}</h3>
+          ${dateTag}
+        </div>
+        <div class="ph-group-body">${inner}</div>
+      </div>`;
+    }
+
+    const icon = node.icon ? iconSvg(node.icon, 'ph-card-icon') : '';
+    const tag = isOrder ? statusTagHtml(node.status, 'ph-card-tag') : '';
+    const extras = leafExtrasHtml(node);
+
+    return `${eventsHtml}<div class="ph-card ${modClass}" style="--depth:${depth};${accent ? `--accent:${esc(accent)}` : ''}">
+      ${icon}
+      <span class="ph-card-rank">${esc(node.rank)}</span>
+      <span class="ph-card-name">${esc(node.name)}</span>
+      ${tag}
+      ${extras}
+    </div>`;
+  }
+
+  function renderDiagram(container, tree) {
+    container.innerHTML = `
+      <header class="tr-masthead">
+        <div class="eyebrow">Herbarium Edition &middot; Diagram</div>
+        <h1 class="tr-title">Where the Orders <em>Fit</em></h1>
+        <div class="tip">A nested map of the plant kingdom, from the origin of life to every order in this field guide.</div>
+      </header>
+      <div class="tr-main ph-main">
+        <div class="ph-caveat">
+          <b>A caveat on the first few boxes.</b> Brown Algae, Red Algae, Green Algae, Bryophytes, and Ferns
+          are <b>not taxonomic orders</b> like the rest of this guide &mdash; each is tagged &ldquo;informal
+          group&rdquo; rather than &ldquo;order&rdquo; below, since they sit at a much higher, less precise rank.
+          Brown Algae in particular sits on an entirely different branch of the tree of life than green plants do;
+          they're placed near each other here only to sketch when photosynthetic life diversified before true land
+          plants existed.
+          <br><br>
+          <b>A caveat on the dates.</b> Boxes run oldest to youngest, top to bottom and outer to inner. Divergence
+          dates for ancient splits come from molecular-clock and fossil studies that often disagree by tens of
+          millions of years &mdash; treat the dates on the rust-colored tags as commonly-cited estimates, not precise
+          figures.
+        </div>
+        <div class="ph-species-controls">
+          <button type="button" id="phExpandAll" class="ph-species-btn">Expand all</button>
+          <button type="button" id="phCollapseAll" class="ph-species-btn">Collapse all</button>
+        </div>
+        <div id="phyloTree" class="ph-tree">${tree.map((n) => renderNode(n, 0, n.accent)).join('')}</div>
+      </div>
+    `;
+
+    const root = container.querySelector('#phyloTree');
+    container.querySelector('#phExpandAll').addEventListener('click', () => {
+      root.querySelectorAll('details.ph-species-toggle').forEach((d) => { d.open = true; });
+    });
+    container.querySelector('#phCollapseAll').addEventListener('click', () => {
+      root.querySelectorAll('details.ph-species-toggle').forEach((d) => { d.open = false; });
+    });
+  }
+
+  window.Herb = window.Herb || {};
+  window.Herb.renderDiagram = renderDiagram;
+})();
+
+
+// Trainer tab: quiz/study game built from the same taxonomy tree, no
+// separate quiz-data file. Five modes: Species -> Family, Family -> Order,
+// Spot the Difference (differentia -> family), Icon -> Order, and a
+// non-quiz Study/Browse mode for flipping through a chosen order's families.
+(function () {
+  const { esc, iconSvg, collectOrders } = window.Herb;
+
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+  function pick(arr, n, exclude) {
+    return shuffle(arr.filter((x) => x !== exclude)).slice(0, n);
+  }
+
+  function buildPools(tree) {
+    const orders = collectOrders(tree).filter((o) => o.families && o.families.length);
+    const families = [];
+    const species = [];
+    for (const order of orders) {
+      for (const fam of order.families) {
+        if (!fam.species || !fam.species.length) continue;
+        families.push({ ...fam, orderName: order.name });
+        for (const sp of fam.species) {
+          species.push({ ...sp, familyName: fam.common || fam.name, orderName: order.name });
+        }
+      }
+    }
+    const iconOrders = collectOrders(tree).filter((o) => o.quizClue && o.icon);
+    return { orders, families, species, iconOrders };
+  }
+
+  function questionSpeciesToFamily(pools) {
+    const target = pools.species[Math.floor(Math.random() * pools.species.length)];
+    const options = shuffle([target.familyName, ...pick(pools.families.map((f) => f.common || f.name), 3, target.familyName)]);
+    return {
+      label: 'Species &rarr; Family', icon: null,
+      main: esc(target.common), sub: target.sci,
+      text: `Which family does this belong to?`,
+      options, answer: target.familyName,
+      why: `${esc(target.common)} sits in ${esc(target.familyName)}, order ${esc(target.orderName)}.`,
+    };
+  }
+
+  function questionFamilyToOrder(pools) {
+    const target = pools.families[Math.floor(Math.random() * pools.families.length)];
+    const options = shuffle([target.orderName, ...pick(pools.orders.map((o) => o.name), 3, target.orderName)]);
+    return {
+      label: 'Family &rarr; Order', icon: null,
+      main: esc(target.name), sub: target.common,
+      text: target.trait,
+      options, answer: target.orderName,
+      why: target.differentia,
+    };
+  }
+
+  function questionDifferentia(pools) {
+    const target = pools.families[Math.floor(Math.random() * pools.families.length)];
+    const siblings = pools.families.filter((f) => f.orderName === target.orderName && f.name !== target.name);
+    const distractorPool = siblings.length >= 3 ? siblings : pools.families;
+    const options = shuffle([target.name, ...pick(distractorPool.map((f) => f.name), 3, target.name)]);
+    return {
+      label: 'Spot the Difference', icon: null,
+      main: 'Which family is this?', sub: '',
+      text: target.differentia,
+      options, answer: target.name,
+      why: `${esc(target.name)} (${esc(target.common)}) &mdash; ${target.trait}`,
+    };
+  }
+
+  function questionIconToOrder(pools) {
+    const target = pools.iconOrders[Math.floor(Math.random() * pools.iconOrders.length)];
+    const options = shuffle([target.name, ...pick(pools.iconOrders.map((o) => o.name), 3, target.name)]);
+    return {
+      label: 'Icon &rarr; Order', icon: target.icon,
+      main: '', sub: '',
+      text: target.quizClue,
+      options, answer: target.name,
+      why: target.quizWhy,
+    };
+  }
+
+  const MODES = {
+    species: { label: 'Species &rarr; Family', build: questionSpeciesToFamily, needs: (p) => p.species.length >= 4 },
+    family: { label: 'Family &rarr; Order', build: questionFamilyToOrder, needs: (p) => p.families.length >= 4 && p.orders.length >= 4 },
+    differentia: { label: 'Spot the Difference', build: questionDifferentia, needs: (p) => p.families.length >= 4 },
+    icon: { label: 'Icon &rarr; Order', build: questionIconToOrder, needs: (p) => p.iconOrders.length >= 4 },
+  };
+
+  function studyCardHtml(family) {
+    return `<div class="study-card">
+      <div class="study-card-top">${iconSvg(family.icon)}<div>
+        <div class="study-fam-name">${esc(family.name)}</div>
+        <div class="study-fam-common">${esc(family.common)}</div>
+      </div></div>
+      <p class="study-trait">${family.trait}</p>
+      <p class="study-differentia">${family.differentia}</p>
+      <div class="study-species">${(family.species || []).map((sp) => `<span>${esc(sp.common)}</span>`).join('')}</div>
+    </div>`;
+  }
+
+  function renderTrainer(container, tree) {
+    const pools = buildPools(tree);
+    const state = { mode: 'icon', correct: 0, answered: 0, streak: 0, best: 0, current: null, studyOrder: null };
+
+    container.innerHTML = `
+      <header class="tr-masthead">
+        <div class="eyebrow">Companion to the Field Guide</div>
+        <h1 class="tr-title">The <em>Herbarium</em> Trainer</h1>
+        <p class="tip">Cycle through all four quiz modes each session instead of mastering one at a time &mdash; interleaving species, families, and orders builds stronger recall than drilling one relationship on its own.</p>
+      </header>
+      <div class="stats-bar">
+        <div class="stat"><span class="stat-num" id="statCorrect">0</span><span class="stat-label">Correct</span></div>
+        <div class="stat"><span class="stat-num" id="statTotal">0</span><span class="stat-label">Answered</span></div>
+        <div class="stat"><span class="stat-num" id="statStreak">0</span><span class="stat-label">Streak</span></div>
+        <div class="stat"><span class="stat-num" id="statBest">0</span><span class="stat-label">Best Streak</span></div>
+      </div>
+      <nav class="modes">${Object.entries(MODES).map(([key, m]) => `<button type="button" data-mode="${key}">${m.label}</button>`).join('')}<button type="button" data-mode="study">Study / Browse</button></nav>
+      <div class="tr-main">
+        <div id="quizArea" class="quiz-wrap"></div>
+        <div id="studyArea" class="hidden">
+          <div class="order-chips" id="orderChips"></div>
+          <p class="study-order-desc" id="studyOrderDesc"></p>
+          <div class="study-grid" id="studyGrid"></div>
+        </div>
+      </div>
+    `;
+
+    const quizArea = container.querySelector('#quizArea');
+    const studyArea = container.querySelector('#studyArea');
+    const statCorrect = container.querySelector('#statCorrect');
+    const statTotal = container.querySelector('#statTotal');
+    const statStreak = container.querySelector('#statStreak');
+    const statBest = container.querySelector('#statBest');
+
+    function setMode(key) {
+      state.mode = key;
+      container.querySelectorAll('nav.modes button').forEach((b) => b.classList.toggle('active', b.dataset.mode === key));
+      if (key === 'study') {
+        quizArea.classList.add('hidden');
+        studyArea.classList.remove('hidden');
+        renderStudy();
+      } else {
+        studyArea.classList.add('hidden');
+        quizArea.classList.remove('hidden');
+        nextQuestion();
+      }
+    }
+
+    function nextQuestion() {
+      const mode = MODES[state.mode];
+      if (!mode.needs(pools)) {
+        quizArea.innerHTML = '<p class="tr-empty">Not enough built data for this mode yet.</p>';
+        return;
+      }
+      const q = mode.build(pools);
+      state.current = q;
+      quizArea.innerHTML = `
+        <div class="prompt-card">
+          <div class="prompt-label">${q.label}</div>
+          ${q.icon ? iconSvg(q.icon, 'prompt-icon') : ''}
+          ${q.main ? `<div class="prompt-main">${q.main}</div>` : ''}
+          ${q.sub ? `<div class="prompt-sub">${q.sub}</div>` : ''}
+          <p class="prompt-text">${q.text}</p>
+        </div>
+        <div class="answers">${q.options.map((opt) => `<button type="button" class="answer-btn" data-opt="${esc(opt)}"><span class="a-name">${esc(opt)}</span></button>`).join('')}</div>
+        <div class="feedback hidden" id="feedback"></div>
+        <button type="button" class="next-btn hidden" id="nextBtn">Next</button>
+      `;
+      quizArea.querySelectorAll('.answer-btn').forEach((btn) => btn.addEventListener('click', () => answer(btn.dataset.opt)));
+      quizArea.querySelector('#nextBtn').addEventListener('click', nextQuestion);
+    }
+
+    function answer(choice) {
+      const q = state.current;
+      const correct = choice === q.answer;
+      state.answered += 1;
+      if (correct) { state.correct += 1; state.streak += 1; state.best = Math.max(state.best, state.streak); }
+      else { state.streak = 0; }
+      statCorrect.textContent = state.correct;
+      statTotal.textContent = state.answered;
+      statStreak.textContent = state.streak;
+      statBest.textContent = state.best;
+
+      quizArea.querySelectorAll('.answer-btn').forEach((btn) => {
+        btn.disabled = true;
+        if (btn.dataset.opt === q.answer) btn.classList.add('correct');
+        else if (btn.dataset.opt === choice) btn.classList.add('wrong');
+      });
+      const feedback = quizArea.querySelector('#feedback');
+      feedback.classList.remove('hidden');
+      feedback.innerHTML = `${correct ? '<b>Correct.</b>' : `<b>Answer: ${esc(q.answer)}.</b>`} ${q.why}`;
+      quizArea.querySelector('#nextBtn').classList.remove('hidden');
+    }
+
+    function renderStudy() {
+      const chipsEl = container.querySelector('#orderChips');
+      if (!chipsEl.dataset.built) {
+        chipsEl.dataset.built = '1';
+        chipsEl.innerHTML = pools.orders.map((o) => `<button type="button" class="order-chip" style="--chip-color:${esc(o.accent || '#c79a2b')}" data-order="${esc(o.name)}">${esc(o.name)}</button>`).join('');
+        chipsEl.querySelectorAll('.order-chip').forEach((btn) => btn.addEventListener('click', () => showStudyOrder(btn.dataset.order)));
+      }
+      if (!state.studyOrder) showStudyOrder(pools.orders[0].name);
+    }
+
+    function showStudyOrder(name) {
+      state.studyOrder = name;
+      const order = pools.orders.find((o) => o.name === name);
+      container.querySelectorAll('.order-chip').forEach((b) => b.classList.toggle('active', b.dataset.order === name));
+      container.querySelector('#studyOrderDesc').textContent = order.desc || '';
+      container.querySelector('#studyGrid').innerHTML = (order.families || []).map(studyCardHtml).join('');
+    }
+
+    container.querySelectorAll('nav.modes button').forEach((btn) => btn.addEventListener('click', () => setMode(btn.dataset.mode)));
+    setMode(state.mode);
+  }
+
+  window.Herb = window.Herb || {};
+  window.Herb.renderTrainer = renderTrainer;
+})();
+
+
+// Field Log tab: private log of user-found plants. Reads the taxonomy tree
+// only to build the species picker (so a logged sighting can reference a
+// real species/family/order) - the log entries themselves live only in
+// window.storage (localStorage-backed) and are never written back into
+// taxonomy.json. This is personal data, not a shared fact.
+(function () {
+  const { esc, collectOrders } = window.Herb;
+  const STORAGE_KEY = 'herbarium.fieldLog.v1';
+
+  window.storage = window.storage || {
+    get() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      } catch (e) {
+        return [];
+      }
+    },
+    set(entries) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+      } catch (e) { /* storage unavailable (private browsing, quota) */ }
+    },
+  };
+
+  function speciesOptionsHtml(tree) {
+    let html = '<option value="custom">Other / not in guide&hellip;</option>';
+    for (const order of collectOrders(tree)) {
+      for (const fam of order.families || []) {
+        if (!fam.species || !fam.species.length) continue;
+        html += `<optgroup label="${esc(order.name)} — ${esc(fam.name)}">`;
+        for (const sp of fam.species) {
+          const value = esc(JSON.stringify({ common: sp.common, sci: sp.sci, family: fam.name, order: order.name }));
+          html += `<option value="${value}">${esc(sp.common)}</option>`;
+        }
+        html += '</optgroup>';
+      }
+    }
+    return html;
+  }
+
+  function entryCardHtml(entry, idx) {
+    const tags = [entry.family, entry.order].filter(Boolean);
+    return `<div class="fl-card" data-idx="${idx}">
+      <div class="fl-card-top">
+        <div>
+          <span class="fl-name">${esc(entry.common)}</span>
+          ${entry.sci ? `<span class="fl-sci"> &mdash; ${entry.sci}</span>` : ''}
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="fl-date">${esc(entry.date || '')}</span>
+          <button type="button" class="fl-delete" data-idx="${idx}" aria-label="Delete entry">&times;</button>
+        </div>
+      </div>
+      ${tags.length ? `<div class="fl-tags">${tags.map((t) => `<span>${esc(t)}</span>`).join('')}</div>` : ''}
+      ${entry.location ? `<div class="fl-location">${esc(entry.location)}</div>` : ''}
+      ${entry.notes ? `<p class="fl-notes">${esc(entry.notes)}</p>` : ''}
+    </div>`;
+  }
+
+  function renderFieldLog(container, tree) {
+    function stats(entries) {
+      const species = new Set(entries.map((e) => e.common).filter(Boolean));
+      const families = new Set(entries.map((e) => e.family).filter(Boolean));
+      const orders = new Set(entries.map((e) => e.order).filter(Boolean));
+      return { total: entries.length, species: species.size, families: families.size, orders: orders.size };
+    }
+
+    function draw() {
+      const entries = window.storage.get();
+      const s = stats(entries);
+      container.innerHTML = `
+        <header class="tr-masthead">
+          <div class="eyebrow">Your Private Log</div>
+          <h1 class="tr-title">The <em>Field</em> Log</h1>
+          <p class="tip">Every sighting you add here is saved privately to this app &mdash; nothing is shared or uploaded anywhere else.</p>
+        </header>
+        <div class="stats-bar">
+          <div class="stat"><span class="stat-num">${s.total}</span><span class="stat-label">Sightings</span></div>
+          <div class="stat"><span class="stat-num">${s.species}</span><span class="stat-label">Species</span></div>
+          <div class="stat"><span class="stat-num">${s.families}</span><span class="stat-label">Families</span></div>
+          <div class="stat"><span class="stat-num">${s.orders}</span><span class="stat-label">Orders</span></div>
+        </div>
+        <div class="tr-main">
+          <form id="flForm" class="fl-form">
+            <div class="fl-field">
+              <label for="flSpeciesSelect">Species</label>
+              <select id="flSpeciesSelect">${speciesOptionsHtml(tree)}</select>
+            </div>
+            <div class="fl-field hidden" id="flCustomWrap">
+              <label for="flCustomName">Species name</label>
+              <input type="text" id="flCustomName" placeholder="e.g. Trillium grandiflorum" />
+            </div>
+            <div class="fl-row">
+              <div class="fl-field">
+                <label for="flDate">Date found</label>
+                <input type="date" id="flDate" />
+              </div>
+              <div class="fl-field">
+                <label for="flLocation">Location</label>
+                <input type="text" id="flLocation" placeholder="e.g. Riverside trail, north bank" />
+              </div>
+            </div>
+            <div class="fl-field">
+              <label for="flNotes">Notes</label>
+              <textarea id="flNotes" rows="2" placeholder="Anything worth remembering &mdash; condition, habitat, identifying features"></textarea>
+            </div>
+            <button type="submit" class="fl-submit">Add Sighting</button>
+          </form>
+          <div class="fl-list">${entries.slice().reverse().map((e, i) => entryCardHtml(e, entries.length - 1 - i)).join('') || ''}</div>
+          ${!entries.length ? '<p class="fl-empty">No sightings logged yet &mdash; add the first one above.</p>' : ''}
+        </div>
+      `;
+
+      const select = container.querySelector('#flSpeciesSelect');
+      const customWrap = container.querySelector('#flCustomWrap');
+      select.addEventListener('change', () => {
+        customWrap.classList.toggle('hidden', select.value !== 'custom');
+      });
+
+      container.querySelector('#flForm').addEventListener('submit', (ev) => {
+        ev.preventDefault();
+        const customName = container.querySelector('#flCustomName');
+        let entry;
+        if (select.value === 'custom') {
+          if (!customName.value.trim()) return;
+          entry = { common: customName.value.trim(), sci: '', family: '', order: '' };
+        } else {
+          entry = JSON.parse(select.value);
+        }
+        entry.date = container.querySelector('#flDate').value || '';
+        entry.location = container.querySelector('#flLocation').value.trim();
+        entry.notes = container.querySelector('#flNotes').value.trim();
+
+        const current = window.storage.get();
+        current.push(entry);
+        window.storage.set(current);
+        draw();
+      });
+
+      container.querySelectorAll('.fl-delete').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const idx = Number(btn.dataset.idx);
+          const current = window.storage.get();
+          current.splice(idx, 1);
+          window.storage.set(current);
+          draw();
+        });
+      });
+    }
+    draw();
+  }
+
+  window.Herb = window.Herb || {};
+  window.Herb.renderFieldLog = renderFieldLog;
+})();
+
+
+// Wires up tab switching (#appSwitch) and lazily calls each tab's renderer
+// the first time it's shown. Works both in dev (fetches data/taxonomy.json)
+// and in the concatenated build (reads the inlined window.TAXONOMY_DATA).
+(function () {
+  function boot(data) {
+    const tree = data.tree;
+    const rendered = { guide: false, diagram: false, trainer: false, log: false };
+    const panels = {
+      guide: document.getElementById('panel-field-guide'),
+      diagram: document.getElementById('panel-diagram'),
+      trainer: document.getElementById('panel-trainer'),
+      log: document.getElementById('panel-field-log'),
+    };
+
+    function show(tab) {
+      Object.entries(panels).forEach(([key, el]) => {
+        el.hidden = key !== tab;
+      });
+      document.querySelectorAll('#appSwitch [data-tab]').forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.tab === tab);
+      });
+      if (!rendered[tab]) {
+        rendered[tab] = true;
+        if (tab === 'guide') window.Herb.renderFieldGuide(panels.guide, tree);
+        if (tab === 'diagram') window.Herb.renderDiagram(panels.diagram, tree);
+        if (tab === 'trainer') window.Herb.renderTrainer(panels.trainer, tree);
+        if (tab === 'log') window.Herb.renderFieldLog(panels.log, tree);
+      }
+    }
+
+    document.querySelectorAll('#appSwitch [data-tab]').forEach((btn) => {
+      btn.addEventListener('click', () => show(btn.dataset.tab));
+    });
+
+    show('guide');
+  }
+
+  if (window.TAXONOMY_DATA) {
+    boot(window.TAXONOMY_DATA);
+  } else {
+    fetch('data/taxonomy.json')
+      .then((r) => r.json())
+      .then(boot)
+      .catch((err) => {
+        document.body.innerHTML = `<p style="padding:2rem;color:#a33">Failed to load taxonomy.json: ${err.message}</p>`;
+      });
+  }
+})();
+
+</script>
+</body>
+</html>
