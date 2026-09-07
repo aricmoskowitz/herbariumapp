@@ -1,6 +1,8 @@
 // Shared helpers used by all four tab renderers. Single place for icon
-// wrapping, escaping, and the order status-tag vocabulary so nothing is
-// hand-duplicated per tab.
+// wrapping, escaping, and tree traversal so nothing is hand-duplicated
+// per tab. There is no guide-status concept in this app - every order
+// and informal group is equally "in the guide" - so this file carries
+// no status vocabulary of any kind.
 window.Herb = (function () {
   function esc(str) {
     return String(str == null ? '' : str).replace(/[&<>"']/g, (c) => ({
@@ -14,20 +16,6 @@ window.Herb = (function () {
     return `<svg class="${cls || ''}" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">${pathMarkup || ''}</svg>`;
   }
 
-  // Status -> the modifier class on .ph-group/.ph-card, plus the small
-  // label text shown in the tag slot. Absence of both classes (the
-  // "context" case) is the default, muted look.
-  function statusModifierClass(status) {
-    if (status === 'inguide') return 'ph-inguide';
-    if (status === 'extension') return 'ph-extension';
-    return '';
-  }
-  function statusTagHtml(status, tagClass) {
-    if (status === 'inguide') return `<span class="${tagClass}">&check; in guide</span>`;
-    if (status === 'extension') return `<span class="${tagClass}">extension pt.</span>`;
-    return `<span class="${tagClass} ${tagClass}-not">not in guide</span>`;
-  }
-
   // Depth-first walk over the taxonomy tree. visit(node, depth, parents)
   // may return false to skip descending into node.children.
   function walk(nodes, visit, depth = 0, parents = []) {
@@ -39,13 +27,16 @@ window.Herb = (function () {
     }
   }
 
-  // Collect every rank:"order" node in document order.
-  function collectOrders(tree) {
-    const orders = [];
+  // Collect every order and informal-group node, in document order. These
+  // are the two ranks that can carry families[] - rank is a taxonomic
+  // label only, so this checks rank membership, never field presence vs.
+  // rank as a gate for what a renderer is allowed to show.
+  function collectGroups(tree) {
+    const groups = [];
     walk(tree, (node) => {
-      if (node.rank === 'order') orders.push(node);
+      if (node.rank === 'order' || node.rank === 'informal group') groups.push(node);
     });
-    return orders;
+    return groups;
   }
 
   function eventsRowHtml(events) {
@@ -56,6 +47,6 @@ window.Herb = (function () {
   }
 
   return {
-    esc, iconSvg, statusModifierClass, statusTagHtml, walk, collectOrders, eventsRowHtml,
+    esc, iconSvg, walk, collectGroups, eventsRowHtml,
   };
 })();

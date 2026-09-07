@@ -4,7 +4,7 @@
 // window.storage (localStorage-backed) and are never written back into
 // taxonomy.json. This is personal data, not a shared fact.
 (function () {
-  const { esc, collectOrders } = window.Herb;
+  const { esc, collectGroups } = window.Herb;
   const STORAGE_KEY = 'herbarium.fieldLog.v1';
 
   window.storage = window.storage || {
@@ -24,7 +24,7 @@
 
   function speciesOptionsHtml(tree) {
     let html = '<option value="custom">Other / not in guide&hellip;</option>';
-    for (const order of collectOrders(tree)) {
+    for (const order of collectGroups(tree)) {
       for (const fam of order.families || []) {
         if (!fam.species || !fam.species.length) continue;
         html += `<optgroup label="${esc(order.name)} — ${esc(fam.name)}">`;
@@ -78,7 +78,7 @@
           <div class="stat"><span class="stat-num">${s.total}</span><span class="stat-label">Sightings</span></div>
           <div class="stat"><span class="stat-num">${s.species}</span><span class="stat-label">Species</span></div>
           <div class="stat"><span class="stat-num">${s.families}</span><span class="stat-label">Families</span></div>
-          <div class="stat"><span class="stat-num">${s.orders}</span><span class="stat-label">Orders</span></div>
+          <div class="stat"><span class="stat-num">${s.orders}</span><span class="stat-label">Groups</span></div>
         </div>
         <div class="tr-main">
           <form id="flForm" class="fl-form">

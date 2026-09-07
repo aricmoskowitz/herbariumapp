@@ -6,7 +6,7 @@
 // rendering by rank or by hand-picked pixel values, so adding a family
 // under an order, or a species under a family, needs zero changes here.
 (function () {
-  const { esc, iconSvg, statusModifierClass, statusTagHtml, eventsRowHtml } = window.Herb;
+  const { esc, iconSvg, eventsRowHtml } = window.Herb;
 
   function chipsToggleHtml(labels, summaryText) {
     if (!labels || !labels.length) return '';
@@ -16,8 +16,11 @@
     </details>`;
   }
 
+  // Checked by field presence, not rank - any leaf node (order or
+  // informal group) can carry families[], and any not-yet-built node can
+  // carry a plain plants[] list instead.
   function leafExtrasHtml(node) {
-    if (node.rank === 'order' && node.families && node.families.length) {
+    if (node.families && node.families.length) {
       const labels = node.families.map((f) => f.common || f.name);
       return chipsToggleHtml(labels, `${labels.length} famil${labels.length === 1 ? 'y' : 'ies'}`);
     }
@@ -29,14 +32,12 @@
 
   function renderNode(node, depth, inheritedAccent) {
     const accent = node.accent || inheritedAccent;
-    const isOrder = node.rank === 'order';
-    const modClass = isOrder ? statusModifierClass(node.status) : '';
     const eventsHtml = eventsRowHtml(node.events);
     const dateTag = node.headerEvent ? `<span class="ph-group-date">${esc(node.headerEvent.date)} &middot; ${esc(node.headerEvent.label)}</span>` : '';
 
     if (node.children && node.children.length) {
       const inner = node.children.map((child) => renderNode(child, depth + 1, accent)).join('');
-      return `${eventsHtml}<div class="ph-group ${modClass}" style="--depth:${depth};${accent ? `--accent:${esc(accent)}` : ''}">
+      return `${eventsHtml}<div class="ph-group" style="--depth:${depth};${accent ? `--accent:${esc(accent)}` : ''}">
         <div class="ph-group-head">
           <span class="ph-group-rank">${esc(node.rank)}</span>
           <h3 class="ph-group-title">${esc(node.name)}</h3>
@@ -47,14 +48,12 @@
     }
 
     const icon = node.icon ? iconSvg(node.icon, 'ph-card-icon') : '';
-    const tag = isOrder ? statusTagHtml(node.status, 'ph-card-tag') : '';
     const extras = leafExtrasHtml(node);
 
-    return `${eventsHtml}<div class="ph-card ${modClass}" style="--depth:${depth};${accent ? `--accent:${esc(accent)}` : ''}">
+    return `${eventsHtml}<div class="ph-card" style="--depth:${depth};${accent ? `--accent:${esc(accent)}` : ''}">
       ${icon}
       <span class="ph-card-rank">${esc(node.rank)}</span>
       <span class="ph-card-name">${esc(node.name)}</span>
-      ${tag}
       ${extras}
     </div>`;
   }
