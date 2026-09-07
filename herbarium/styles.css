@@ -185,7 +185,8 @@ section.order{ max-width:1100px; margin:0 auto; padding:48px 24px 12px; scroll-m
 }
 .order-title-group{ display:flex; align-items:center; gap:14px; }
 .order-icon{ width:40px; height:40px; flex-shrink:0; color:var(--gold-bright); }
-h2.order-name{ font-family:'Fraunces', serif; font-weight:600; font-size:clamp(28px, 4vw, 44px); margin:0; color:var(--card); scroll-margin-top:24px; }
+.fg-rank{ font-family:'Space Mono', monospace; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--sage); }
+h2.order-name{ font-family:'Fraunces', serif; font-weight:600; font-size:clamp(28px, 4vw, 44px); margin:2px 0 0; color:var(--card); scroll-margin-top:24px; }
 .order-head .plate{
   font-family:'Space Mono', monospace; font-size:12px; color:var(--rust);
   background:rgba(139,58,47,0.15); border:1px solid rgba(139,58,47,0.4);
@@ -358,17 +359,6 @@ nav.modes button.active{ background:var(--gold); color:#1b2a20; border-color:var
 .ph-card-icon{ width:22px; height:22px; flex-shrink:0; color:var(--rust); margin-bottom:2px; }
 .ph-card-rank{ font-family:'Space Mono', monospace; font-size:7px; letter-spacing:0.06em; text-transform:uppercase; color:var(--accent, var(--ink-soft)); opacity:0.8; }
 .ph-card-name{ font-family:'Fraunces', serif; font-weight:600; font-size:13.5px; line-height:1.2; }
-.ph-card-tag{ font-family:'Space Mono', monospace; font-size:7.5px; letter-spacing:0.03em; text-transform:uppercase; }
-.ph-group.ph-inguide{ border-left-color:var(--gold); box-shadow: inset 0 0 0 1px rgba(224,183,74,0.3); }
-.ph-group.ph-extension{ border-left-style:dashed; opacity:0.92; }
-.ph-group.ph-inguide .ph-group-tag{ color:#c79a2b; }
-.ph-group.ph-extension .ph-group-tag{ color:var(--sage); font-style:italic; }
-.ph-group-tag-not{ color:var(--ink-soft); opacity:0.75; font-style:italic; text-transform:none; letter-spacing:0.01em; }
-.ph-card.ph-inguide{ border:1.5px solid var(--gold); }
-.ph-card.ph-inguide .ph-card-tag{ color:#8a6512; }
-.ph-card.ph-extension{ border:1.5px dashed var(--sage); opacity:0.88; }
-.ph-card.ph-extension .ph-card-tag{ color:var(--ink-soft); font-style:italic; }
-.ph-card-tag-not{ color:var(--ink-soft); opacity:0.7; font-style:italic; text-transform:none; letter-spacing:0.01em; }
 
 .ph-species-toggle{ width:100%; margin-top:6px; }
 .ph-species-toggle summary{

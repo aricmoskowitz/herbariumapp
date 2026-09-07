@@ -3,7 +3,7 @@
 // Spot the Difference (differentia -> family), Icon -> Order, and a
 // non-quiz Study/Browse mode for flipping through a chosen order's families.
 (function () {
-  const { esc, iconSvg, collectOrders } = window.Herb;
+  const { esc, iconSvg, collectGroups } = window.Herb;
 
   function shuffle(arr) {
     const a = arr.slice();
@@ -17,20 +17,26 @@
     return shuffle(arr.filter((x) => x !== exclude)).slice(0, n);
   }
 
+  // "orders" here also includes the 5 informal groups (Brown Algae etc.) -
+  // they carry families[]/quizClue/icon exactly like an order does, and
+  // are quizzed/browsed identically. Rank is a taxonomic label shown in
+  // the UI, not a gate on what content or quiz modes a node takes part in.
   function buildPools(tree) {
-    const orders = collectOrders(tree).filter((o) => o.families && o.families.length);
+    const orders = collectGroups(tree).filter((o) => o.families && o.families.length);
     const families = [];
     const species = [];
     for (const order of orders) {
       for (const fam of order.families) {
         if (!fam.species || !fam.species.length) continue;
-        families.push({ ...fam, orderName: order.name });
+        families.push({ ...fam, orderName: order.name, orderRank: order.rank });
         for (const sp of fam.species) {
-          species.push({ ...sp, familyName: fam.common || fam.name, orderName: order.name });
+          species.push({
+            ...sp, familyName: fam.common || fam.name, orderName: order.name, orderRank: order.rank,
+          });
         }
       }
     }
-    const iconOrders = collectOrders(tree).filter((o) => o.quizClue && o.icon);
+    const iconOrders = collectGroups(tree).filter((o) => o.quizClue && o.icon);
     return { orders, families, species, iconOrders };
   }
 
@@ -42,7 +48,7 @@
       main: esc(target.common), sub: target.sci,
       text: `Which family does this belong to?`,
       options, answer: target.familyName,
-      why: `${esc(target.common)} sits in ${esc(target.familyName)}, order ${esc(target.orderName)}.`,
+      why: `${esc(target.common)} sits in ${esc(target.familyName)}, ${esc(target.orderRank)} ${esc(target.orderName)}.`,
     };
   }
 
@@ -50,7 +56,7 @@
     const target = pools.families[Math.floor(Math.random() * pools.families.length)];
     const options = shuffle([target.orderName, ...pick(pools.orders.map((o) => o.name), 3, target.orderName)]);
     return {
-      label: 'Family &rarr; Order', icon: null,
+      label: 'Family &rarr; Group', icon: null,
       main: esc(target.name), sub: target.common,
       text: target.trait,
       options, answer: target.orderName,
@@ -72,11 +78,11 @@
     };
   }
 
-  function questionIconToOrder(pools) {
+  function questionIconToGroup(pools) {
     const target = pools.iconOrders[Math.floor(Math.random() * pools.iconOrders.length)];
     const options = shuffle([target.name, ...pick(pools.iconOrders.map((o) => o.name), 3, target.name)]);
     return {
-      label: 'Icon &rarr; Order', icon: target.icon,
+      label: 'Icon &rarr; Group', icon: target.icon,
       main: '', sub: '',
       text: target.quizClue,
       options, answer: target.name,
@@ -86,9 +92,9 @@
 
   const MODES = {
     species: { label: 'Species &rarr; Family', build: questionSpeciesToFamily, needs: (p) => p.species.length >= 4 },
-    family: { label: 'Family &rarr; Order', build: questionFamilyToOrder, needs: (p) => p.families.length >= 4 && p.orders.length >= 4 },
+    family: { label: 'Family &rarr; Group', build: questionFamilyToOrder, needs: (p) => p.families.length >= 4 && p.orders.length >= 4 },
     differentia: { label: 'Spot the Difference', build: questionDifferentia, needs: (p) => p.families.length >= 4 },
-    icon: { label: 'Icon &rarr; Order', build: questionIconToOrder, needs: (p) => p.iconOrders.length >= 4 },
+    icon: { label: 'Icon &rarr; Group', build: questionIconToGroup, needs: (p) => p.iconOrders.length >= 4 },
   };
 
   function studyCardHtml(family) {
@@ -111,7 +117,7 @@
       <header class="tr-masthead">
         <div class="eyebrow">Companion to the Field Guide</div>
         <h1 class="tr-title">The <em>Herbarium</em> Trainer</h1>
-        <p class="tip">Cycle through all four quiz modes each session instead of mastering one at a time &mdash; interleaving species, families, and orders builds stronger recall than drilling one relationship on its own.</p>
+        <p class="tip">Cycle through all four quiz modes each session instead of mastering one at a time &mdash; interleaving species, families, and groups builds stronger recall than drilling one relationship on its own.</p>
       </header>
       <div class="stats-bar">
         <div class="stat"><span class="stat-num" id="statCorrect">0</span><span class="stat-label">Correct</span></div>
