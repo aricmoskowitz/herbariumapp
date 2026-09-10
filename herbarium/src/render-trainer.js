@@ -1,7 +1,8 @@
 // Trainer tab: quiz/study game built from the same taxonomy tree, no
-// separate quiz-data file. Five modes: Species -> Family, Family -> Order,
-// Spot the Difference (differentia -> family), Icon -> Order, and a
-// non-quiz Study/Browse mode for flipping through a chosen order's families.
+// separate quiz-data file. Six modes: Species -> Family, Species -> Group,
+// Family -> Order, Spot the Difference (differentia -> family), Icon ->
+// Order, and a non-quiz Study/Browse mode for flipping through a chosen
+// order's families.
 (function () {
   const { esc, iconSvg, collectGroups } = window.Herb;
 
@@ -52,6 +53,18 @@
     };
   }
 
+  function questionSpeciesToOrder(pools) {
+    const target = pools.species[Math.floor(Math.random() * pools.species.length)];
+    const options = shuffle([target.orderName, ...pick(pools.orders.map((o) => o.name), 3, target.orderName)]);
+    return {
+      label: 'Species &rarr; Group', icon: null,
+      main: esc(target.common), sub: target.sci,
+      text: `Which ${target.orderRank} does this belong to?`,
+      options, answer: target.orderName,
+      why: `${esc(target.common)} sits in ${esc(target.familyName)}, ${esc(target.orderRank)} ${esc(target.orderName)}.`,
+    };
+  }
+
   function questionFamilyToOrder(pools) {
     const target = pools.families[Math.floor(Math.random() * pools.families.length)];
     const options = shuffle([target.orderName, ...pick(pools.orders.map((o) => o.name), 3, target.orderName)]);
@@ -92,6 +105,7 @@
 
   const MODES = {
     species: { label: 'Species &rarr; Family', build: questionSpeciesToFamily, needs: (p) => p.species.length >= 4 },
+    speciesOrder: { label: 'Species &rarr; Group', build: questionSpeciesToOrder, needs: (p) => p.species.length >= 4 && p.orders.length >= 4 },
     family: { label: 'Family &rarr; Group', build: questionFamilyToOrder, needs: (p) => p.families.length >= 4 && p.orders.length >= 4 },
     differentia: { label: 'Spot the Difference', build: questionDifferentia, needs: (p) => p.families.length >= 4 },
     icon: { label: 'Icon &rarr; Group', build: questionIconToGroup, needs: (p) => p.iconOrders.length >= 4 },
@@ -117,7 +131,7 @@
       <header class="tr-masthead">
         <div class="eyebrow">Companion to the Field Guide</div>
         <h1 class="tr-title">The <em>Herbarium</em> Trainer</h1>
-        <p class="tip">Cycle through all four quiz modes each session instead of mastering one at a time &mdash; interleaving species, families, and groups builds stronger recall than drilling one relationship on its own.</p>
+        <p class="tip">Cycle through all five quiz modes each session instead of mastering one at a time &mdash; interleaving species, families, and groups builds stronger recall than drilling one relationship on its own.</p>
       </header>
       <div class="stats-bar">
         <div class="stat"><span class="stat-num" id="statCorrect">0</span><span class="stat-label">Correct</span></div>
