@@ -2357,6 +2357,13 @@
          "name": "Nitrogen-fixing clade",
          "rank": "clade",
          "accent": "#8b3a2f",
+         "icon": "<path d=\"M20 8v10\"/><path d=\"M20 18l-8 14M20 18l8 14M20 18l-4 16M20 18l4 16\"/><circle cx=\"12\" cy=\"32\" r=\"2.2\"/><circle cx=\"28\" cy=\"32\" r=\"2.2\"/><circle cx=\"16\" cy=\"34\" r=\"2.2\"/><circle cx=\"24\" cy=\"34\" r=\"2.2\"/>",
+         "funFacts": [
+          {
+           "type": "interspecies",
+           "text": "The name refers to a shared evolutionary predisposition, not a universal trait. All four orders here (Fabales, Fagales, Cucurbitales, Rosales) descend from one ancestor that gained the genetic toolkit for root-nodule symbiosis with nitrogen-fixing bacteria, but the trait itself is patchy across their descendants — expressed by most legumes and by alder (Fagales), yet absent from close relatives like hazelnut, which sits in the very same family as nitrogen-fixing alder."
+          }
+         ],
          "children": [
           {
            "name": "Fagales",
@@ -2748,6 +2755,21 @@
                 {
                  "type": "region_origin",
                  "text": "Native to a broad swath of Asia from Iran to Japan, it is now widely planted as an ornamental shade tree well beyond its native range."
+                }
+               ]
+              },
+              {
+               "common": "White clover",
+               "sci": "Trifolium repens",
+               "id": "trifolium-repens",
+               "funFacts": [
+                {
+                 "type": "interspecies",
+                 "text": "Partners with Rhizobium bacteria in root nodules, trading sugars for fixed nitrogen — one of the clearest, best-studied examples of the symbiosis that gives the Nitrogen-fixing clade its name."
+                },
+                {
+                 "type": "culinary",
+                 "text": "Often sown as a living \"green manure\" alongside pasture grasses, since the nitrogen it fixes enriches the soil for neighboring plants without any synthetic fertilizer."
                 }
                ]
               }
