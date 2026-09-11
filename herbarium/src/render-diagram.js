@@ -37,7 +37,7 @@
 
     if (node.children && node.children.length) {
       const inner = node.children.map((child) => renderNode(child, depth + 1, accent)).join('');
-      return `${eventsHtml}<div class="ph-group" style="--depth:${depth};${accent ? `--accent:${esc(accent)}` : ''}">
+      return `${eventsHtml}<div class="ph-group" id="diag-${esc(node.id)}" style="--depth:${depth};${accent ? `--accent:${esc(accent)}` : ''}">
         <div class="ph-group-head">
           <span class="ph-group-rank">${esc(node.rank)}</span>
           <h3 class="ph-group-title">${esc(node.name)}</h3>
@@ -50,7 +50,7 @@
     const icon = node.icon ? iconSvg(node.icon, 'ph-card-icon') : '';
     const extras = leafExtrasHtml(node);
 
-    return `${eventsHtml}<div class="ph-card" style="--depth:${depth};${accent ? `--accent:${esc(accent)}` : ''}">
+    return `${eventsHtml}<div class="ph-card" id="diag-${esc(node.id)}" style="--depth:${depth};${accent ? `--accent:${esc(accent)}` : ''}">
       ${icon}
       <span class="ph-card-rank">${esc(node.rank)}</span>
       <span class="ph-card-name">${esc(node.name)}</span>

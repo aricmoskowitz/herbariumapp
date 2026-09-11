@@ -73,6 +73,7 @@
           breadcrumb,
           factType: fact.type, factText: fact.text,
           navTarget: node.id,
+          diagramTarget: node.id, // order/informal-group/clade cards link to themselves in the Diagram
         });
       });
     }
@@ -86,10 +87,13 @@
 
       // families[] only ever lives on order/informal-group nodes
       // (collectGroups' rule elsewhere in the app) - the group breadcrumb
-      // below is only meaningful when node is one of those two ranks.
+      // below, and the Diagram target every family/species card under this
+      // node points at, are only meaningful when node is one of those two
+      // ranks.
       const groupBreadcrumb = (node.rank === 'order' || node.rank === 'informal group')
         ? [...ancestryClades, node.name]
         : ancestryClades;
+      const groupDiagramTarget = (node.rank === 'order' || node.rank === 'informal group') ? node.id : null;
 
       for (const fam of (node.families || [])) {
         (fam.funFacts || []).forEach((fact, i) => {
@@ -101,6 +105,7 @@
             breadcrumb: groupBreadcrumb,
             factType: fact.type, factText: fact.text,
             navTarget: fam.id,
+            diagramTarget: groupDiagramTarget, // families have no box of their own in the Diagram - link to their order/informal group
           });
         });
         for (const sp of (fam.species || [])) {
@@ -113,6 +118,7 @@
               breadcrumb: [...groupBreadcrumb, fam.name],
               factType: fact.type, factText: fact.text,
               navTarget: sp.id,
+              diagramTarget: groupDiagramTarget, // same reasoning as family cards above
             });
           });
         }
@@ -157,6 +163,14 @@
     return null;
   }
 
+  // Diagram anchor id for a card's diagramTarget - the order/informal-group
+  // or clade box this card belongs under (families and species have no box
+  // of their own in the Diagram, so they resolve to their owning
+  // order/informal group; see buildCardPool).
+  function diagramAnchorId(card) {
+    return card.diagramTarget ? `diag-${card.diagramTarget}` : null;
+  }
+
   function nameHtml(card) {
     if (card.level === 'species') {
       return `<h2 class="df-name">${esc(card.common)}</h2><div class="df-sci">${esc(card.sci)}</div>`;
@@ -173,7 +187,8 @@
   }
 
   function cardHtml(card) {
-    const anchorId = fieldGuideAnchorId(card);
+    const guideAnchor = fieldGuideAnchorId(card);
+    const diagramAnchor = diagramAnchorId(card);
     return `<div class="df-card" data-card-id="${esc(card.cardId)}">
       ${iconSvg(card.icon, 'df-icon')}
       <div class="df-rank">${esc(card.rankLabel)}</div>
@@ -181,7 +196,10 @@
       ${breadcrumbHtml(card)}
       <span class="df-badge" style="--badge-color:${esc(TYPE_COLORS[card.factType] || TYPE_COLORS.other)}">${badgeGlyphSvg(card.factType)}${esc(TYPE_LABELS[card.factType] || TYPE_LABELS.other)}</span>
       <p class="df-fact">${esc(card.factText)}</p>
-      ${anchorId ? `<button type="button" class="df-viewlink" data-anchor="${esc(anchorId)}">View in Field Guide &rarr;</button>` : ''}
+      <div class="df-viewlinks">
+        ${guideAnchor ? `<button type="button" class="df-viewlink" data-tab="guide" data-anchor="${esc(guideAnchor)}">View in Field Guide &rarr;</button>` : ''}
+        ${diagramAnchor ? `<button type="button" class="df-viewlink" data-tab="diagram" data-anchor="${esc(diagramAnchor)}">View in Diagram &rarr;</button>` : ''}
+      </div>
     </div>`;
   }
 
@@ -203,11 +221,27 @@
     feedEl.querySelectorAll('.df-viewlink').forEach((btn) => {
       btn.addEventListener('click', () => {
         const anchorId = btn.dataset.anchor;
-        const guideBtn = document.querySelector('#appSwitch button[data-tab="guide"]');
-        if (guideBtn) guideBtn.click();
-        requestAnimationFrame(() => {
+        const tabBtn = document.querySelector(`#appSwitch button[data-tab="${btn.dataset.tab}"]`);
+        if (tabBtn) tabBtn.click();
+
+        // The target tab's font-display:swap webfonts (Fraunces/Source
+        // Serif 4/Space Mono) can still be loading the first time a long
+        // tab like Field Guide or Diagram renders, and the resulting
+        // reflow after the initial scroll can leave the target hundreds of
+        // px off - hence needing a manual scroll to "find" it. Re-run the
+        // same scroll once webfonts are actually ready, plus a couple of
+        // fixed-delay fallbacks for engines without the Font Loading API
+        // or any other late reflow (e.g. iOS Safari's chrome collapsing
+        // mid-scroll). A no-op re-scroll (already in place) is harmless.
+        const attempt = () => {
           const el = document.getElementById(anchorId);
           if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+        requestAnimationFrame(() => {
+          attempt();
+          if (document.fonts && document.fonts.ready) document.fonts.ready.then(attempt);
+          setTimeout(attempt, 350);
+          setTimeout(attempt, 900);
         });
       });
     });

@@ -344,6 +344,7 @@ nav.modes button.active{ background:var(--gold); color:#1b2a20; border-color:var
   background: rgba(0,0,0, max(0.05, calc(0.17 - var(--depth) * 0.02)));
   padding: max(9px, calc(15px - var(--depth) * 2px)) max(10px, calc(17px - var(--depth) * 2px)) max(11px, calc(18px - var(--depth) * 2px));
   margin-bottom: max(8px, calc(16px - var(--depth) * 2px));
+  scroll-margin-top:70px;
 }
 .ph-group-head{
   display:flex; align-items:center; gap:9px; flex-wrap:wrap;
@@ -370,6 +371,7 @@ nav.modes button.active{ background:var(--gold); color:#1b2a20; border-color:var
   padding:16px 10px 9px; box-shadow:0 5px 12px -5px rgba(0,0,0,0.45);
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   gap:2px; min-height:58px; text-align:center;
+  scroll-margin-top:70px;
 }
 .ph-tree > .ph-card{ margin-bottom: max(8px, calc(16px - var(--depth) * 2px)); }
 .ph-card::before{
@@ -482,10 +484,11 @@ nav.modes button.active{ background:var(--gold); color:#1b2a20; border-color:var
   font-family:'Source Serif 4', serif; font-size:17px; line-height:1.55; color:var(--card);
   max-width:520px; margin:6px 0 0;
 }
+.df-viewlinks{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:14px; }
 .df-viewlink{
   font-family:'Space Mono', monospace; font-size:11px; letter-spacing:0.04em; text-transform:uppercase;
   background:transparent; color:var(--gold); border:1px solid var(--gold); border-radius:3px;
-  padding:9px 16px; margin-top:14px;
+  padding:9px 16px;
 }
 .df-viewlink:hover{ background:var(--gold); color:#1b2a20; }
 .df-empty{ text-align:center; color:var(--sage); font-style:italic; padding:60px 20px; }
@@ -6635,7 +6638,7 @@ window.Herb = (function () {
 
     if (node.children && node.children.length) {
       const inner = node.children.map((child) => renderNode(child, depth + 1, accent)).join('');
-      return `${eventsHtml}<div class="ph-group" style="--depth:${depth};${accent ? `--accent:${esc(accent)}` : ''}">
+      return `${eventsHtml}<div class="ph-group" id="diag-${esc(node.id)}" style="--depth:${depth};${accent ? `--accent:${esc(accent)}` : ''}">
         <div class="ph-group-head">
           <span class="ph-group-rank">${esc(node.rank)}</span>
           <h3 class="ph-group-title">${esc(node.name)}</h3>
@@ -6648,7 +6651,7 @@ window.Herb = (function () {
     const icon = node.icon ? iconSvg(node.icon, 'ph-card-icon') : '';
     const extras = leafExtrasHtml(node);
 
-    return `${eventsHtml}<div class="ph-card" style="--depth:${depth};${accent ? `--accent:${esc(accent)}` : ''}">
+    return `${eventsHtml}<div class="ph-card" id="diag-${esc(node.id)}" style="--depth:${depth};${accent ? `--accent:${esc(accent)}` : ''}">
       ${icon}
       <span class="ph-card-rank">${esc(node.rank)}</span>
       <span class="ph-card-name">${esc(node.name)}</span>
@@ -7177,6 +7180,7 @@ window.Herb = (function () {
           breadcrumb,
           factType: fact.type, factText: fact.text,
           navTarget: node.id,
+          diagramTarget: node.id, // order/informal-group/clade cards link to themselves in the Diagram
         });
       });
     }
@@ -7190,10 +7194,13 @@ window.Herb = (function () {
 
       // families[] only ever lives on order/informal-group nodes
       // (collectGroups' rule elsewhere in the app) - the group breadcrumb
-      // below is only meaningful when node is one of those two ranks.
+      // below, and the Diagram target every family/species card under this
+      // node points at, are only meaningful when node is one of those two
+      // ranks.
       const groupBreadcrumb = (node.rank === 'order' || node.rank === 'informal group')
         ? [...ancestryClades, node.name]
         : ancestryClades;
+      const groupDiagramTarget = (node.rank === 'order' || node.rank === 'informal group') ? node.id : null;
 
       for (const fam of (node.families || [])) {
         (fam.funFacts || []).forEach((fact, i) => {
@@ -7205,6 +7212,7 @@ window.Herb = (function () {
             breadcrumb: groupBreadcrumb,
             factType: fact.type, factText: fact.text,
             navTarget: fam.id,
+            diagramTarget: groupDiagramTarget, // families have no box of their own in the Diagram - link to their order/informal group
           });
         });
         for (const sp of (fam.species || [])) {
@@ -7217,6 +7225,7 @@ window.Herb = (function () {
               breadcrumb: [...groupBreadcrumb, fam.name],
               factType: fact.type, factText: fact.text,
               navTarget: sp.id,
+              diagramTarget: groupDiagramTarget, // same reasoning as family cards above
             });
           });
         }
@@ -7261,6 +7270,14 @@ window.Herb = (function () {
     return null;
   }
 
+  // Diagram anchor id for a card's diagramTarget - the order/informal-group
+  // or clade box this card belongs under (families and species have no box
+  // of their own in the Diagram, so they resolve to their owning
+  // order/informal group; see buildCardPool).
+  function diagramAnchorId(card) {
+    return card.diagramTarget ? `diag-${card.diagramTarget}` : null;
+  }
+
   function nameHtml(card) {
     if (card.level === 'species') {
       return `<h2 class="df-name">${esc(card.common)}</h2><div class="df-sci">${esc(card.sci)}</div>`;
@@ -7277,7 +7294,8 @@ window.Herb = (function () {
   }
 
   function cardHtml(card) {
-    const anchorId = fieldGuideAnchorId(card);
+    const guideAnchor = fieldGuideAnchorId(card);
+    const diagramAnchor = diagramAnchorId(card);
     return `<div class="df-card" data-card-id="${esc(card.cardId)}">
       ${iconSvg(card.icon, 'df-icon')}
       <div class="df-rank">${esc(card.rankLabel)}</div>
@@ -7285,7 +7303,10 @@ window.Herb = (function () {
       ${breadcrumbHtml(card)}
       <span class="df-badge" style="--badge-color:${esc(TYPE_COLORS[card.factType] || TYPE_COLORS.other)}">${badgeGlyphSvg(card.factType)}${esc(TYPE_LABELS[card.factType] || TYPE_LABELS.other)}</span>
       <p class="df-fact">${esc(card.factText)}</p>
-      ${anchorId ? `<button type="button" class="df-viewlink" data-anchor="${esc(anchorId)}">View in Field Guide &rarr;</button>` : ''}
+      <div class="df-viewlinks">
+        ${guideAnchor ? `<button type="button" class="df-viewlink" data-tab="guide" data-anchor="${esc(guideAnchor)}">View in Field Guide &rarr;</button>` : ''}
+        ${diagramAnchor ? `<button type="button" class="df-viewlink" data-tab="diagram" data-anchor="${esc(diagramAnchor)}">View in Diagram &rarr;</button>` : ''}
+      </div>
     </div>`;
   }
 
@@ -7307,11 +7328,27 @@ window.Herb = (function () {
     feedEl.querySelectorAll('.df-viewlink').forEach((btn) => {
       btn.addEventListener('click', () => {
         const anchorId = btn.dataset.anchor;
-        const guideBtn = document.querySelector('#appSwitch button[data-tab="guide"]');
-        if (guideBtn) guideBtn.click();
-        requestAnimationFrame(() => {
+        const tabBtn = document.querySelector(`#appSwitch button[data-tab="${btn.dataset.tab}"]`);
+        if (tabBtn) tabBtn.click();
+
+        // The target tab's font-display:swap webfonts (Fraunces/Source
+        // Serif 4/Space Mono) can still be loading the first time a long
+        // tab like Field Guide or Diagram renders, and the resulting
+        // reflow after the initial scroll can leave the target hundreds of
+        // px off - hence needing a manual scroll to "find" it. Re-run the
+        // same scroll once webfonts are actually ready, plus a couple of
+        // fixed-delay fallbacks for engines without the Font Loading API
+        // or any other late reflow (e.g. iOS Safari's chrome collapsing
+        // mid-scroll). A no-op re-scroll (already in place) is harmless.
+        const attempt = () => {
           const el = document.getElementById(anchorId);
           if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+        requestAnimationFrame(() => {
+          attempt();
+          if (document.fonts && document.fonts.ready) document.fonts.ready.then(attempt);
+          setTimeout(attempt, 350);
+          setTimeout(attempt, 900);
         });
       });
     });
