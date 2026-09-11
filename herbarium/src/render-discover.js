@@ -51,10 +51,18 @@
 
   // Flatten every funFacts entry in the tree into one card per fact. Built
   // once per load and kept in memory - never rebuilt per scroll.
+  //
+  // Every card carries a `breadcrumb`: the chain of ancestor clade names,
+  // then (for family/species cards) the owning order/informal-group name,
+  // then (for species cards) the family name - so a card always shows where
+  // it sits in the tree, not just its own name. `walk`'s third callback
+  // argument is the node's ancestor chain (root-first, node itself
+  // excluded), which is exactly this breadcrumb's clade portion once
+  // filtered to rank === 'clade'.
   function buildCardPool(tree) {
     const cards = [];
 
-    function pushNodeCard(level, rankLabel, node) {
+    function pushNodeCard(level, rankLabel, node, breadcrumb) {
       if (!node.icon) return; // §4: iconless node with facts - skip rather than assume
       (node.funFacts || []).forEach((fact, i) => {
         cards.push({
@@ -62,16 +70,26 @@
           level, rankLabel,
           name: node.name, common: null, sci: null,
           icon: node.icon,
+          breadcrumb,
           factType: fact.type, factText: fact.text,
           navTarget: node.id,
         });
       });
     }
 
-    walk(tree, (node) => {
-      if (node.rank === 'order') pushNodeCard('order', 'Order', node);
-      else if (node.rank === 'informal group') pushNodeCard('informalGroup', 'Informal group', node);
-      else if (node.rank === 'clade') pushNodeCard('clade', 'Clade', node);
+    walk(tree, (node, depth, parents) => {
+      const ancestryClades = parents.filter((p) => p.rank === 'clade').map((p) => p.name);
+
+      if (node.rank === 'order') pushNodeCard('order', 'Order', node, ancestryClades);
+      else if (node.rank === 'informal group') pushNodeCard('informalGroup', 'Informal group', node, ancestryClades);
+      else if (node.rank === 'clade') pushNodeCard('clade', 'Clade', node, ancestryClades);
+
+      // families[] only ever lives on order/informal-group nodes
+      // (collectGroups' rule elsewhere in the app) - the group breadcrumb
+      // below is only meaningful when node is one of those two ranks.
+      const groupBreadcrumb = (node.rank === 'order' || node.rank === 'informal group')
+        ? [...ancestryClades, node.name]
+        : ancestryClades;
 
       for (const fam of (node.families || [])) {
         (fam.funFacts || []).forEach((fact, i) => {
@@ -80,6 +98,7 @@
             level: 'family', rankLabel: 'Family',
             name: fam.name, common: fam.common, sci: null,
             icon: fam.icon,
+            breadcrumb: groupBreadcrumb,
             factType: fact.type, factText: fact.text,
             navTarget: fam.id,
           });
@@ -91,6 +110,7 @@
               level: 'species', rankLabel: 'Species',
               name: sp.common, common: sp.common, sci: sp.sci,
               icon: fam.icon, // species carry no icon of their own - use the parent family's
+              breadcrumb: [...groupBreadcrumb, fam.name],
               factType: fact.type, factText: fact.text,
               navTarget: sp.id,
             });
@@ -147,12 +167,18 @@
     return `<h2 class="df-name">${esc(card.name)}</h2>`;
   }
 
+  function breadcrumbHtml(card) {
+    if (!card.breadcrumb || !card.breadcrumb.length) return '';
+    return `<div class="df-breadcrumb">${card.breadcrumb.map((n) => `<span>${esc(n)}</span>`).join('<span class="df-breadcrumb-sep">&rsaquo;</span>')}</div>`;
+  }
+
   function cardHtml(card) {
     const anchorId = fieldGuideAnchorId(card);
     return `<div class="df-card" data-card-id="${esc(card.cardId)}">
       ${iconSvg(card.icon, 'df-icon')}
       <div class="df-rank">${esc(card.rankLabel)}</div>
       ${nameHtml(card)}
+      ${breadcrumbHtml(card)}
       <span class="df-badge" style="--badge-color:${esc(TYPE_COLORS[card.factType] || TYPE_COLORS.other)}">${badgeGlyphSvg(card.factType)}${esc(TYPE_LABELS[card.factType] || TYPE_LABELS.other)}</span>
       <p class="df-fact">${esc(card.factText)}</p>
       ${anchorId ? `<button type="button" class="df-viewlink" data-anchor="${esc(anchorId)}">View in Field Guide &rarr;</button>` : ''}
