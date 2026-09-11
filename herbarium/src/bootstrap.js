@@ -10,6 +10,7 @@
       diagram: document.getElementById('panel-diagram'),
       trainer: document.getElementById('panel-trainer'),
       log: document.getElementById('panel-field-log'),
+      discover: document.getElementById('panel-discover'),
     };
 
     function show(tab) {
@@ -19,7 +20,12 @@
       document.querySelectorAll('#appSwitch [data-tab]').forEach((btn) => {
         btn.classList.toggle('active', btn.dataset.tab === tab);
       });
-      if (!rendered[tab]) {
+      // Discover reshuffles its feed order fresh every time the tab opens
+      // (only the seen-set persists), so it re-renders on every visit
+      // rather than being cached like the other tabs.
+      if (tab === 'discover') {
+        window.Herb.renderDiscover(panels.discover, tree);
+      } else if (!rendered[tab]) {
         rendered[tab] = true;
         if (tab === 'guide') window.Herb.renderFieldGuide(panels.guide, tree);
         if (tab === 'diagram') window.Herb.renderDiagram(panels.diagram, tree);
