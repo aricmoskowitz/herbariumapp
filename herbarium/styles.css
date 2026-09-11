@@ -327,6 +327,7 @@ nav.modes button.active{ background:var(--gold); color:#1b2a20; border-color:var
   background: rgba(0,0,0, max(0.05, calc(0.17 - var(--depth) * 0.02)));
   padding: max(9px, calc(15px - var(--depth) * 2px)) max(10px, calc(17px - var(--depth) * 2px)) max(11px, calc(18px - var(--depth) * 2px));
   margin-bottom: max(8px, calc(16px - var(--depth) * 2px));
+  scroll-margin-top:70px;
 }
 .ph-group-head{
   display:flex; align-items:center; gap:9px; flex-wrap:wrap;
@@ -353,6 +354,7 @@ nav.modes button.active{ background:var(--gold); color:#1b2a20; border-color:var
   padding:16px 10px 9px; box-shadow:0 5px 12px -5px rgba(0,0,0,0.45);
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   gap:2px; min-height:58px; text-align:center;
+  scroll-margin-top:70px;
 }
 .ph-tree > .ph-card{ margin-bottom: max(8px, calc(16px - var(--depth) * 2px)); }
 .ph-card::before{
@@ -465,10 +467,11 @@ nav.modes button.active{ background:var(--gold); color:#1b2a20; border-color:var
   font-family:'Source Serif 4', serif; font-size:17px; line-height:1.55; color:var(--card);
   max-width:520px; margin:6px 0 0;
 }
+.df-viewlinks{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:14px; }
 .df-viewlink{
   font-family:'Space Mono', monospace; font-size:11px; letter-spacing:0.04em; text-transform:uppercase;
   background:transparent; color:var(--gold); border:1px solid var(--gold); border-radius:3px;
-  padding:9px 16px; margin-top:14px;
+  padding:9px 16px;
 }
 .df-viewlink:hover{ background:var(--gold); color:#1b2a20; }
 .df-empty{ text-align:center; color:var(--sage); font-style:italic; padding:60px 20px; }
