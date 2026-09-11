@@ -24,6 +24,7 @@ const SRC_ORDER = [
   'render-diagram.js',
   'render-trainer.js',
   'render-field-log.js',
+  'render-discover.js',
   'bootstrap.js',
 ];
 const scripts = SRC_ORDER.map((f) => fs.readFileSync(path.join(ROOT, 'src', f), 'utf8')).join('\n\n');
@@ -54,12 +55,14 @@ ${css}
   <button type="button" data-tab="diagram">Diagram</button>
   <button type="button" data-tab="trainer">Trainer</button>
   <button type="button" data-tab="log">Field Log</button>
+  <button type="button" data-tab="discover">Discover</button>
 </div>
 
 <main id="panel-field-guide" class="tab-panel"></main>
 <main id="panel-diagram" class="tab-panel" hidden></main>
 <main id="panel-trainer" class="tab-panel" hidden></main>
 <main id="panel-field-log" class="tab-panel" hidden></main>
+<main id="panel-discover" class="tab-panel" hidden></main>
 
 <script>
 window.TAXONOMY_DATA = ${taxonomy};
