@@ -450,7 +450,12 @@
          "trait": "Aquatic perennials with round, waxy floating leaves and showy flowers that open at or just above the water's surface; among the most ancient surviving flowering-plant lineages, retaining relatively primitive floral structure.",
          "differentia": "The order's defining family &mdash; true water lilies, floating rather than emergent like the unrelated lotus (Nelumbonaceae) elsewhere in the Diagram.",
          "icon": "<ellipse cx=\"20\" cy=\"26\" rx=\"12\" ry=\"4\"/><path d=\"M20 22c-4-6-4-12 0-16 4 4 4 10 0 16z\"/>",
-         "species": []
+         "species": [
+          {
+           "common": "Water lily",
+           "sci": "Nymphaea alba"
+          }
+         ]
         }
        ],
        "desc": "The water lilies &mdash; aquatic perennials with floating leaves and flowers, among the most ancient surviving lineages of flowering plants."
@@ -510,6 +515,10 @@
           {
            "common": "Cinnamon",
            "sci": "Cinnamomum verum"
+          },
+          {
+           "common": "Bay laurel",
+           "sci": "Laurus nobilis"
           }
          ]
         }
@@ -537,6 +546,20 @@
            "sci": "Myristica fragrans"
           }
          ]
+        },
+        {
+         "id": "magnoliaceae",
+         "name": "Magnoliaceae",
+         "common": "Magnolia family",
+         "icon": "<path d=\"M20 8c5 1 7 8 7 12s-2 11-7 12c-5-1-7-8-7-12s2-11 7-12z\"/><path d=\"M14 12c-2 3-2 12 0 16M26 12c2 3 2 12 0 16\"/><path d=\"M20 32v4\"/>",
+         "trait": "Large, often fragrant flowers that open from a tightly wrapped, torpedo-shaped bud into big waxy tepals arranged in an overlapping spiral rather than distinct whorls of petals and sepals; an ancient lineage that evolved before bees, originally pollinated by beetles.",
+         "differentia": "The order's namesake family and its only broadly cultivated ornamental &mdash; its large spiral-tepaled flowers stand apart from Myristicaceae's inconspicuous blooms, hidden inside an aril-wrapped fruit.",
+         "species": [
+          {
+           "common": "Southern magnolia",
+           "sci": "Magnolia grandiflora"
+          }
+         ]
         }
        ],
        "desc": "Woody trees and shrubs with large, often solitary flowers and numerous spirally arranged floral parts, an early-diverging lineage that predates the split between monocots and eudicots."
@@ -556,7 +579,12 @@
          "trait": "Jointed, often swollen stem nodes; tiny flowers lacking petals, packed densely onto a narrow upright or hanging spike; many species rich in pungent alkaloids.",
          "differentia": "The order's defining family &mdash; black pepper's dense flower spike and pungent alkaloid chemistry (piperine) are unique to this lineage among the early-diverging angiosperms nearby in the Diagram.",
          "icon": "<path d=\"M20 6v10\"/><ellipse cx=\"20\" cy=\"24\" rx=\"4\" ry=\"10\"/>",
-         "species": []
+         "species": [
+          {
+           "common": "Black pepper",
+           "sci": "Piper nigrum"
+          }
+         ]
         }
        ],
        "desc": "Herbs, shrubs, and vines with jointed stems and tiny flowers packed onto dense spikes, source of the world's most widely traded spice, black pepper."
@@ -710,7 +738,12 @@
          "trait": "Long, strap-like leaves arranged in a spiral around the stem, often edged with sharp spines; aerial prop roots support the trunk in some species; separate male and female plants.",
          "differentia": "The order's defining family &mdash; screw pines are named for the distinctive corkscrew spiral in which their strap-like leaves wrap around the stem.",
          "icon": "<path d=\"M20 34V10\"/><path d=\"M20 10c-6-2-10 2-10 2s4 6 10 4 10-6 10-6-4-4-10 0z\"/>",
-         "species": []
+         "species": [
+          {
+           "common": "Pandan",
+           "sci": "Pandanus amaryllifolius"
+          }
+         ]
         }
        ],
        "desc": "Tropical monocots with spirally arranged, often spine-edged strap leaves, commonly propped up by aerial roots."
@@ -834,6 +867,10 @@
           {
            "common": "Lemongrass",
            "sci": "Cymbopogon citratus"
+          },
+          {
+           "common": "Fonio",
+           "sci": "Digitaria exilis"
           }
          ]
         },
@@ -881,6 +918,14 @@
           {
            "common": "Green cardamom",
            "sci": "Elettaria cardamomum"
+          },
+          {
+           "common": "Turmeric",
+           "sci": "Curcuma longa"
+          },
+          {
+           "common": "Galangal",
+           "sci": "Alpinia galanga"
           }
          ]
         },
@@ -920,6 +965,10 @@
           {
            "common": "Coconut palm",
            "sci": "Cocos nucifera"
+          },
+          {
+           "common": "Date palm",
+           "sci": "Phoenix dactylifera"
           }
          ]
         }
@@ -1181,10 +1230,6 @@
               {
                "common": "Sweet chestnut",
                "sci": "Castanea sativa"
-              },
-              {
-               "common": "Tanoak",
-               "sci": "Notholithocarpus densiflorus"
               }
              ]
             },
@@ -1319,6 +1364,14 @@
               {
                "common": "Mimosa",
                "sci": "Mimosa pudica"
+              },
+              {
+               "common": "Judas tree",
+               "sci": "Cercis siliquastrum"
+              },
+              {
+               "common": "Pink mimosa tree",
+               "sci": "Albizia julibrissin"
               }
              ]
             }
@@ -1390,6 +1443,10 @@
               {
                "common": "White mulberry",
                "sci": "Morus alba"
+              },
+              {
+               "common": "Black mulberry",
+               "sci": "Morus nigra"
               }
              ]
             },
@@ -1461,6 +1518,10 @@
               {
                "common": "Melon",
                "sci": "Cucumis melo"
+              },
+              {
+               "common": "Cucumber",
+               "sci": "Cucumis sativus"
               }
              ]
             }
@@ -1601,7 +1662,12 @@
            "trait": "Compound leaves typically divided into three heart-shaped leaflets that fold downward at night or in low light (nyctinasty); sour, oxalic-acid-rich tissue gives the family its name.",
            "differentia": "The order's defining family &mdash; its three-part, light-sensitive clover-like leaves are a distinctive trait not shared by the order's other, more obscure families.",
            "icon": "<circle cx=\"20\" cy=\"12\" r=\"6\"/><circle cx=\"12\" cy=\"24\" r=\"6\"/><circle cx=\"28\" cy=\"24\" r=\"6\"/><path d=\"M20 18v16\"/>",
-           "species": []
+           "species": [
+            {
+             "common": "Wood sorrel",
+             "sci": "Oxalis acetosella"
+            }
+           ]
           }
          ],
          "desc": "Mostly herbaceous plants with light-sensitive, clover-like compound leaves and a sharp, oxalic-acid tang."
@@ -1628,7 +1694,12 @@
            "trait": "Palmately lobed or deeply dissected leaves; flowers with five separate petals, often with fine dark veining, followed by a distinctive long, beak-shaped seed capsule that springs open to fling seeds away from the parent plant.",
            "differentia": "The order's defining family &mdash; its beaked seed capsule (the source of the common name \"cranesbill\") is unique among the Diagram's rosid orders.",
            "icon": "<path d=\"M20 20l0-10M20 20l9-3M20 20l6 8M20 20l-6 8M20 20l-9-3\"/><circle cx=\"20\" cy=\"20\" r=\"2\"/>",
-           "species": []
+           "species": [
+            {
+             "common": "Geranium",
+             "sci": "Pelargonium x hortorum"
+            }
+           ]
           }
          ],
          "desc": "Herbs and shrubs with lobed leaves and five-petaled flowers, known for a distinctive beaked seed capsule that catapults seeds away from the parent plant."
@@ -1828,6 +1899,10 @@
             {
              "common": "Jute",
              "sci": "Corchorus olitorius"
+            },
+            {
+             "common": "Mallow",
+             "sci": "Malva sylvestris"
             }
            ]
           },
@@ -1934,6 +2009,10 @@
              "sci": "Acer saccharum"
             },
             {
+             "common": "Norway maple",
+             "sci": "Acer platanoides"
+            },
+            {
              "common": "Horse chestnut",
              "sci": "Aesculus hippocastanum"
             },
@@ -1974,6 +2053,10 @@
             {
              "common": "Spanish cedar",
              "sci": "Cedrela odorata"
+            },
+            {
+             "common": "Chinese toon tree",
+             "sci": "Toona sinensis"
             }
            ]
           },
@@ -2188,6 +2271,10 @@
             {
              "common": "Flowering dogwood",
              "sci": "Cornus florida"
+            },
+            {
+             "common": "Kousa dogwood",
+             "sci": "Cornus kousa"
             }
            ]
           },
@@ -2602,6 +2689,10 @@
                 {
                  "common": "Common plantain",
                  "sci": "Plantago major"
+                },
+                {
+                 "common": "Psyllium husk",
+                 "sci": "Plantago ovata"
                 }
                ]
               },
