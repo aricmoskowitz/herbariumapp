@@ -449,6 +449,11 @@ nav.modes button.active{ background:var(--gold); color:#1b2a20; border-color:var
 .df-name{ font-family:'Fraunces', serif; font-weight:600; font-size:clamp(24px, 5vw, 36px); margin:0; color:var(--card); }
 .df-sci{ font-style:italic; color:var(--sage); font-size:15px; }
 .df-common{ font-family:'Space Mono', monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:var(--sage); }
+.df-breadcrumb{
+  font-family:'Space Mono', monospace; font-size:10.5px; letter-spacing:0.02em;
+  color:var(--sage); max-width:480px; line-height:1.6;
+}
+.df-breadcrumb-sep{ margin:0 5px; opacity:0.6; }
 .df-badge{
   display:inline-flex; align-items:center; gap:6px;
   font-family:'Space Mono', monospace; font-size:10px; letter-spacing:0.05em; text-transform:uppercase;
