@@ -7288,9 +7288,14 @@ window.Herb = (function () {
     return `<h2 class="df-name">${esc(card.name)}</h2>`;
   }
 
+  // Rendered narrowest-first (species/family end) to broadest-last (clade
+  // end) - the reverse of `breadcrumb`'s own root-first order - so it reads
+  // as "this, within this, within this" rather than starting from the most
+  // abstract ancestor.
   function breadcrumbHtml(card) {
     if (!card.breadcrumb || !card.breadcrumb.length) return '';
-    return `<div class="df-breadcrumb">${card.breadcrumb.map((n) => `<span>${esc(n)}</span>`).join('<span class="df-breadcrumb-sep">&rsaquo;</span>')}</div>`;
+    const narrowestFirst = card.breadcrumb.slice().reverse();
+    return `<div class="df-breadcrumb">${narrowestFirst.map((n) => `<span>${esc(n)}</span>`).join('<span class="df-breadcrumb-sep">&lsaquo;</span>')}</div>`;
   }
 
   function cardHtml(card) {
