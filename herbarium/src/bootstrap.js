@@ -38,7 +38,7 @@
       btn.addEventListener('click', () => show(btn.dataset.tab));
     });
 
-    show('guide');
+    show('discover');
   }
 
   if (window.TAXONOMY_DATA) {

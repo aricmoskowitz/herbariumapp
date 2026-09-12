@@ -503,15 +503,15 @@ nav.modes button.active{ background:var(--gold); color:#1b2a20; border-color:var
 </head>
 <body>
 <div id="appSwitch">
-  <button type="button" data-tab="discover">Discover</button>
-  <button type="button" data-tab="guide" class="active">Field Guide</button>
+  <button type="button" data-tab="discover" class="active">Discover</button>
+  <button type="button" data-tab="guide">Field Guide</button>
   <button type="button" data-tab="diagram">Diagram</button>
   <button type="button" data-tab="trainer">Trainer</button>
   <button type="button" data-tab="log">Field Log</button>
 </div>
 
-<main id="panel-discover" class="tab-panel" hidden></main>
-<main id="panel-field-guide" class="tab-panel"></main>
+<main id="panel-discover" class="tab-panel"></main>
+<main id="panel-field-guide" class="tab-panel" hidden></main>
 <main id="panel-diagram" class="tab-panel" hidden></main>
 <main id="panel-trainer" class="tab-panel" hidden></main>
 <main id="panel-field-log" class="tab-panel" hidden></main>
@@ -7772,7 +7772,7 @@ window.Herb = (function () {
       btn.addEventListener('click', () => show(btn.dataset.tab));
     });
 
-    show('guide');
+    show('discover');
   }
 
   if (window.TAXONOMY_DATA) {
