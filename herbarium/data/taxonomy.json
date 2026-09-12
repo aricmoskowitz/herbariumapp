@@ -18,6 +18,7 @@
    "cultural",
    "medicinal",
    "discovery",
+   "cultivation",
    "other"
   ]
  },
@@ -183,6 +184,10 @@
     {
      "type": "discovery",
      "text": "In 2024, paleobiologist Cindy Looy and colleagues dated fossilized kelp holdfasts collected by amateur fossil hunter James Goedert near Jansen Creek, Washington State, to about 32 million years old — more than doubling the previous oldest known kelp fossil, Julescraneia, described in 1965 from Miocene rocks in California."
+    },
+    {
+     "type": "cultivation",
+     "text": "Species like kombu and wakame are commercially farmed rather than wild-harvested, grown on ropes suspended in coastal waters where they can be lowered to depth and hauled back up again at harvest."
     }
    ]
   },
@@ -1133,6 +1138,10 @@
             {
              "type": "cultural",
              "text": "Traded along ancient spice routes for millennia and mentioned in Egyptian, Hebrew, and Greek texts as a luxury good used in incense and embalming."
+            },
+            {
+             "type": "cultivation",
+             "text": "Harvested by coppicing - cutting the stems back to encourage new shoots - then peeling the inner bark from those young shoots, which curls into quills as it dries."
             }
            ]
           },
@@ -1148,6 +1157,10 @@
             {
              "type": "culinary",
              "text": "Dried whole, its leaves are simmered in stews and sauces for their aroma, then almost always fished back out before serving — the leaf itself is tough and unpleasant to eat."
+            },
+            {
+             "type": "cultivation",
+             "text": "Leaves are hand-picked year-round from mature shrubs and air-dried out of direct sun, which preserves their aroma better than fast drying."
             }
            ]
           }
@@ -1189,6 +1202,10 @@
             {
              "type": "medicinal",
              "text": "Contains myristicin, a compound that is toxic and mildly hallucinogenic in large doses — a few whole nutmegs can cause serious poisoning."
+            },
+            {
+             "type": "cultivation",
+             "text": "The fruit is split open at harvest to reveal a seed wrapped in a lacy red aril; the aril is peeled off and dried separately to become mace, while the seed itself is dried for weeks before cracking to yield the nutmeg."
             }
            ]
           }
@@ -1257,6 +1274,10 @@
             {
              "type": "cultural",
              "text": "Pepper was so valuable in medieval Europe that it was sometimes used to pay rent, taxes, or dowries, and hoarded merchant wealth was literally measured \"by the peppercorn.\""
+            },
+            {
+             "type": "cultivation",
+             "text": "Grown as a vine trained up a support pole; unripe berries are hand-picked and dried in the sun to make black peppercorns, while fully ripe berries are soaked to remove the skin before drying into white pepper."
             }
            ]
           }
@@ -1387,6 +1408,10 @@
             {
              "type": "cultural",
              "text": "Domesticated more than 5,000 years ago, making it one of the oldest continuously cultivated vegetables."
+            },
+            {
+             "type": "cultivation",
+             "text": "Grown from seed, seedlings, or small bulbs called \"sets\"; harvested once the leafy tops yellow and fall over, then cured in a dry, airy spot for days to weeks so the outer skin toughens for storage."
             }
            ]
           },
@@ -1402,6 +1427,10 @@
             {
              "type": "other",
              "text": "Its pungency comes from allicin, formed only after a clove is crushed or chopped, which triggers a chemical reaction between two compounds normally kept separate in the intact cell."
+            },
+            {
+             "type": "cultivation",
+             "text": "Propagated by planting individual cloves rather than seed, in autumn in most climates; bulbs are dug up once the leaves begin to brown, then cured and dried before the papery skin is stored intact."
             }
            ]
           }
@@ -1433,6 +1462,10 @@
             {
              "type": "other",
              "text": "A sterile triploid that can no longer produce viable seeds; every saffron crocus in cultivation is propagated by hand-dividing its underground corms."
+            },
+            {
+             "type": "cultivation",
+             "text": "Each corm produces just a few flowers, and the three red stigmas inside must be hand-picked at dawn before the bloom wilts; roughly 150 flowers yield only a gram of dried saffron."
             }
            ]
           },
@@ -1515,6 +1548,10 @@
             {
              "type": "other",
              "text": "Digesting it produces methanethiol, a sulfurous compound that gives urine a distinctive smell afterward; not everyone can smell it, due to genetic variation in odor receptors."
+            },
+            {
+             "type": "cultivation",
+             "text": "A perennial crop that takes two to three years to establish before the first harvest; young spears are cut by hand just above soil level each spring, and the plant is left to grow into tall fern-like foliage the rest of the season to recharge the roots."
             }
            ]
           },
@@ -1606,6 +1643,10 @@
             {
              "type": "other",
              "text": "Frequently confused with sweet potato in North American grocery stores and recipes, but the two aren't closely related at all — sweet potato belongs to the morning glory family (Convolvulaceae), an entirely different order."
+            },
+            {
+             "type": "cultivation",
+             "text": "Grown from small tuber pieces planted at the start of the rainy season and trained up stakes or trellises; the mature tubers are dug up by hand months later, which can damage the brittle skin if done carelessly."
             }
            ]
           }
@@ -1651,6 +1692,10 @@
             {
              "type": "cultural",
              "text": "One of the oldest cultivated food plants in Southeast Asia and the Pacific, and the base ingredient of Hawaiian poi."
+            },
+            {
+             "type": "cultivation",
+             "text": "Propagated from the corm's growing tip rather than seed, often grown in flooded paddies like rice; the corms are dug up after 6-12 months and must be cooked before eating, since raw tissue is loaded with irritating calcium oxalate crystals."
             }
            ]
           },
@@ -1707,6 +1752,10 @@
             {
              "type": "other",
              "text": "The most drought-tolerant of the major cereal crops, making it a staple across Africa's semi-arid Sahel region and parts of India."
+            },
+            {
+             "type": "cultivation",
+             "text": "Sown at the start of the rainy season in poor, sandy soils where few other grains survive; the seed heads are cut and dried, then threshed and ground into flour."
             }
            ]
           },
@@ -1718,6 +1767,10 @@
             {
              "type": "region_found",
              "text": "A dietary staple across much of sub-Saharan Africa, also grown widely for animal feed, sorghum syrup, and biofuel."
+            },
+            {
+             "type": "cultivation",
+             "text": "Direct-seeded like corn but far more drought-tolerant; grain heads are combine-harvested once mature and threshed, with the stalks sometimes pressed for syrup."
             }
            ]
           },
@@ -1738,6 +1791,10 @@
             {
              "type": "region_origin",
              "text": "Domesticated from teosinte roughly 9,000 years ago in the Balsas River basin of southwestern Mexico."
+            },
+            {
+             "type": "cultivation",
+             "text": "Seeds are planted directly in rows after the last frost and cultivated to control weeds while young; harvested once the husks dry and kernels reach a hard, low-moisture stage, then dried further before milling or storage."
             }
            ]
           },
@@ -1749,6 +1806,10 @@
             {
              "type": "other",
              "text": "A staple food for over half the world's population, more than any other single crop."
+            },
+            {
+             "type": "cultivation",
+             "text": "Seedlings are started in nurseries and transplanted by hand or machine into flooded paddies; fields are drained before harvest, and the grain is threshed, then milled to remove the husk and bran."
             }
            ]
           },
@@ -1764,6 +1825,10 @@
             {
              "type": "cultural",
              "text": "One of the founding crops of the Fertile Crescent's Neolithic agricultural revolution."
+            },
+            {
+             "type": "cultivation",
+             "text": "Sown in autumn (winter wheat) or spring and left largely unweeded once established; combine harvesters cut and thresh the ripe grain in one pass, which is then milled into flour."
             }
            ]
           },
@@ -1775,6 +1840,10 @@
             {
              "type": "other",
              "text": "Uses C4 photosynthesis, a more efficient carbon-fixing pathway than most plants, letting it convert sunlight into biomass unusually quickly — part of why it's grown at massive scale for both sugar and ethanol biofuel."
+            },
+            {
+             "type": "cultivation",
+             "text": "Propagated from stem cuttings rather than seed; stalks are cut near ground level 12-24 months later and rushed to a mill within hours, since sucrose begins degrading as soon as the cane is cut."
             }
            ]
           },
@@ -1820,8 +1889,18 @@
             {
              "type": "other",
              "text": "Its grains are so tiny — smaller than a grain of sand — that a West African proverb holds it takes real skill and patience to harvest and clean them."
+            },
+            {
+             "type": "cultivation",
+             "text": "Sown by broadcasting the tiny seed over prepared soil; harvested by hand with sickles, since the fine grain shatters easily, then pounded to remove a tough husk before cooking."
             }
            ]
+          }
+         ],
+         "funFacts": [
+          {
+           "type": "cultivation",
+           "text": "Cereal grains across this family share a common cultivation arc: direct-seeded, largely left to grow once established, then cut and threshed in one pass by a combine harvester, which separates grain from straw and chaff in the same operation."
           }
          ]
         },
@@ -1845,6 +1924,10 @@
             {
              "type": "cultural",
              "text": "Native to South America; Christopher Columbus's crew were among the first Europeans to encounter it, on the island of Guadeloupe in 1493."
+            },
+            {
+             "type": "cultivation",
+             "text": "Propagated from the leafy crown cut off a harvested fruit rather than from seed; each plant produces a single fruit over 18-24 months, cut by hand once the base of the fruit turns yellow."
             }
            ]
           }
@@ -1892,6 +1975,10 @@
             {
              "type": "medicinal",
              "text": "Used for centuries in traditional Chinese and Ayurvedic medicine to settle nausea, an effect with some modern clinical support."
+            },
+            {
+             "type": "cultivation",
+             "text": "Grown from pieces of rhizome (\"seed ginger\") planted just under the soil surface; harvested by digging up the whole rhizome clump 8-10 months later, after the leaves yellow and die back."
             }
            ]
           },
@@ -1933,6 +2020,10 @@
             {
              "type": "other",
              "text": "Like its relative ginger, turmeric's flavorful part is an underground rhizome, not a true root."
+            },
+            {
+             "type": "cultivation",
+             "text": "Grown from rhizome pieces like ginger; the rhizomes are boiled, sun-dried, and polished after harvest, then ground into the bright yellow powder sold as a spice."
             }
            ]
           },
@@ -1944,6 +2035,10 @@
             {
              "type": "culinary",
              "text": "Though it resembles ginger, galangal has a sharper, more citrusy and piney bite, and is a staple aromatic in Thai and Indonesian dishes like tom kha gai."
+            },
+            {
+             "type": "cultivation",
+             "text": "Propagated from rhizome divisions; mature rhizomes are dug up after a year or more, when the tough, fibrous flesh is at its most pungent, and used fresh or dried and ground."
             }
            ]
           }
@@ -1965,6 +2060,10 @@
             {
              "type": "other",
              "text": "Commercial bananas like the Cavendish are seedless, sterile triploids propagated only from cuttings, making every plant a genetic clone of the last — which leaves the entire global crop uniformly vulnerable to diseases like Panama disease."
+            },
+            {
+             "type": "cultivation",
+             "text": "Propagated from suckers growing at the base of a mature plant rather than seed, since cultivated bananas are seedless; the whole flowering stalk is cut down once the fruit fills out but is still green, and it ripens off the plant."
             }
            ]
           }
@@ -2002,6 +2101,10 @@
             {
              "type": "other",
              "text": "Its buoyant, waterproof husk lets coconuts float and stay viable for weeks at sea, which helped the species colonize remote tropical shorelines by ocean current long before humans carried it."
+            },
+            {
+             "type": "cultivation",
+             "text": "Grown from whole seed nuts germinated in a nursery bed before transplanting; mature nuts are harvested by climbing the trunk or using a long pole knife, then husked, and the flesh is pressed or dried into copra for oil."
             }
            ]
           },
@@ -2017,6 +2120,10 @@
             {
              "type": "discovery",
              "text": "A roughly 2,000-year-old date palm seed recovered at Masada, Israel, was germinated in 2005 and grew into a tree now nicknamed \"Methuselah.\""
+            },
+            {
+             "type": "cultivation",
+             "text": "Female trees are hand-pollinated with pollen from male trees, since wind pollination alone is unreliable in cultivation; the fruit clusters are harvested over weeks as individual dates ripen, then sun-dried or dehydrated."
             }
            ]
           }
@@ -2231,6 +2338,10 @@
             {
              "type": "other",
              "text": "In the late 1800s, European vineyards were nearly wiped out by phylloxera, an aphid-like insect, and were saved largely by grafting European vines onto resistant American rootstock."
+            },
+            {
+             "type": "cultivation",
+             "text": "Vines are pruned hard every winter back to just a few buds, which controls yield and concentrates flavor; grapes destined for wine are picked once sugar levels peak, then crushed and left to ferment with their own skins."
             }
            ]
           }
@@ -2617,6 +2728,10 @@
                 {
                  "type": "other",
                  "text": "Sends taproots several meters deep, letting it draw on groundwater and survive drought far better than most forage crops."
+                },
+                {
+                 "type": "cultivation",
+                 "text": "A perennial hay crop cut several times a season, just as flowering begins for peak protein content, then field-dried or dried faster with a mechanical conditioner before baling."
                 }
                ]
               },
@@ -2650,6 +2765,10 @@
                 {
                  "type": "cultural",
                  "text": "One of the earliest crops domesticated in the Fertile Crescent, alongside wheat and barley, roughly 10,000 years ago."
+                },
+                {
+                 "type": "cultivation",
+                 "text": "Direct-seeded like other pulses; the whole plant is cut or pulled once the pods dry and rattle, then threshed to separate the small lens-shaped seeds, which are stored dry rather than processed further."
                 }
                ]
               },
@@ -2770,8 +2889,18 @@
                 {
                  "type": "culinary",
                  "text": "Often sown as a living \"green manure\" alongside pasture grasses, since the nitrogen it fixes enriches the soil for neighboring plants without any synthetic fertilizer."
+                },
+                {
+                 "type": "cultivation",
+                 "text": "Usually sown directly into pasture or as a cover crop rather than harvested for its own sake; when grown for seed, the flower heads are cut and dried, then threshed to release the tiny seeds."
                 }
                ]
+              }
+             ],
+             "funFacts": [
+              {
+               "type": "cultivation",
+               "text": "Grown in rotation with cereal crops in many farming systems, since their root-nodule bacteria replenish soil nitrogen that heavy grain cropping depletes - a practice far older than the chemistry that later explained why it worked."
               }
              ]
             }
@@ -2868,6 +2997,10 @@
                 {
                  "type": "region_origin",
                  "text": "Traces back to wild forests of Malus sieversii in the mountains of Kazakhstan, the species' original center of diversity."
+                },
+                {
+                 "type": "cultivation",
+                 "text": "Nearly all cultivated varieties are grafted onto rootstock rather than grown from seed, since seedlings don't reliably reproduce the parent's fruit; grafted trees are pruned each winter to an open shape and hand-picked at harvest to avoid bruising."
                 }
                ]
               },
@@ -2890,8 +3023,18 @@
                 {
                  "type": "other",
                  "text": "A close relative of peach and cherry in the same genus; wild almonds are bitter and contain the same cyanide-releasing compound as apricot kernels, but a single gene mutation, selected by early farmers, produced the sweet almonds grown today."
+                },
+                {
+                 "type": "cultivation",
+                 "text": "Trees are shaken mechanically once the outer hull splits open, dropping the in-shell nuts to the orchard floor, where they're swept up, hulled, and dried before the shell is cracked."
                 }
                ]
+              }
+             ],
+             "funFacts": [
+              {
+               "type": "cultivation",
+               "text": "Most cultivated tree fruits in this family are grafted onto a separate rootstock rather than grown from seed, which keeps the variety true and lets growers control the tree's ultimate size."
               }
              ]
             },
@@ -2975,6 +3118,10 @@
                 {
                  "type": "other",
                  "text": "Industrial hemp and psychoactive cannabis are the same species — they differ mainly in THC content as a result of selective breeding, which is why many countries set a legal THC threshold to distinguish the two uses."
+                },
+                {
+                 "type": "cultivation",
+                 "text": "Grown densely for fiber (tall, minimally branched stalks cut and retted like flax) or spaced further apart for seed and flower; fiber and seed varieties are harvested at entirely different maturity stages."
                 }
                ]
               }
@@ -3095,6 +3242,10 @@
               {
                "type": "other",
                "text": "The same crop yields two very different products depending on how it's grown: linseed oil from the seeds, and linen fiber from the stem."
+              },
+              {
+               "type": "cultivation",
+               "text": "For fiber, whole plants are pulled up rather than cut, then \"retted\" - soaked or left in damp conditions for weeks so bacteria break down the stem's pectin, freeing the long bast fibers for spinning into linen."
               }
              ]
             }
@@ -3234,6 +3385,10 @@
               {
                "type": "other",
                "text": "Contains cyanogenic compounds that must be removed by soaking, fermenting, or cooking before eating, especially in \"bitter\" varieties — despite this, it's a dietary staple for several hundred million people across the tropics."
+              },
+              {
+               "type": "cultivation",
+               "text": "Grown from stem cuttings planted directly in the ground; the starchy roots are dug up 8-24 months later and must be peeled, grated, and pressed or soaked to leach out cyanogenic compounds before the pulp is dried into flour."
               }
              ]
             }
@@ -3430,6 +3585,10 @@
               {
                "type": "cultural",
                "text": "Native only to Indonesia's Maluku Islands, part of the same historic spice-trade rivalry that also centered on nutmeg from the neighboring Banda Islands."
+              },
+              {
+               "type": "cultivation",
+               "text": "The unopened flower buds are hand-picked while still green-pink and spread out to dry in the sun for several days, turning the familiar dark brown as they lose most of their moisture."
               }
              ]
             }
@@ -3455,6 +3614,10 @@
               {
                "type": "other",
                "text": "A single fruit can contain several hundred individual seed-and-pulp arils."
+              },
+              {
+               "type": "cultivation",
+               "text": "Fruit is snipped rather than pulled from the branch, since tugging can split the tough rind; it's harvested when it makes a metallic sound when tapped, a sign the arils inside are fully juiced up."
               }
              ]
             }
@@ -3488,6 +3651,10 @@
               {
                "type": "other",
                "text": "Cabbage, kale, broccoli, cauliflower, and Brussels sprouts are all the same species — selective breeding for different plant parts (leaves, flower buds, stem buds) over centuries produced these dramatically different-looking vegetables."
+              },
+              {
+               "type": "cultivation",
+               "text": "Started as seedlings and transplanted into the field; heads are cut at the base once they feel dense and firm, and a second, smaller flush of small heads can sometimes be harvested from the same stump afterward."
               }
              ]
             },
@@ -3532,6 +3699,10 @@
               {
                "type": "other",
                "text": "One of the fastest-maturing vegetable crops, with some varieties ready to harvest in as little as three to four weeks."
+              },
+              {
+               "type": "cultivation",
+               "text": "One of the fastest crops from sowing to harvest, direct-seeded and ready to pull in as little as three to four weeks; left in the ground too long, the root turns woody and pithy."
               }
              ]
             },
@@ -3621,6 +3792,10 @@
               {
                "type": "other",
                "text": "Contains papain, a protein-digesting enzyme extracted commercially and used as a natural meat tenderizer."
+              },
+              {
+               "type": "cultivation",
+               "text": "Grown from seed and fruiting within a year; fruit is cut when the skin just starts to blush yellow, since papayas continue ripening off the tree, and the still-green latex-rich sap is tapped separately for the papain used in meat tenderizer."
               }
              ]
             }
@@ -3679,6 +3854,10 @@
               {
                "type": "region_origin",
                "text": "Domesticated independently in both the Americas and the Old World, from different wild Gossypium species."
+              },
+              {
+               "type": "cultivation",
+               "text": "Bolls are picked once they burst open and the fiber has fully fluffed out, either by hand or mechanical picker; the harvested lint is then ginned to separate the fiber from the seed."
               }
              ]
             },
@@ -3694,6 +3873,10 @@
               {
                "type": "other",
                "text": "Beans are fermented before being dried, roasted, and ground — a step essential for developing chocolate's characteristic flavor."
+              },
+              {
+               "type": "cultivation",
+               "text": "Pods are cut from the trunk and branches by hand, then split open so the pulp-covered beans can be scooped out and piled to ferment for several days - a step essential for developing chocolate flavor - before sun-drying and roasting."
               }
              ]
             },
@@ -3749,6 +3932,10 @@
               {
                "type": "other",
                "text": "One of the most widely produced natural fibers after cotton, historically central to the economy of Bengal, and still a major source of burlap and sacking material."
+              },
+              {
+               "type": "cultivation",
+               "text": "Grown densely and cut near the base once the plant flowers; stalks are then retted in water for weeks to loosen the bark, which is stripped off by hand to separate the long fibers used for burlap and rope."
               }
              ]
             },
@@ -4218,6 +4405,10 @@
           {
            "type": "other",
            "text": "One of the most chemically and economically diverse rosid orders, spanning mangoes and cashews, citrus fruits, maples, mahogany, and the resins frankincense and myrrh."
+          },
+          {
+           "type": "cultivation",
+           "text": "Its fruit and nut trees (citrus, mango, cashew, pistachio) are overwhelmingly propagated by grafting a fruiting variety onto a hardier seedling rootstock, rather than grown from seed."
           }
          ]
         }
@@ -4610,6 +4801,10 @@
               {
                "type": "other",
                "text": "Ripe berries contain small internal air pockets, which is why growers flood bogs at harvest time — the berries float to the surface for easy collection, the source of the iconic floating-harvest image."
+              },
+              {
+               "type": "cultivation",
+               "text": "Grown in sandy, acidic bogs; for the wet harvest most people picture, the bogs are flooded and a machine beats the vines so the buoyant, air-pocketed berries float to the surface for collection."
               }
              ]
             },
@@ -4683,6 +4878,10 @@
               {
                "type": "cultural",
                "text": "Second only to water as the most widely consumed beverage on Earth."
+              },
+              {
+               "type": "cultivation",
+               "text": "Only the newest growth - the classic \"two leaves and a bud\" - is plucked by hand every week or two during the growing season; the same leaf can become green, oolong, or black tea depending entirely on how much it is withered, rolled, and oxidized afterward."
               }
              ]
             },
@@ -4784,6 +4983,10 @@
               {
                "type": "interspecies",
                "text": "In parts of Morocco, goats are famously photographed climbing into the tree's branches to browse its fruit."
+              },
+              {
+               "type": "cultivation",
+               "text": "Fruit is collected from the ground after falling; the nut inside the dried pulp is cracked by hand - a slow, labor-intensive step - and the kernels are pressed for oil, sometimes after light roasting for a more strongly flavored culinary grade."
               }
              ]
             },
@@ -4795,6 +4998,10 @@
               {
                "type": "region_found",
                "text": "Grows wild across the savanna belt of West and Central Africa; its fatty seed kernels are the source of shea butter."
+              },
+              {
+               "type": "cultivation",
+               "text": "Fallen fruit is gathered by hand from wild and semi-wild trees; the nut inside is dried, roasted, and pounded, then boiled and kneaded in water so the fat separates out and can be skimmed off as raw shea butter."
               }
              ]
             }
@@ -4879,7 +5086,13 @@
            ]
           }
          ],
-         "id": "ericales"
+         "id": "ericales",
+         "funFacts": [
+          {
+           "type": "cultivation",
+           "text": "Several of its most valuable crops - tea, blueberries, cranberries - all need distinctly acidic soil to thrive, a shared requirement traced back to a common ancestor rather than convergent coincidence."
+          }
+         ]
         },
         {
          "name": "Core Asterids",
@@ -4955,6 +5168,10 @@
                   {
                    "type": "region_origin",
                    "text": "Native to the highlands of Ethiopia, and still grows wild there in forest understories today."
+                  },
+                  {
+                   "type": "cultivation",
+                   "text": "Ripe red cherries are hand-picked, then either dried whole in the sun or pulped and fermented in water to strip the fruit from the bean, which is then dried, hulled, and roasted."
                   }
                  ]
                 }
@@ -5040,6 +5257,10 @@
                   {
                    "type": "other",
                    "text": "Tubers exposed to light turn green and produce elevated solanine, a bitter, toxic compound — those green portions should be cut away before eating."
+                  },
+                  {
+                   "type": "cultivation",
+                   "text": "Grown from cut, sprouted tuber pieces called seed potatoes rather than true seed; soil is mounded up around the stems (\"hilling\") as they grow to keep developing tubers covered and free of sunlight-induced greening, then the tubers are dug up once the foliage dies back."
                   }
                  ]
                 },
@@ -5066,6 +5287,10 @@
                   {
                    "type": "other",
                    "text": "Naturally produces nicotine as an insect-deterrent chemical defense, one of the most potent naturally occurring plant alkaloids."
+                  },
+                  {
+                   "type": "cultivation",
+                   "text": "Leaves are hand-picked in stages from the bottom of the plant upward as they ripen, then cured for days to weeks - by air, fire, or heat depending on the style - which turns them from green to the familiar brown."
                   }
                  ]
                 },
@@ -5109,6 +5334,12 @@
                    "text": "Its spiky seed pod, which splits open into four sections, gives the plant its \"thorn apple\" name."
                   }
                  ]
+                }
+               ],
+               "funFacts": [
+                {
+                 "type": "cultivation",
+                 "text": "Its major food crops (tomato, potato, eggplant, pepper) are almost always started indoors or in seedbeds and transplanted out as young plants rather than direct-seeded, since the family's tropical origins make them slow and unreliable to start in cool spring soil."
                 }
                ]
               },
@@ -5201,6 +5432,10 @@
                   {
                    "type": "cultural",
                    "text": "Its name likely derives from the Latin lavare, \"to wash,\" reflecting its long use in Roman bathing and laundry practices."
+                  },
+                  {
+                   "type": "cultivation",
+                   "text": "Whole flower spikes are cut in mid-summer once about half the buds on a stem have opened, then either dried in bundles or distilled almost immediately, since essential oil content drops the longer cut stems sit."
                   }
                  ]
                 },
@@ -5255,6 +5490,10 @@
                   {
                    "type": "cultural",
                    "text": "Cultivated across the Mediterranean for at least 6,000 years, with some individual trees estimated to be over a thousand years old and still bearing fruit."
+                  },
+                  {
+                   "type": "cultivation",
+                   "text": "Trees are pruned hard each year to an open shape that lets light reach the fruit; olives are picked (by hand, rake, or mechanical shaker) while still green for a sharper oil or fully ripe and black for a milder one, then pressed within hours to avoid spoilage."
                   }
                  ]
                 },
@@ -5476,6 +5715,10 @@
                   {
                    "type": "other",
                    "text": "Its seed pods burst open abruptly when fully dry — very likely the origin of the phrase \"open sesame\" from One Thousand and One Nights."
+                  },
+                  {
+                   "type": "cultivation",
+                   "text": "Harvested just as the lowest seed pods begin to split, since fully ripe pods shatter and scatter seed on their own; cut plants are stacked upright to finish drying before threshing shakes the seed loose."
                   }
                  ]
                 }
@@ -5507,7 +5750,13 @@
                ]
               }
              ],
-             "id": "lamiales"
+             "id": "lamiales",
+             "funFacts": [
+              {
+               "type": "cultivation",
+               "text": "Many of this order's culinary herbs (basil, mint, sage) are cut back hard and repeatedly through the season, which delays flowering and keeps the plant producing the tender new growth that carries the most flavor and aromatic oil."
+              }
+             ]
             }
            ],
            "id": "lamiids"
@@ -5655,6 +5904,10 @@
                   {
                    "type": "other",
                    "text": "Wild carrot roots are thin, pale, and bitter; the familiar large orange root is the result of centuries of selective breeding, with orange varieties becoming dominant in the Netherlands around the 17th century."
+                  },
+                  {
+                   "type": "cultivation",
+                   "text": "Direct-seeded rather than transplanted, since the taproot doesn't recover well from disturbance; thinned early to give remaining roots room, then pulled once the shoulders reach full size."
                   }
                  ]
                 },
@@ -5666,6 +5919,10 @@
                   {
                    "type": "other",
                    "text": "Its long fibrous stalks are leaf petioles, not stems — the plant's actual stem is a short, compact structure at the base."
+                  },
+                  {
+                   "type": "cultivation",
+                   "text": "A slow starter usually begun indoors and transplanted out; stalks are often blanched by mounding soil or wrapping the base to block light and reduce bitterness, then the whole head is cut at the base at harvest."
                   }
                  ]
                 }
@@ -5803,6 +6060,10 @@
                   {
                    "type": "other",
                    "text": "The edible part is an unopened flower bud — if left to bloom, it opens into a large, thistle-like purple flower."
+                  },
+                  {
+                   "type": "cultivation",
+                   "text": "Grown as a perennial from root divisions or seed; the edible part is the immature flower bud, hand-cut with a length of stem while its scales are still tight, since an opened bud turns tough and inedible."
                   }
                  ]
                 },
@@ -5840,6 +6101,10 @@
                   {
                    "type": "region_origin",
                    "text": "Domesticated by Indigenous peoples in North America long before Europeans encountered it."
+                  },
+                  {
+                   "type": "cultivation",
+                   "text": "Direct-seeded in spring; the flower heads are left to dry in the field until the back turns brown and the seeds rattle loose, then combine-harvested and the seed pressed for oil or hulled for snacking."
                   }
                  ]
                 },
@@ -5862,6 +6127,10 @@
                   {
                    "type": "culinary",
                    "text": "Its roasted, ground root has long been used as a coffee substitute or additive, especially popular in parts of the American South and Louisiana."
+                  },
+                  {
+                   "type": "cultivation",
+                   "text": "Roots are dug up in autumn, then dried and roasted until dark and brittle, at which point they're ground into a bitter, caffeine-free substitute for or additive to coffee."
                   }
                  ]
                 },
@@ -5925,6 +6194,10 @@
                   {
                    "type": "other",
                    "text": "Its milky sap, released when the stem is cut, contains a mild sedative compound called lactucarium, which gave rise to its old nickname \"lettuce opium\" — though the effect from eating lettuce is negligible."
+                  },
+                  {
+                   "type": "cultivation",
+                   "text": "Direct-seeded or transplanted as seedlings; leaf types are cut repeatedly as outer leaves mature, while head types are cut once at the base when the head feels firm."
                   }
                  ]
                 },

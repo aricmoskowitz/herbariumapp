@@ -12,12 +12,12 @@
   const TYPE_LABELS = {
     height: 'Height', region_found: 'Region found', region_origin: 'Region origin',
     pollination: 'Pollination', interspecies: 'Interspecies', culinary: 'Culinary',
-    cultural: 'Cultural', medicinal: 'Medicinal', discovery: 'Discovery', other: 'Fact',
+    cultural: 'Cultural', medicinal: 'Medicinal', discovery: 'Discovery', cultivation: 'Cultivation', other: 'Fact',
   };
   const TYPE_COLORS = {
     height: '#5f7a8a', region_found: '#6f7d5c', region_origin: '#a8763a',
     pollination: '#c79a2b', interspecies: '#8b3a2f', culinary: '#e0b74a',
-    cultural: '#8a9678', medicinal: '#4c7a4c', discovery: '#a4453a', other: '#8a9678',
+    cultural: '#8a9678', medicinal: '#4c7a4c', discovery: '#a4453a', cultivation: '#5c7a3f', other: '#8a9678',
   };
   // Small hand-drawn glyphs for the category badge - a distinct, smaller
   // icon set from the per-taxon icons used elsewhere on the card (§4 in the
@@ -33,6 +33,7 @@
     cultural: '<path d="M6 3v18M6 4h10l-3 4 3 4H6"/>',
     medicinal: '<circle cx="12" cy="12" r="9"/><path d="M12 7v10M7 12h10"/>',
     discovery: '<circle cx="10" cy="10" r="6"/><path d="M15 15l6 6"/>',
+    cultivation: '<path d="M3 18h18"/><path d="M12 18v-7"/><path d="M12 11c-3.2 0-5.5-2.3-5.5-5.5 3.2 0 5.5 2.3 5.5 5.5zM12 11c3.2 0 5.5-2.3 5.5-5.5-3.2 0-5.5 2.3-5.5 5.5z"/>',
     other: '<path d="M12 3v18M4.5 7.5l15 9M19.5 7.5l-15 9"/>',
   };
 
