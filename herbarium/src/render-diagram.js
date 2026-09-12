@@ -19,9 +19,18 @@
   // Checked by field presence, not rank - any leaf node (order or
   // informal group) can carry families[], and any not-yet-built node can
   // carry a plain plants[] list instead.
+  // The toggle summary itself already says "N families" - repeating
+  // "family" on every chip beneath it is redundant and, at this compact
+  // size, costs more space than it's worth. Every family's `common` name
+  // in the data ends in "family"/"Family" by convention, so this trim is
+  // safe without special-casing individual families.
+  function trimFamilySuffix(label) {
+    return label.replace(/\s+family$/i, '');
+  }
+
   function leafExtrasHtml(node) {
     if (node.families && node.families.length) {
-      const labels = node.families.map((f) => f.common || f.name);
+      const labels = node.families.map((f) => trimFamilySuffix(f.common || f.name));
       return chipsToggleHtml(labels, `${labels.length} famil${labels.length === 1 ? 'y' : 'ies'}`);
     }
     if (node.plants && node.plants.length) {
