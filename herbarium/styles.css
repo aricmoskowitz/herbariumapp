@@ -447,6 +447,8 @@ nav.modes button.active{ background:var(--gold); color:#1b2a20; border-color:var
   border-bottom:1px solid var(--line);
 }
 .df-icon{ width:72px; height:72px; color:var(--gold-bright); flex-shrink:0; }
+.df-illustration{ width:min(240px, 70vw); max-height:240px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.df-illustration svg{ width:100%; height:100%; max-height:240px; }
 .df-rank{ font-family:'Space Mono', monospace; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--sage); }
 .df-name{ font-family:'Fraunces', serif; font-weight:600; font-size:clamp(24px, 5vw, 36px); margin:0; color:var(--card); }
 .df-sci{ font-style:italic; color:var(--sage); font-size:15px; }
@@ -478,6 +480,8 @@ nav.modes button.active{ background:var(--gold); color:#1b2a20; border-color:var
 @media (max-width:520px){
   .df-card{ padding:24px 20px; gap:8px; }
   .df-icon{ width:56px; height:56px; }
+  .df-illustration{ width:min(190px, 65vw); max-height:190px; }
+  .df-illustration svg{ max-height:190px; }
   .df-fact{ font-size:15.5px; }
 }
 .hidden{ display:none !important; }

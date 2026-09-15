@@ -464,6 +464,8 @@ nav.modes button.active{ background:var(--gold); color:#1b2a20; border-color:var
   border-bottom:1px solid var(--line);
 }
 .df-icon{ width:72px; height:72px; color:var(--gold-bright); flex-shrink:0; }
+.df-illustration{ width:min(240px, 70vw); max-height:240px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.df-illustration svg{ width:100%; height:100%; max-height:240px; }
 .df-rank{ font-family:'Space Mono', monospace; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--sage); }
 .df-name{ font-family:'Fraunces', serif; font-weight:600; font-size:clamp(24px, 5vw, 36px); margin:0; color:var(--card); }
 .df-sci{ font-style:italic; color:var(--sage); font-size:15px; }
@@ -495,6 +497,8 @@ nav.modes button.active{ background:var(--gold); color:#1b2a20; border-color:var
 @media (max-width:520px){
   .df-card{ padding:24px 20px; gap:8px; }
   .df-icon{ width:56px; height:56px; }
+  .df-illustration{ width:min(190px, 65vw); max-height:190px; }
+  .df-illustration svg{ max-height:190px; }
   .df-fact{ font-size:15.5px; }
 }
 .hidden{ display:none !important; }
@@ -7978,6 +7982,16 @@ window.Herb = (function () {
     return `<svg class="df-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">${TYPE_GLYPHS[type] || TYPE_GLYPHS.other}</svg>`;
   }
 
+  // Species-detail illustrations: a second, additive visual tier on top of
+  // the funFacts badge system above. An `organ` label reuses the .df-badge
+  // pill styling (a distinct color, no glyph) rather than a fact-type
+  // badge, since an illustration isn't a funFacts entry - see the
+  // Species Detail Illustrations brief, "Discover card rendering".
+  const ORGAN_LABELS = {
+    flower: 'Flower', leaf: 'Leaf', fruit: 'Fruit', root: 'Root', stem: 'Stem', shoot: 'Shoot', seed: 'Seed',
+  };
+  const ORGAN_BADGE_COLOR = '#c79a6b';
+
   function shuffle(arr) {
     const a = arr.slice();
     for (let i = a.length - 1; i > 0; i--) {
@@ -8059,6 +8073,24 @@ window.Herb = (function () {
               diagramTarget: groupDiagramTarget, // same reasoning as family cards above
             });
           });
+          // Species-detail illustration (optional, additive) - never on
+          // family/order/informal-group/clade entries, per the brief's
+          // scope rule. A separate card from any funFacts this species
+          // also has, not a replacement or merge.
+          if (sp.illustration) {
+            cards.push({
+              cardId: `species:${sp.id}:illustration`,
+              level: 'species', rankLabel: 'Species',
+              name: sp.common, common: sp.common, sci: sp.sci,
+              isIllustration: true,
+              organ: sp.illustration.organ,
+              illustrationSvg: sp.illustration.svg,
+              caption: sp.illustration.caption,
+              breadcrumb: [...groupBreadcrumb, fam.name],
+              navTarget: sp.id,
+              diagramTarget: groupDiagramTarget,
+            });
+          }
         }
       }
     });
@@ -8132,6 +8164,25 @@ window.Herb = (function () {
   function cardHtml(card) {
     const guideAnchor = fieldGuideAnchorId(card);
     const diagramAnchor = diagramAnchorId(card);
+    const viewLinksHtml = `<div class="df-viewlinks">
+        ${guideAnchor ? `<button type="button" class="df-viewlink" data-tab="guide" data-anchor="${esc(guideAnchor)}">View in Field Guide &rarr;</button>` : ''}
+        ${diagramAnchor ? `<button type="button" class="df-viewlink" data-tab="diagram" data-anchor="${esc(diagramAnchor)}">View in Diagram &rarr;</button>` : ''}
+      </div>`;
+
+    if (card.isIllustration) {
+      // card.illustrationSvg is trusted, author-supplied markup (same trust
+      // level as taxonomy.json's icon paths elsewhere), inserted verbatim.
+      return `<div class="df-card" data-card-id="${esc(card.cardId)}">
+      <div class="df-illustration">${card.illustrationSvg}</div>
+      <div class="df-rank">${esc(card.rankLabel)}</div>
+      ${nameHtml(card)}
+      ${breadcrumbHtml(card)}
+      <span class="df-badge" style="--badge-color:${ORGAN_BADGE_COLOR}">${esc(ORGAN_LABELS[card.organ] || card.organ)}</span>
+      <p class="df-fact">${esc(card.caption)}</p>
+      ${viewLinksHtml}
+    </div>`;
+    }
+
     return `<div class="df-card" data-card-id="${esc(card.cardId)}">
       ${iconSvg(card.icon, 'df-icon')}
       <div class="df-rank">${esc(card.rankLabel)}</div>
@@ -8139,10 +8190,7 @@ window.Herb = (function () {
       ${breadcrumbHtml(card)}
       <span class="df-badge" style="--badge-color:${esc(TYPE_COLORS[card.factType] || TYPE_COLORS.other)}">${badgeGlyphSvg(card.factType)}${esc(TYPE_LABELS[card.factType] || TYPE_LABELS.other)}</span>
       <p class="df-fact">${esc(card.factText)}</p>
-      <div class="df-viewlinks">
-        ${guideAnchor ? `<button type="button" class="df-viewlink" data-tab="guide" data-anchor="${esc(guideAnchor)}">View in Field Guide &rarr;</button>` : ''}
-        ${diagramAnchor ? `<button type="button" class="df-viewlink" data-tab="diagram" data-anchor="${esc(diagramAnchor)}">View in Diagram &rarr;</button>` : ''}
-      </div>
+      ${viewLinksHtml}
     </div>`;
   }
 

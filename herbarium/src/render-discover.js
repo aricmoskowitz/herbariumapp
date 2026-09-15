@@ -44,6 +44,16 @@
     return `<svg class="df-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">${TYPE_GLYPHS[type] || TYPE_GLYPHS.other}</svg>`;
   }
 
+  // Species-detail illustrations: a second, additive visual tier on top of
+  // the funFacts badge system above. An `organ` label reuses the .df-badge
+  // pill styling (a distinct color, no glyph) rather than a fact-type
+  // badge, since an illustration isn't a funFacts entry - see the
+  // Species Detail Illustrations brief, "Discover card rendering".
+  const ORGAN_LABELS = {
+    flower: 'Flower', leaf: 'Leaf', fruit: 'Fruit', root: 'Root', stem: 'Stem', shoot: 'Shoot', seed: 'Seed',
+  };
+  const ORGAN_BADGE_COLOR = '#c79a6b';
+
   function shuffle(arr) {
     const a = arr.slice();
     for (let i = a.length - 1; i > 0; i--) {
@@ -125,6 +135,24 @@
               diagramTarget: groupDiagramTarget, // same reasoning as family cards above
             });
           });
+          // Species-detail illustration (optional, additive) - never on
+          // family/order/informal-group/clade entries, per the brief's
+          // scope rule. A separate card from any funFacts this species
+          // also has, not a replacement or merge.
+          if (sp.illustration) {
+            cards.push({
+              cardId: `species:${sp.id}:illustration`,
+              level: 'species', rankLabel: 'Species',
+              name: sp.common, common: sp.common, sci: sp.sci,
+              isIllustration: true,
+              organ: sp.illustration.organ,
+              illustrationSvg: sp.illustration.svg,
+              caption: sp.illustration.caption,
+              breadcrumb: [...groupBreadcrumb, fam.name],
+              navTarget: sp.id,
+              diagramTarget: groupDiagramTarget,
+            });
+          }
         }
       }
     });
@@ -198,6 +226,25 @@
   function cardHtml(card) {
     const guideAnchor = fieldGuideAnchorId(card);
     const diagramAnchor = diagramAnchorId(card);
+    const viewLinksHtml = `<div class="df-viewlinks">
+        ${guideAnchor ? `<button type="button" class="df-viewlink" data-tab="guide" data-anchor="${esc(guideAnchor)}">View in Field Guide &rarr;</button>` : ''}
+        ${diagramAnchor ? `<button type="button" class="df-viewlink" data-tab="diagram" data-anchor="${esc(diagramAnchor)}">View in Diagram &rarr;</button>` : ''}
+      </div>`;
+
+    if (card.isIllustration) {
+      // card.illustrationSvg is trusted, author-supplied markup (same trust
+      // level as taxonomy.json's icon paths elsewhere), inserted verbatim.
+      return `<div class="df-card" data-card-id="${esc(card.cardId)}">
+      <div class="df-illustration">${card.illustrationSvg}</div>
+      <div class="df-rank">${esc(card.rankLabel)}</div>
+      ${nameHtml(card)}
+      ${breadcrumbHtml(card)}
+      <span class="df-badge" style="--badge-color:${ORGAN_BADGE_COLOR}">${esc(ORGAN_LABELS[card.organ] || card.organ)}</span>
+      <p class="df-fact">${esc(card.caption)}</p>
+      ${viewLinksHtml}
+    </div>`;
+    }
+
     return `<div class="df-card" data-card-id="${esc(card.cardId)}">
       ${iconSvg(card.icon, 'df-icon')}
       <div class="df-rank">${esc(card.rankLabel)}</div>
@@ -205,10 +252,7 @@
       ${breadcrumbHtml(card)}
       <span class="df-badge" style="--badge-color:${esc(TYPE_COLORS[card.factType] || TYPE_COLORS.other)}">${badgeGlyphSvg(card.factType)}${esc(TYPE_LABELS[card.factType] || TYPE_LABELS.other)}</span>
       <p class="df-fact">${esc(card.factText)}</p>
-      <div class="df-viewlinks">
-        ${guideAnchor ? `<button type="button" class="df-viewlink" data-tab="guide" data-anchor="${esc(guideAnchor)}">View in Field Guide &rarr;</button>` : ''}
-        ${diagramAnchor ? `<button type="button" class="df-viewlink" data-tab="diagram" data-anchor="${esc(diagramAnchor)}">View in Diagram &rarr;</button>` : ''}
-      </div>
+      ${viewLinksHtml}
     </div>`;
   }
 
