@@ -1,8 +1,8 @@
 // Trainer tab: quiz/study game built from the same taxonomy tree, no
-// separate quiz-data file. Six modes: Species -> Family, Species -> Group,
+// separate quiz-data file. Seven modes: Species -> Family, Species -> Group,
 // Family -> Order, Spot the Difference (differentia -> family), Icon ->
-// Order, and a non-quiz Study/Browse mode for flipping through a chosen
-// order's families.
+// Order, Illustration -> Species, and a non-quiz Study/Browse mode for
+// flipping through a chosen order's families.
 (function () {
   const { esc, iconSvg, collectGroups } = window.Herb;
 
@@ -38,7 +38,10 @@
       }
     }
     const iconOrders = collectGroups(tree).filter((o) => o.quizClue && o.icon);
-    return { orders, families, species, iconOrders };
+    const illustratedSpecies = species.filter((sp) => sp.illustration);
+    return {
+      orders, families, species, iconOrders, illustratedSpecies,
+    };
   }
 
   function questionSpeciesToFamily(pools) {
@@ -103,12 +106,25 @@
     };
   }
 
+  function questionIllustrationToSpecies(pools) {
+    const target = pools.illustratedSpecies[Math.floor(Math.random() * pools.illustratedSpecies.length)];
+    const options = shuffle([target.common, ...pick(pools.illustratedSpecies.map((s) => s.common), 3, target.common)]);
+    return {
+      label: 'Illustration &rarr; Species', icon: null, illustration: target.illustration.svg,
+      main: '', sub: '',
+      text: 'Which species does this illustration show?',
+      options, answer: target.common,
+      why: `${esc(target.common)} (${esc(target.sci)}) &mdash; ${target.illustration.caption}`,
+    };
+  }
+
   const MODES = {
     species: { label: 'Species &rarr; Family', build: questionSpeciesToFamily, needs: (p) => p.species.length >= 4 },
     speciesOrder: { label: 'Species &rarr; Group', build: questionSpeciesToOrder, needs: (p) => p.species.length >= 4 && p.orders.length >= 4 },
     family: { label: 'Family &rarr; Group', build: questionFamilyToOrder, needs: (p) => p.families.length >= 4 && p.orders.length >= 4 },
     differentia: { label: 'Spot the Difference', build: questionDifferentia, needs: (p) => p.families.length >= 4 },
     icon: { label: 'Icon &rarr; Group', build: questionIconToGroup, needs: (p) => p.iconOrders.length >= 4 },
+    illustration: { label: 'Illustration &rarr; Species', build: questionIllustrationToSpecies, needs: (p) => p.illustratedSpecies.length >= 4 },
   };
 
   function studyCardHtml(family) {
@@ -131,7 +147,7 @@
       <header class="tr-masthead">
         <div class="eyebrow">Companion to the Field Guide</div>
         <h1 class="tr-title">The <em>Herbarium</em> Trainer</h1>
-        <p class="tip">Cycle through all five quiz modes each session instead of mastering one at a time &mdash; interleaving species, families, and groups builds stronger recall than drilling one relationship on its own.</p>
+        <p class="tip">Cycle through all six quiz modes each session instead of mastering one at a time &mdash; interleaving species, families, and groups builds stronger recall than drilling one relationship on its own.</p>
       </header>
       <div class="stats-bar">
         <div class="stat"><span class="stat-num" id="statCorrect">0</span><span class="stat-label">Correct</span></div>
@@ -183,6 +199,7 @@
         <div class="prompt-card">
           <div class="prompt-label">${q.label}</div>
           ${q.icon ? iconSvg(q.icon, 'prompt-icon') : ''}
+          ${q.illustration ? `<div class="prompt-illustration">${q.illustration}</div>` : ''}
           ${q.main ? `<div class="prompt-main">${q.main}</div>` : ''}
           ${q.sub ? `<div class="prompt-sub">${q.sub}</div>` : ''}
           <p class="prompt-text">${q.text}</p>

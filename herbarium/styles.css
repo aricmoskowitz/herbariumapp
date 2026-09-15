@@ -234,14 +234,14 @@ h2.order-name{ font-family:'Fraunces', serif; font-weight:600; font-size:clamp(2
 }
 
 /* ================= Trainer: mode nav + quiz ================= */
-nav.modes{ display:flex; justify-content:center; gap:2px; flex-wrap:wrap; padding:16px 12px; }
+nav.modes{ display:flex; justify-content:center; gap:4px; flex-wrap:wrap; padding:12px 12px; }
 nav.modes button{
-  font-family:'Space Mono', monospace; font-size:11px; letter-spacing:0.04em; text-transform:uppercase;
-  background:transparent; color:var(--sage); border:1px solid var(--line);
-  padding:9px 15px; border-radius:2px; transition:all .15s ease;
+  font-family:'Space Mono', monospace; font-size:9.5px; letter-spacing:0.03em; text-transform:uppercase;
+  background:transparent; color:var(--sage); border:1px solid var(--line); opacity:0.72;
+  padding:6px 11px; border-radius:2px; font-weight:400; transition:all .15s ease;
 }
-nav.modes button:hover{ color:var(--gold-bright); border-color:var(--gold); }
-nav.modes button.active{ background:var(--gold); color:#1b2a20; border-color:var(--gold); font-weight:700; }
+nav.modes button:hover{ color:var(--gold-bright); border-color:var(--gold); opacity:1; }
+nav.modes button.active{ background:var(--gold); color:#1b2a20; border-color:var(--gold); font-weight:600; opacity:1; }
 
 .quiz-wrap{ display:flex; flex-direction:column; align-items:center; gap:22px; }
 .prompt-card{
@@ -251,6 +251,8 @@ nav.modes button.active{ background:var(--gold); color:#1b2a20; border-color:var
 }
 .prompt-label{ font-family:'Space Mono', monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; color:var(--rust); margin-bottom:12px; }
 .prompt-icon{ width:56px; height:56px; color:var(--rust); margin:0 auto 10px; }
+.prompt-illustration{ width:100%; max-width:280px; aspect-ratio:1/1; margin:0 auto 14px; }
+.prompt-illustration svg{ width:100%; height:100%; display:block; border-radius:3px; }
 .prompt-main{ font-family:'Fraunces', serif; font-weight:600; font-size:24px; color:var(--ink); }
 .prompt-sub{ font-family:'Source Serif 4', serif; font-style:italic; font-size:14px; color:var(--ink-soft); margin-top:4px; }
 .prompt-text{ font-size:14.5px; line-height:1.6; color:var(--ink); }
