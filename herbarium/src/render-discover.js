@@ -46,13 +46,18 @@
 
   // Species-detail illustrations: a second, additive visual tier on top of
   // the funFacts badge system above. An `organ` label reuses the .df-badge
-  // pill styling (a distinct color, no glyph) rather than a fact-type
-  // badge, since an illustration isn't a funFacts entry - see the
+  // pill styling (a distinct color) with one shared "illustration" glyph
+  // (analogous to chemical's beaker) followed by the organ name - not a
+  // fact-type badge, since an illustration isn't a funFacts entry. See the
   // Species Detail Illustrations brief, "Discover card rendering".
   const ORGAN_LABELS = {
     flower: 'Flower', leaf: 'Leaf', fruit: 'Fruit', root: 'Root', stem: 'Stem', shoot: 'Shoot', seed: 'Seed',
   };
   const ORGAN_BADGE_COLOR = '#c79a6b';
+  const ILLUSTRATION_GLYPH = '<rect x="3" y="4" width="18" height="16" rx="1.5"/><circle cx="8.5" cy="9.5" r="1.8"/><path d="M4 17l5-5 4 4 3-3 4 4"/>';
+  function illustrationGlyphSvg() {
+    return `<svg class="df-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">${ILLUSTRATION_GLYPH}</svg>`;
+  }
 
   function shuffle(arr) {
     const a = arr.slice();
@@ -239,7 +244,7 @@
       <div class="df-rank">${esc(card.rankLabel)}</div>
       ${nameHtml(card)}
       ${breadcrumbHtml(card)}
-      <span class="df-badge" style="--badge-color:${ORGAN_BADGE_COLOR}">${esc(ORGAN_LABELS[card.organ] || card.organ)}</span>
+      <span class="df-badge" style="--badge-color:${ORGAN_BADGE_COLOR}">${illustrationGlyphSvg()}${esc(ORGAN_LABELS[card.organ] || card.organ)}</span>
       <p class="df-fact">${esc(card.caption)}</p>
       ${viewLinksHtml}
     </div>`;
