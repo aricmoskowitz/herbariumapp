@@ -2167,7 +2167,7 @@
          "common": "Ginger family",
          "icon": "<path d=\"M20 34V20\"/><path d=\"M20 20c0-8 6-14 6-14s2 8-2 12-4 2-4 2z\"/><path d=\"M20 20c0-8-6-14-6-14s-2 8 2 12 4 2 4 2z\"/>",
          "trait": "Aromatic rhizomes packed with essential oils; asymmetric flowers with a single showy petal-like staminode, growing from reed-like pseudostems.",
-         "differentia": "Named for and dominated by its aromatic rhizome spices &mdash; ginger and the two cardamoms &mdash; unlike Musaceae's starchy, fruit-bearing pseudostem.",
+         "differentia": "Named for and dominated by its aromatic rhizome spices — ginger and the two cardamoms — unlike Musaceae's starchy, fruit-bearing pseudostem or Marantaceae's low, starch-storing rhizome herbs grown mainly as houseplants and thickener crops.",
          "species": [
           {
            "common": "Ginger",
@@ -2279,7 +2279,7 @@
          "common": "Banana family",
          "icon": "<path d=\"M20 6v20\"/><path d=\"M14 8c2 4 2 8 0 12M26 8c-2 4-2 8 0 12\"/><path d=\"M20 26c-3 3-3 7 0 9M20 26c3 3 3 7 0 9\"/>",
          "trait": "Giant herbaceous plants with a false trunk (pseudostem) built from tightly rolled leaf sheaths, topped by huge paddle-shaped leaves and a hanging flower spike that develops into a cluster of fruit.",
-         "differentia": "The order's giant, unmistakably fruit-bearing herb &mdash; its rolled-leaf pseudostem trunk has nothing in common with the low aromatic rhizomes of Zingiberaceae.",
+         "differentia": "The order’s giant, unmistakably fruit-bearing herb — its rolled-leaf pseudostem trunk has nothing in common with the low aromatic rhizomes of Zingiberaceae or the compact, leaf-folding herbs of Marantaceae.",
          "species": [
           {
            "common": "Banana",
@@ -2299,6 +2299,40 @@
             "organ": "fruit",
             "svg": "<svg viewBox=\"0 0 200 200\" xmlns=\"http://www.w3.org/2000/svg\"><defs><linearGradient id=\"cv24\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"0\"><stop offset=\"0%\" stop-color=\"#e0d068\"/><stop offset=\"50%\" stop-color=\"#a89830\"/><stop offset=\"100%\" stop-color=\"#e0d068\"/></linearGradient></defs><defs><radialGradient id=\"cvs25\" cx=\"40%\" cy=\"30%\" r=\"70%\"><stop offset=\"0%\" stop-color=\"#f4f0d8\"/><stop offset=\"100%\" stop-color=\"#a89830\"/></radialGradient></defs><path d=\"M20,150 Q30,80 75,45 Q95,30 100,35 Q95,45 80,60 Q50,90 42,155 Q40,170 25,168 Q16,165 20,150 Z\" fill=\"url(#cv24)\" stroke=\"#a89830\" stroke-width=\"1.2\"/><circle cx=\"140\" cy=\"140\" r=\"42\" fill=\"#e0d068\" stroke=\"#a89830\" stroke-width=\"1.5\"/><circle cx=\"140\" cy=\"140\" r=\"34\" fill=\"url(#cvs25)\"/><circle cx=\"150.0\" cy=\"140.0\" r=\"1.6\" fill=\"#3a2f18\" opacity=\"0.7\"/><circle cx=\"143.1\" cy=\"149.5\" r=\"1.6\" fill=\"#3a2f18\" opacity=\"0.7\"/><circle cx=\"131.9\" cy=\"145.9\" r=\"1.6\" fill=\"#3a2f18\" opacity=\"0.7\"/><circle cx=\"131.9\" cy=\"134.1\" r=\"1.6\" fill=\"#3a2f18\" opacity=\"0.7\"/><circle cx=\"143.1\" cy=\"130.5\" r=\"1.6\" fill=\"#3a2f18\" opacity=\"0.7\"/></svg>",
             "caption": "A ripe banana shown whole and in cross-section; the tiny dark specks in the slice are the vestiges of seeds that never matured, since commercial bananas are seedless triploid clones propagated by cuttings rather than by the wild fruit's actual seeds."
+           }
+          }
+         ]
+        },
+        {
+         "id": "marantaceae",
+         "name": "Marantaceae",
+         "common": "Prayer-plant family",
+         "icon": "<path d=\"M20 8C27 11 31 19 27 28C23 35 17 35 13 28C9 19 13 11 20 8Z\"/><path d=\"M20 10V33\"/><path d=\"M20 15L14 19M20 15L26 19M20 21L14 25M20 21L26 25\"/>",
+         "trait": "Compact rhizomatous herbs with broad, patterned leaves that fold upright at night (a movement called nyctinasty); small, asymmetric flowers largely overshadowed by the ornamental foliage and starch-rich rhizome.",
+         "differentia": "Low, understated herbs beside its more spice-forward or fruit-bearing relatives — valued not for aromatic rhizomes or fruit but for a neutral, starch-rich rhizome and the night-folding leaves that give the family its 'prayer plant' name.",
+         "species": [
+          {
+           "common": "Arrowroot",
+           "sci": "Maranta arundinacea",
+           "id": "maranta-arundinacea",
+           "funFacts": [
+            {
+             "type": "culinary",
+             "text": "The rhizome is processed into a fine, nearly flavorless starch valued for setting into a clear gel rather than the cloudy one cornstarch produces — prized historically as an easily digestible food for infants and invalids."
+            },
+            {
+             "type": "other",
+             "text": "Its name is often traced to the Arawak word aru-aru, 'root of roots,' rather than to any real use treating arrow wounds, despite a popular but unverified colonial-era story linking the two."
+            },
+            {
+             "type": "cultivation",
+             "text": "Grown in moist, well-drained tropical soil and harvested by digging up the whole rhizome clump roughly ten to twelve months after planting, once the leafy top growth begins to yellow and die back — the same cue used to time ginger and turmeric harvests."
+            }
+           ],
+           "illustration": {
+            "organ": "root",
+            "svg": "<svg viewBox=\"0 0 200 200\" xmlns=\"http://www.w3.org/2000/svg\"><defs><linearGradient id=\"rh1\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"0\"><stop offset=\"0%\" stop-color=\"#e8e0c8\"/><stop offset=\"50%\" stop-color=\"#b8a878\"/><stop offset=\"100%\" stop-color=\"#e8e0c8\"/></linearGradient></defs><path d=\"M20,105 Q35,80 55,100 Q75,120 95,100 Q115,80 135,100 Q150,115 165,105 L165,135 Q150,150 135,132 Q115,152 95,132 Q75,152 55,132 Q35,150 20,135 Z\" fill=\"url(#rh1)\" stroke=\"#b8a878\" stroke-width=\"1.2\"/><ellipse cx=\"45\" cy=\"93\" rx=\"15\" ry=\"12\" fill=\"#e8e0c8\" stroke=\"#b8a878\" stroke-width=\"0.6\" opacity=\"0.85\"/><ellipse cx=\"85\" cy=\"88\" rx=\"15\" ry=\"12\" fill=\"#e8e0c8\" stroke=\"#b8a878\" stroke-width=\"0.6\" opacity=\"0.85\"/><ellipse cx=\"125\" cy=\"93\" rx=\"15\" ry=\"12\" fill=\"#e8e0c8\" stroke=\"#b8a878\" stroke-width=\"0.6\" opacity=\"0.85\"/><ellipse cx=\"65\" cy=\"142\" rx=\"15\" ry=\"12\" fill=\"#e8e0c8\" stroke=\"#b8a878\" stroke-width=\"0.6\" opacity=\"0.85\"/><ellipse cx=\"105\" cy=\"140\" rx=\"15\" ry=\"12\" fill=\"#e8e0c8\" stroke=\"#b8a878\" stroke-width=\"0.6\" opacity=\"0.85\"/><path d=\"M30,130 L27,150\" stroke=\"#b8a878\" stroke-width=\"1\" opacity=\"0.45\"/><path d=\"M54,130 L51,150\" stroke=\"#b8a878\" stroke-width=\"1\" opacity=\"0.45\"/><path d=\"M78,130 L75,150\" stroke=\"#b8a878\" stroke-width=\"1\" opacity=\"0.45\"/><path d=\"M102,130 L99,150\" stroke=\"#b8a878\" stroke-width=\"1\" opacity=\"0.45\"/><path d=\"M126,130 L123,150\" stroke=\"#b8a878\" stroke-width=\"1\" opacity=\"0.45\"/><path d=\"M150,130 L147,150\" stroke=\"#b8a878\" stroke-width=\"1\" opacity=\"0.45\"/><circle cx=\"165\" cy=\"113\" r=\"17\" fill=\"#f8f4e4\" stroke=\"#b8a878\" stroke-width=\"1.5\"/></svg>",
+            "caption": "An arrowroot rhizome dug at harvest, cut to show the pale, almost white starch-rich interior that gives arrowroot flour its name; unlike ginger or turmeric, the rhizome itself carries almost no aroma or color, since its whole commercial value is the neutral, easily digested starch packed inside."
            }
           }
          ]
@@ -3274,6 +3308,30 @@
                  "text": "The root is harvested from plants at least four years old, then sliced and dried — older, thicker roots are considered higher quality and command higher prices."
                 }
                ]
+              },
+              {
+               "common": "Kudzu",
+               "sci": "Pueraria montana",
+               "id": "pueraria-montana",
+               "funFacts": [
+                {
+                 "type": "other",
+                 "text": "Under warm, humid summer conditions a single kudzu vine can grow up to a foot in a day, letting it blanket trees, utility poles, and abandoned buildings — the trait behind its nickname in the American South, \"the vine that ate the South.\""
+                },
+                {
+                 "type": "cultural",
+                 "text": "Introduced to the United States at the 1876 Centennial Exposition as an ornamental, then widely planted through the 1930s-50s for livestock forage and to control soil erosion — decades before its unchecked spread turned it into one of the country’s most notorious invasive plants."
+                },
+                {
+                 "type": "medicinal",
+                 "text": "The starchy root, long used in East Asian medicine and cooking under the name ge gen, is dried and ground into a fine starch prized as a thickener and, in Traditional Chinese Medicine, brewed to treat fevers and headaches."
+                }
+               ],
+               "illustration": {
+                "organ": "flower",
+                "svg": "<svg viewBox=\"0 0 200 200\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M100,190 L100,60\" stroke=\"#4a6a2f\" stroke-width=\"3\" fill=\"none\"/><ellipse cx=\"91.2\" cy=\"60.0\" rx=\"7\" ry=\"5.6\" fill=\"#7a3a8a\" stroke=\"#4a1a5a\" stroke-width=\"0.5\" opacity=\"0.95\"/><ellipse cx=\"109.5\" cy=\"66.3\" rx=\"7\" ry=\"5.6\" fill=\"#4a1a5a\" stroke=\"#4a1a5a\" stroke-width=\"0.5\" opacity=\"0.95\"/><ellipse cx=\"92.1\" cy=\"72.7\" rx=\"7\" ry=\"5.6\" fill=\"#7a3a8a\" stroke=\"#4a1a5a\" stroke-width=\"0.5\" opacity=\"0.95\"/><ellipse cx=\"107.1\" cy=\"79.0\" rx=\"7\" ry=\"5.6\" fill=\"#4a1a5a\" stroke=\"#4a1a5a\" stroke-width=\"0.5\" opacity=\"0.95\"/><ellipse cx=\"92.7\" cy=\"85.3\" rx=\"7\" ry=\"5.6\" fill=\"#7a3a8a\" stroke=\"#4a1a5a\" stroke-width=\"0.5\" opacity=\"0.95\"/><ellipse cx=\"105.2\" cy=\"91.7\" rx=\"7\" ry=\"5.6\" fill=\"#4a1a5a\" stroke=\"#4a1a5a\" stroke-width=\"0.5\" opacity=\"0.95\"/><ellipse cx=\"93.5\" cy=\"98.0\" rx=\"7\" ry=\"5.6\" fill=\"#7a3a8a\" stroke=\"#4a1a5a\" stroke-width=\"0.5\" opacity=\"0.95\"/><ellipse cx=\"106.4\" cy=\"104.3\" rx=\"7\" ry=\"5.6\" fill=\"#4a1a5a\" stroke=\"#4a1a5a\" stroke-width=\"0.5\" opacity=\"0.95\"/><ellipse cx=\"93.4\" cy=\"110.7\" rx=\"7\" ry=\"5.6\" fill=\"#7a3a8a\" stroke=\"#4a1a5a\" stroke-width=\"0.5\" opacity=\"0.95\"/><ellipse cx=\"104.6\" cy=\"117.0\" rx=\"7\" ry=\"5.6\" fill=\"#4a1a5a\" stroke=\"#4a1a5a\" stroke-width=\"0.5\" opacity=\"0.95\"/><ellipse cx=\"92.3\" cy=\"123.3\" rx=\"7\" ry=\"5.6\" fill=\"#7a3a8a\" stroke=\"#4a1a5a\" stroke-width=\"0.5\" opacity=\"0.95\"/><ellipse cx=\"103.7\" cy=\"129.7\" rx=\"7\" ry=\"5.6\" fill=\"#4a1a5a\" stroke=\"#4a1a5a\" stroke-width=\"0.5\" opacity=\"0.95\"/><ellipse cx=\"95.8\" cy=\"136.0\" rx=\"7\" ry=\"5.6\" fill=\"#7a3a8a\" stroke=\"#4a1a5a\" stroke-width=\"0.5\" opacity=\"0.95\"/><ellipse cx=\"103.5\" cy=\"142.3\" rx=\"7\" ry=\"5.6\" fill=\"#4a1a5a\" stroke=\"#4a1a5a\" stroke-width=\"0.5\" opacity=\"0.95\"/><ellipse cx=\"96.2\" cy=\"148.7\" rx=\"7\" ry=\"5.6\" fill=\"#7a3a8a\" stroke=\"#4a1a5a\" stroke-width=\"0.5\" opacity=\"0.95\"/><ellipse cx=\"103.0\" cy=\"155.0\" rx=\"7\" ry=\"5.6\" fill=\"#4a1a5a\" stroke=\"#4a1a5a\" stroke-width=\"0.5\" opacity=\"0.95\"/></svg>",
+                "caption": "A kudzu flower raceme at peak summer bloom, its densely packed purple, pea-shaped florets opening from the base of the spike upward; the flowers give off a strong grape-soda scent from methyl anthranilate, the same aromatic compound used in grape-flavored candy."
+               }
               }
              ],
              "funFacts": [
