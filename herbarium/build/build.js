@@ -22,7 +22,6 @@ const SRC_ORDER = [
   'shared.js',
   'render-field-guide.js',
   'render-diagram.js',
-  'render-trainer.js',
   'render-field-log.js',
   'render-discover.js',
   'bootstrap.js',
@@ -54,14 +53,12 @@ ${css}
   <button type="button" data-tab="discover" class="active">Discover</button>
   <button type="button" data-tab="guide">Field Guide</button>
   <button type="button" data-tab="diagram">Diagram</button>
-  <button type="button" data-tab="trainer">Trainer</button>
   <button type="button" data-tab="log">Field Log</button>
 </div>
 
 <main id="panel-discover" class="tab-panel"></main>
 <main id="panel-field-guide" class="tab-panel" hidden></main>
 <main id="panel-diagram" class="tab-panel" hidden></main>
-<main id="panel-trainer" class="tab-panel" hidden></main>
 <main id="panel-field-log" class="tab-panel" hidden></main>
 
 <script>

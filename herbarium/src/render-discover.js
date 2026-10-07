@@ -1,11 +1,17 @@
 // Discover tab: a vertical snap-scroll feed of one-fact-per-card plant
 // trivia, built once per load by flattening every funFacts[] entry found
 // anywhere in the tree (order/informal-group/clade, family, species) into a
-// flat card pool. Unseen cards are shuffled ahead of seen ones on every
-// open; only the seen-set itself persists (in localStorage), never a fixed
-// queue order.
+// flat card pool, plus one species-detail-illustration card per illustrated
+// species, plus one multiple-choice quiz card per eligible target across all
+// six of the former Trainer tab's quiz relationships (species->family,
+// species->group, family->group, spot-the-difference, icon->group,
+// illustration->species - see buildQuizCards). Unseen cards are shuffled
+// ahead of seen ones on every open; only the seen-set itself persists (in
+// localStorage), never a fixed queue order.
 (function () {
-  const { esc, iconSvg, walk } = window.Herb;
+  const {
+    esc, iconSvg, walk, collectGroups,
+  } = window.Herb;
 
   const SEEN_KEY = 'df-seen';
 
@@ -59,6 +65,174 @@
     return `<svg class="df-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">${ILLUSTRATION_GLYPH}</svg>`;
   }
 
+  // Quiz cards: a third, additive card type folded into the same feed and
+  // seen-tracking system as fact cards and illustration cards. One card per
+  // eligible target per mode (not an infinite random generator - a fixed
+  // pool like everything else in Discover), covering all six of the former
+  // Trainer tab's quiz relationships. Study/Browse had no quiz content of
+  // its own (it just paged through Field Guide-equivalent info) and is not
+  // represented here at all.
+  const QUIZ_BADGE_COLOR = '#4a7a9a';
+  const QUIZ_GLYPH = '<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 015 .5c0 1.5-2 1.8-2 3.5"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/>';
+  function quizGlyphSvg() {
+    return `<svg class="df-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">${QUIZ_GLYPH}</svg>`;
+  }
+
+  function buildQuizCards(tree) {
+    const orders = collectGroups(tree).filter((o) => o.families && o.families.length);
+    const families = [];
+    const species = [];
+    for (const order of orders) {
+      for (const fam of order.families) {
+        if (!fam.species || !fam.species.length) continue;
+        families.push({ ...fam, orderName: order.name, orderRank: order.rank });
+        for (const sp of fam.species) {
+          species.push({
+            ...sp, familyName: fam.name, orderName: order.name, orderRank: order.rank,
+          });
+        }
+      }
+    }
+    const iconOrders = collectGroups(tree).filter((o) => o.quizClue && o.icon);
+    const illustratedSpecies = species.filter((sp) => sp.illustration);
+
+    const cards = [];
+
+    if (families.length >= 4) {
+      for (const sp of species) {
+        const options = shuffle([sp.familyName, ...pick(families.map((f) => f.name), 3, sp.familyName)]);
+        cards.push({
+          cardId: `quiz:speciesFamily:${sp.id}`,
+          isQuiz: true,
+          modeLabel: 'Species → Family',
+          promptName: sp.common,
+          promptSub: sp.sci,
+          promptSubStyle: 'sci',
+          questionHtml: 'Which family does this belong to?',
+          options,
+          answer: sp.familyName,
+          whyHtml: `${esc(sp.common)} sits in ${esc(sp.familyName)}, ${esc(sp.orderRank)} ${esc(sp.orderName)}.`,
+        });
+      }
+    }
+
+    if (families.length >= 4 && orders.length >= 4) {
+      for (const sp of species) {
+        const options = shuffle([sp.orderName, ...pick(orders.map((o) => o.name), 3, sp.orderName)]);
+        cards.push({
+          cardId: `quiz:speciesGroup:${sp.id}`,
+          isQuiz: true,
+          modeLabel: 'Species → Group',
+          promptName: sp.common,
+          promptSub: sp.sci,
+          promptSubStyle: 'sci',
+          questionHtml: `Which ${esc(sp.orderRank)} does this belong to?`,
+          options,
+          answer: sp.orderName,
+          whyHtml: `${esc(sp.common)} sits in ${esc(sp.familyName)}, ${esc(sp.orderRank)} ${esc(sp.orderName)}.`,
+        });
+      }
+    }
+
+    if (families.length >= 4 && orders.length >= 4) {
+      for (const fam of families) {
+        const options = shuffle([fam.orderName, ...pick(orders.map((o) => o.name), 3, fam.orderName)]);
+        cards.push({
+          cardId: `quiz:familyGroup:${fam.id}`,
+          isQuiz: true,
+          modeLabel: 'Family → Group',
+          promptName: fam.name,
+          promptSub: fam.common,
+          promptSubStyle: 'common',
+          questionHtml: `${fam.trait} Which group is this?`,
+          options,
+          answer: fam.orderName,
+          whyHtml: fam.differentia,
+        });
+      }
+    }
+
+    if (families.length >= 4) {
+      for (const fam of families) {
+        const siblings = families.filter((f) => f.orderName === fam.orderName && f.name !== fam.name);
+        const distractorPool = siblings.length >= 3 ? siblings : families;
+        const options = shuffle([fam.name, ...pick(distractorPool.map((f) => f.name), 3, fam.name)]);
+        cards.push({
+          cardId: `quiz:differentia:${fam.id}`,
+          isQuiz: true,
+          modeLabel: 'Spot the Difference',
+          promptName: 'Which family is this?',
+          promptSub: null,
+          questionHtml: fam.differentia,
+          options,
+          answer: fam.name,
+          whyHtml: `${esc(fam.name)} (${esc(fam.common)}) — ${fam.trait}`,
+        });
+      }
+    }
+
+    if (iconOrders.length >= 4) {
+      for (const grp of iconOrders) {
+        const options = shuffle([grp.name, ...pick(iconOrders.map((o) => o.name), 3, grp.name)]);
+        cards.push({
+          cardId: `quiz:iconGroup:${grp.id}`,
+          isQuiz: true,
+          modeLabel: 'Icon → Group',
+          promptIcon: grp.icon,
+          questionHtml: `${grp.quizClue} Which group is this?`,
+          options,
+          answer: grp.name,
+          whyHtml: grp.quizWhy,
+        });
+      }
+    }
+
+    if (illustratedSpecies.length >= 4) {
+      for (const sp of illustratedSpecies) {
+        const options = shuffle([sp.common, ...pick(illustratedSpecies.map((s) => s.common), 3, sp.common)]);
+        cards.push({
+          cardId: `quiz:illustrationSpecies:${sp.id}`,
+          isQuiz: true,
+          modeLabel: 'Illustration → Species',
+          promptIllustrationSvg: sp.illustration.svg,
+          questionHtml: 'Which species does this illustration show?',
+          options,
+          answer: sp.common,
+          whyHtml: `${esc(sp.common)} (${esc(sp.sci)}) — ${sp.illustration.caption}`,
+        });
+      }
+    }
+
+    return cards;
+  }
+
+  function quizPromptHtml(card) {
+    let html = '';
+    if (card.promptIcon) html += iconSvg(card.promptIcon, 'df-icon');
+    if (card.promptIllustrationSvg) html += `<div class="df-illustration">${card.promptIllustrationSvg}</div>`;
+    if (card.promptName) {
+      html += `<h2 class="df-name">${esc(card.promptName)}</h2>`;
+      if (card.promptSub) {
+        html += card.promptSubStyle === 'common'
+          ? `<div class="df-common">${esc(card.promptSub)}</div>`
+          : `<div class="df-sci">${esc(card.promptSub)}</div>`;
+      }
+    }
+    return html;
+  }
+
+  function quizCardHtml(card) {
+    return `<div class="df-card df-quiz-card" data-card-id="${esc(card.cardId)}">
+      <div class="df-rank">Quiz &middot; ${esc(card.modeLabel)}</div>
+      ${quizPromptHtml(card)}
+      <span class="df-badge" style="--badge-color:${QUIZ_BADGE_COLOR}">${quizGlyphSvg()}Quiz</span>
+      <p class="df-fact">${card.questionHtml}</p>
+      <div class="answers">${card.options.map((opt) => `<button type="button" class="answer-btn" data-opt="${esc(opt)}"><span class="a-name">${esc(opt)}</span></button>`).join('')}</div>
+      <div class="feedback hidden"></div>
+      <button type="button" class="next-btn hidden">Continue scrolling &darr;</button>
+    </div>`;
+  }
+
   function shuffle(arr) {
     const a = arr.slice();
     for (let i = a.length - 1; i > 0; i--) {
@@ -66,6 +240,12 @@
       [a[i], a[j]] = [a[j], a[i]];
     }
     return a;
+  }
+
+  // Picks n random items from arr, excluding `exclude` - used to build
+  // multiple-choice distractors for quiz cards (see buildQuizCards below).
+  function pick(arr, n, exclude) {
+    return shuffle(arr.filter((x) => x !== exclude)).slice(0, n);
   }
 
   // Flatten every funFacts entry in the tree into one card per fact. Built
@@ -229,6 +409,8 @@
   }
 
   function cardHtml(card) {
+    if (card.isQuiz) return quizCardHtml(card);
+
     const guideAnchor = fieldGuideAnchorId(card);
     const diagramAnchor = diagramAnchorId(card);
     const viewLinksHtml = `<div class="df-viewlinks">
@@ -262,7 +444,7 @@
   }
 
   function renderDiscover(container, tree) {
-    const pool = buildCardPool(tree);
+    const pool = [...buildCardPool(tree), ...buildQuizCards(tree)];
 
     if (!pool.length) {
       container.innerHTML = '<p class="df-empty">No facts yet &mdash; check back once the Discover feed has content.</p>';
@@ -271,6 +453,7 @@
 
     const seenSet = loadSeen();
     const order = buildFeedOrder(pool, seenSet);
+    const cardById = new Map(order.map((c) => [c.cardId, c]));
 
     container.innerHTML = `<div class="df-feed" id="dfFeed">${order.map(cardHtml).join('')}</div>`;
 
@@ -300,6 +483,39 @@
           if (document.fonts && document.fonts.ready) document.fonts.ready.then(attempt);
           setTimeout(attempt, 350);
           setTimeout(attempt, 900);
+        });
+      });
+    });
+
+    // Quiz cards: tap an option to answer in place (one try per card, like
+    // the old Trainer tab), then "Continue scrolling" smooth-scrolls to
+    // whatever card comes next in the feed - there is no regenerate-in-place
+    // here, since a quiz card is a fixed, pre-built member of the pool like
+    // any other Discover card.
+    feedEl.querySelectorAll('.df-quiz-card').forEach((cardEl) => {
+      const card = cardById.get(cardEl.dataset.cardId);
+      if (!card) return;
+      const buttons = [...cardEl.querySelectorAll('.answer-btn')];
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          if (cardEl.dataset.answered) return;
+          cardEl.dataset.answered = '1';
+          const choice = btn.dataset.opt;
+          const correct = choice === card.answer;
+          buttons.forEach((b) => {
+            b.disabled = true;
+            if (b.dataset.opt === card.answer) b.classList.add('correct');
+            else if (b.dataset.opt === choice) b.classList.add('wrong');
+          });
+          const feedback = cardEl.querySelector('.feedback');
+          feedback.classList.remove('hidden');
+          feedback.innerHTML = `${correct ? '<b>Correct.</b>' : `<b>Answer: ${esc(card.answer)}.</b>`} ${card.whyHtml}`;
+          const nextBtn = cardEl.querySelector('.next-btn');
+          nextBtn.classList.remove('hidden');
+          nextBtn.addEventListener('click', () => {
+            const next = cardEl.nextElementSibling;
+            if (next) next.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, { once: true });
         });
       });
     });
