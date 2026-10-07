@@ -145,7 +145,7 @@ h1.title em{ color:var(--gold-bright); font-style:italic; font-weight:500; }
 }
 .subtitle .dot{ color:var(--rust); margin:0 8px; }
 
-/* ---------- Stats bar (Trainer / Field Log) ---------- */
+/* ---------- Stats bar (Field Log) ---------- */
 .stats-bar{
   display:flex;
   justify-content:center;
@@ -233,32 +233,12 @@ h2.order-name{ font-family:'Fraunces', serif; font-weight:600; font-size:clamp(2
   header.masthead, header.tr-masthead{ padding-left:16px; padding-right:16px; }
 }
 
-/* ================= Trainer: mode nav + quiz ================= */
-nav.modes{ display:flex; justify-content:center; gap:4px; flex-wrap:wrap; padding:12px 12px; }
-nav.modes button{
-  font-family:'Space Mono', monospace; font-size:9.5px; letter-spacing:0.03em; text-transform:uppercase;
-  background:transparent; color:var(--sage); border:1px solid var(--line); opacity:0.72;
-  padding:6px 11px; border-radius:2px; font-weight:400; transition:all .15s ease;
-}
-nav.modes button:hover{ color:var(--gold-bright); border-color:var(--gold); opacity:1; }
-nav.modes button.active{ background:var(--gold); color:#1b2a20; border-color:var(--gold); font-weight:600; opacity:1; }
-
-.quiz-wrap{ display:flex; flex-direction:column; align-items:center; gap:22px; }
-.prompt-card{
-  background:var(--card); color:var(--ink); border-radius:4px; padding:28px 26px;
-  width:100%; max-width:520px; text-align:center;
-  box-shadow:0 16px 34px -14px var(--card-shadow); position:relative;
-}
-.prompt-label{ font-family:'Space Mono', monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; color:var(--rust); margin-bottom:12px; }
-.prompt-icon{ width:56px; height:56px; color:var(--rust); margin:0 auto 10px; }
-.prompt-illustration{ width:100%; max-width:280px; aspect-ratio:1/1; margin:0 auto 14px; }
-.prompt-illustration svg{ width:100%; height:100%; display:block; border-radius:3px; }
-.prompt-main{ font-family:'Fraunces', serif; font-weight:600; font-size:24px; color:var(--ink); }
-.prompt-sub{ font-family:'Source Serif 4', serif; font-style:italic; font-size:14px; color:var(--ink-soft); margin-top:4px; }
-.prompt-text{ font-size:14.5px; line-height:1.6; color:var(--ink); }
-
-.answers{ display:grid; grid-template-columns:1fr 1fr; gap:12px; width:100%; max-width:520px; }
-@media (max-width:520px){ .answers{ grid-template-columns:1fr; } }
+/* ================= Discover: quiz cards ================= */
+/* Folded in from the former Trainer tab - one multiple-choice question per
+   card, using the same .df-card shell as fact/illustration cards. Always a
+   2x2 grid (no single-column mobile breakpoint) so a question fits within
+   one screen-height card alongside its prompt. */
+.answers{ display:grid; grid-template-columns:1fr 1fr; gap:12px; width:100%; max-width:420px; }
 .answer-btn{
   display:flex; align-items:center; gap:10px; background:var(--card); color:var(--ink);
   border:2px solid transparent; border-radius:3px; padding:12px 14px; text-align:left;
@@ -281,26 +261,6 @@ nav.modes button.active{ background:var(--gold); color:#1b2a20; border-color:var
   background:var(--rust); color:var(--card); border:none; padding:12px 26px; border-radius:3px;
 }
 .next-btn:hover{ background:#a4453a; }
-.tr-empty{ color:var(--sage); font-style:italic; }
-
-/* ---------- Study / Browse mode ---------- */
-.order-chips{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:22px; }
-.order-chip{
-  font-family:'Space Mono', monospace; font-size:11px; padding:10px 14px; border-radius:20px;
-  border:1px solid var(--chip-color, var(--gold)); color:var(--chip-color, var(--gold)); background:transparent;
-}
-.order-chip.active{ background:var(--chip-color, var(--gold)); color:#152018; font-weight:700; }
-.study-order-desc{ text-align:center; font-style:italic; color:var(--sage); font-size:13px; max-width:600px; margin:0 auto 22px; line-height:1.5; }
-.study-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px; }
-.study-card{ background:var(--card); color:var(--ink); border-radius:3px; padding:16px 18px; border-left:4px solid var(--chip-color, var(--gold)); }
-.study-card-top{ display:flex; align-items:center; gap:10px; margin-bottom:6px; }
-.study-card-top svg{ width:28px; height:28px; color:var(--rust); flex-shrink:0; }
-.study-fam-name{ font-family:'Fraunces', serif; font-weight:600; font-size:16px; }
-.study-fam-common{ font-family:'Space Mono', monospace; font-size:9.5px; text-transform:uppercase; color:var(--ink-soft); }
-.study-trait{ font-size:12.5px; color:var(--ink-soft); margin:8px 0; line-height:1.5; }
-.study-differentia{ font-family:'Space Mono', monospace; font-size:10.5px; color:var(--rust); background:rgba(139,58,47,0.07); padding:7px 9px; border-radius:2px; line-height:1.5; margin-bottom:8px; }
-.study-species{ display:flex; flex-wrap:wrap; gap:5px; }
-.study-species span{ font-family:'Space Mono', monospace; font-size:9.5px; background:rgba(36,48,31,0.08); padding:3px 7px; border-radius:10px; color:var(--ink); }
 
 /* ================= Diagram ================= */
 .ph-main{ max-width:1040px; margin:0 auto; padding:10px 20px 80px; }

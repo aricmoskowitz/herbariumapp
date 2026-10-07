@@ -162,7 +162,7 @@ h1.title em{ color:var(--gold-bright); font-style:italic; font-weight:500; }
 }
 .subtitle .dot{ color:var(--rust); margin:0 8px; }
 
-/* ---------- Stats bar (Trainer / Field Log) ---------- */
+/* ---------- Stats bar (Field Log) ---------- */
 .stats-bar{
   display:flex;
   justify-content:center;
@@ -250,32 +250,12 @@ h2.order-name{ font-family:'Fraunces', serif; font-weight:600; font-size:clamp(2
   header.masthead, header.tr-masthead{ padding-left:16px; padding-right:16px; }
 }
 
-/* ================= Trainer: mode nav + quiz ================= */
-nav.modes{ display:flex; justify-content:center; gap:4px; flex-wrap:wrap; padding:12px 12px; }
-nav.modes button{
-  font-family:'Space Mono', monospace; font-size:9.5px; letter-spacing:0.03em; text-transform:uppercase;
-  background:transparent; color:var(--sage); border:1px solid var(--line); opacity:0.72;
-  padding:6px 11px; border-radius:2px; font-weight:400; transition:all .15s ease;
-}
-nav.modes button:hover{ color:var(--gold-bright); border-color:var(--gold); opacity:1; }
-nav.modes button.active{ background:var(--gold); color:#1b2a20; border-color:var(--gold); font-weight:600; opacity:1; }
-
-.quiz-wrap{ display:flex; flex-direction:column; align-items:center; gap:22px; }
-.prompt-card{
-  background:var(--card); color:var(--ink); border-radius:4px; padding:28px 26px;
-  width:100%; max-width:520px; text-align:center;
-  box-shadow:0 16px 34px -14px var(--card-shadow); position:relative;
-}
-.prompt-label{ font-family:'Space Mono', monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; color:var(--rust); margin-bottom:12px; }
-.prompt-icon{ width:56px; height:56px; color:var(--rust); margin:0 auto 10px; }
-.prompt-illustration{ width:100%; max-width:280px; aspect-ratio:1/1; margin:0 auto 14px; }
-.prompt-illustration svg{ width:100%; height:100%; display:block; border-radius:3px; }
-.prompt-main{ font-family:'Fraunces', serif; font-weight:600; font-size:24px; color:var(--ink); }
-.prompt-sub{ font-family:'Source Serif 4', serif; font-style:italic; font-size:14px; color:var(--ink-soft); margin-top:4px; }
-.prompt-text{ font-size:14.5px; line-height:1.6; color:var(--ink); }
-
-.answers{ display:grid; grid-template-columns:1fr 1fr; gap:12px; width:100%; max-width:520px; }
-@media (max-width:520px){ .answers{ grid-template-columns:1fr; } }
+/* ================= Discover: quiz cards ================= */
+/* Folded in from the former Trainer tab - one multiple-choice question per
+   card, using the same .df-card shell as fact/illustration cards. Always a
+   2x2 grid (no single-column mobile breakpoint) so a question fits within
+   one screen-height card alongside its prompt. */
+.answers{ display:grid; grid-template-columns:1fr 1fr; gap:12px; width:100%; max-width:420px; }
 .answer-btn{
   display:flex; align-items:center; gap:10px; background:var(--card); color:var(--ink);
   border:2px solid transparent; border-radius:3px; padding:12px 14px; text-align:left;
@@ -298,26 +278,6 @@ nav.modes button.active{ background:var(--gold); color:#1b2a20; border-color:var
   background:var(--rust); color:var(--card); border:none; padding:12px 26px; border-radius:3px;
 }
 .next-btn:hover{ background:#a4453a; }
-.tr-empty{ color:var(--sage); font-style:italic; }
-
-/* ---------- Study / Browse mode ---------- */
-.order-chips{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:22px; }
-.order-chip{
-  font-family:'Space Mono', monospace; font-size:11px; padding:10px 14px; border-radius:20px;
-  border:1px solid var(--chip-color, var(--gold)); color:var(--chip-color, var(--gold)); background:transparent;
-}
-.order-chip.active{ background:var(--chip-color, var(--gold)); color:#152018; font-weight:700; }
-.study-order-desc{ text-align:center; font-style:italic; color:var(--sage); font-size:13px; max-width:600px; margin:0 auto 22px; line-height:1.5; }
-.study-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px; }
-.study-card{ background:var(--card); color:var(--ink); border-radius:3px; padding:16px 18px; border-left:4px solid var(--chip-color, var(--gold)); }
-.study-card-top{ display:flex; align-items:center; gap:10px; margin-bottom:6px; }
-.study-card-top svg{ width:28px; height:28px; color:var(--rust); flex-shrink:0; }
-.study-fam-name{ font-family:'Fraunces', serif; font-weight:600; font-size:16px; }
-.study-fam-common{ font-family:'Space Mono', monospace; font-size:9.5px; text-transform:uppercase; color:var(--ink-soft); }
-.study-trait{ font-size:12.5px; color:var(--ink-soft); margin:8px 0; line-height:1.5; }
-.study-differentia{ font-family:'Space Mono', monospace; font-size:10.5px; color:var(--rust); background:rgba(139,58,47,0.07); padding:7px 9px; border-radius:2px; line-height:1.5; margin-bottom:8px; }
-.study-species{ display:flex; flex-wrap:wrap; gap:5px; }
-.study-species span{ font-family:'Space Mono', monospace; font-size:9.5px; background:rgba(36,48,31,0.08); padding:3px 7px; border-radius:10px; color:var(--ink); }
 
 /* ================= Diagram ================= */
 .ph-main{ max-width:1040px; margin:0 auto; padding:10px 20px 80px; }
@@ -511,14 +471,12 @@ nav.modes button.active{ background:var(--gold); color:#1b2a20; border-color:var
   <button type="button" data-tab="discover" class="active">Discover</button>
   <button type="button" data-tab="guide">Field Guide</button>
   <button type="button" data-tab="diagram">Diagram</button>
-  <button type="button" data-tab="trainer">Trainer</button>
   <button type="button" data-tab="log">Field Log</button>
 </div>
 
 <main id="panel-discover" class="tab-panel"></main>
 <main id="panel-field-guide" class="tab-panel" hidden></main>
 <main id="panel-diagram" class="tab-panel" hidden></main>
-<main id="panel-trainer" class="tab-panel" hidden></main>
 <main id="panel-field-log" class="tab-panel" hidden></main>
 
 <script>
@@ -8210,269 +8168,6 @@ window.Herb = (function () {
 })();
 
 
-// Trainer tab: quiz/study game built from the same taxonomy tree, no
-// separate quiz-data file. Seven modes: Species -> Family, Species -> Group,
-// Family -> Order, Spot the Difference (differentia -> family), Icon ->
-// Order, Illustration -> Species, and a non-quiz Study/Browse mode for
-// flipping through a chosen order's families.
-(function () {
-  const { esc, iconSvg, collectGroups } = window.Herb;
-
-  function shuffle(arr) {
-    const a = arr.slice();
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-  }
-  function pick(arr, n, exclude) {
-    return shuffle(arr.filter((x) => x !== exclude)).slice(0, n);
-  }
-
-  // "orders" here also includes the 5 informal groups (Brown Algae etc.) -
-  // they carry families[]/quizClue/icon exactly like an order does, and
-  // are quizzed/browsed identically. Rank is a taxonomic label shown in
-  // the UI, not a gate on what content or quiz modes a node takes part in.
-  function buildPools(tree) {
-    const orders = collectGroups(tree).filter((o) => o.families && o.families.length);
-    const families = [];
-    const species = [];
-    for (const order of orders) {
-      for (const fam of order.families) {
-        if (!fam.species || !fam.species.length) continue;
-        families.push({ ...fam, orderName: order.name, orderRank: order.rank });
-        for (const sp of fam.species) {
-          species.push({
-            ...sp, familyName: fam.name, orderName: order.name, orderRank: order.rank,
-          });
-        }
-      }
-    }
-    const iconOrders = collectGroups(tree).filter((o) => o.quizClue && o.icon);
-    const illustratedSpecies = species.filter((sp) => sp.illustration);
-    return {
-      orders, families, species, iconOrders, illustratedSpecies,
-    };
-  }
-
-  function questionSpeciesToFamily(pools) {
-    const target = pools.species[Math.floor(Math.random() * pools.species.length)];
-    const options = shuffle([target.familyName, ...pick(pools.families.map((f) => f.name), 3, target.familyName)]);
-    return {
-      label: 'Species &rarr; Family', icon: null,
-      main: esc(target.common), sub: target.sci,
-      text: `Which family does this belong to?`,
-      options, answer: target.familyName,
-      why: `${esc(target.common)} sits in ${esc(target.familyName)}, ${esc(target.orderRank)} ${esc(target.orderName)}.`,
-    };
-  }
-
-  function questionSpeciesToOrder(pools) {
-    const target = pools.species[Math.floor(Math.random() * pools.species.length)];
-    const options = shuffle([target.orderName, ...pick(pools.orders.map((o) => o.name), 3, target.orderName)]);
-    return {
-      label: 'Species &rarr; Group', icon: null,
-      main: esc(target.common), sub: target.sci,
-      text: `Which ${target.orderRank} does this belong to?`,
-      options, answer: target.orderName,
-      why: `${esc(target.common)} sits in ${esc(target.familyName)}, ${esc(target.orderRank)} ${esc(target.orderName)}.`,
-    };
-  }
-
-  function questionFamilyToOrder(pools) {
-    const target = pools.families[Math.floor(Math.random() * pools.families.length)];
-    const options = shuffle([target.orderName, ...pick(pools.orders.map((o) => o.name), 3, target.orderName)]);
-    return {
-      label: 'Family &rarr; Group', icon: null,
-      main: esc(target.name), sub: target.common,
-      text: target.trait,
-      options, answer: target.orderName,
-      why: target.differentia,
-    };
-  }
-
-  function questionDifferentia(pools) {
-    const target = pools.families[Math.floor(Math.random() * pools.families.length)];
-    const siblings = pools.families.filter((f) => f.orderName === target.orderName && f.name !== target.name);
-    const distractorPool = siblings.length >= 3 ? siblings : pools.families;
-    const options = shuffle([target.name, ...pick(distractorPool.map((f) => f.name), 3, target.name)]);
-    return {
-      label: 'Spot the Difference', icon: null,
-      main: 'Which family is this?', sub: '',
-      text: target.differentia,
-      options, answer: target.name,
-      why: `${esc(target.name)} (${esc(target.common)}) &mdash; ${target.trait}`,
-    };
-  }
-
-  function questionIconToGroup(pools) {
-    const target = pools.iconOrders[Math.floor(Math.random() * pools.iconOrders.length)];
-    const options = shuffle([target.name, ...pick(pools.iconOrders.map((o) => o.name), 3, target.name)]);
-    return {
-      label: 'Icon &rarr; Group', icon: target.icon,
-      main: '', sub: '',
-      text: target.quizClue,
-      options, answer: target.name,
-      why: target.quizWhy,
-    };
-  }
-
-  function questionIllustrationToSpecies(pools) {
-    const target = pools.illustratedSpecies[Math.floor(Math.random() * pools.illustratedSpecies.length)];
-    const options = shuffle([target.common, ...pick(pools.illustratedSpecies.map((s) => s.common), 3, target.common)]);
-    return {
-      label: 'Illustration &rarr; Species', icon: null, illustration: target.illustration.svg,
-      main: '', sub: '',
-      text: 'Which species does this illustration show?',
-      options, answer: target.common,
-      why: `${esc(target.common)} (${esc(target.sci)}) &mdash; ${target.illustration.caption}`,
-    };
-  }
-
-  const MODES = {
-    species: { label: 'Species &rarr; Family', build: questionSpeciesToFamily, needs: (p) => p.species.length >= 4 },
-    speciesOrder: { label: 'Species &rarr; Group', build: questionSpeciesToOrder, needs: (p) => p.species.length >= 4 && p.orders.length >= 4 },
-    family: { label: 'Family &rarr; Group', build: questionFamilyToOrder, needs: (p) => p.families.length >= 4 && p.orders.length >= 4 },
-    differentia: { label: 'Spot the Difference', build: questionDifferentia, needs: (p) => p.families.length >= 4 },
-    icon: { label: 'Icon &rarr; Group', build: questionIconToGroup, needs: (p) => p.iconOrders.length >= 4 },
-    illustration: { label: 'Illustration &rarr; Species', build: questionIllustrationToSpecies, needs: (p) => p.illustratedSpecies.length >= 4 },
-  };
-
-  function studyCardHtml(family) {
-    return `<div class="study-card">
-      <div class="study-card-top">${iconSvg(family.icon)}<div>
-        <div class="study-fam-name">${esc(family.name)}</div>
-        <div class="study-fam-common">${esc(family.common)}</div>
-      </div></div>
-      <p class="study-trait">${family.trait}</p>
-      <p class="study-differentia">${family.differentia}</p>
-      <div class="study-species">${(family.species || []).map((sp) => `<span>${esc(sp.common)}</span>`).join('')}</div>
-    </div>`;
-  }
-
-  function renderTrainer(container, tree) {
-    const pools = buildPools(tree);
-    const state = { mode: 'icon', correct: 0, answered: 0, streak: 0, best: 0, current: null, studyOrder: null };
-
-    container.innerHTML = `
-      <header class="tr-masthead">
-        <div class="eyebrow">Companion to the Field Guide</div>
-        <h1 class="tr-title">The <em>Herbarium</em> Trainer</h1>
-        <p class="tip">Cycle through all six quiz modes each session instead of mastering one at a time &mdash; interleaving species, families, and groups builds stronger recall than drilling one relationship on its own.</p>
-      </header>
-      <div class="stats-bar">
-        <div class="stat"><span class="stat-num" id="statCorrect">0</span><span class="stat-label">Correct</span></div>
-        <div class="stat"><span class="stat-num" id="statTotal">0</span><span class="stat-label">Answered</span></div>
-        <div class="stat"><span class="stat-num" id="statStreak">0</span><span class="stat-label">Streak</span></div>
-        <div class="stat"><span class="stat-num" id="statBest">0</span><span class="stat-label">Best Streak</span></div>
-      </div>
-      <nav class="modes">${Object.entries(MODES).map(([key, m]) => `<button type="button" data-mode="${key}">${m.label}</button>`).join('')}<button type="button" data-mode="study">Study / Browse</button></nav>
-      <div class="tr-main">
-        <div id="quizArea" class="quiz-wrap"></div>
-        <div id="studyArea" class="hidden">
-          <div class="order-chips" id="orderChips"></div>
-          <p class="study-order-desc" id="studyOrderDesc"></p>
-          <div class="study-grid" id="studyGrid"></div>
-        </div>
-      </div>
-    `;
-
-    const quizArea = container.querySelector('#quizArea');
-    const studyArea = container.querySelector('#studyArea');
-    const statCorrect = container.querySelector('#statCorrect');
-    const statTotal = container.querySelector('#statTotal');
-    const statStreak = container.querySelector('#statStreak');
-    const statBest = container.querySelector('#statBest');
-
-    function setMode(key) {
-      state.mode = key;
-      container.querySelectorAll('nav.modes button').forEach((b) => b.classList.toggle('active', b.dataset.mode === key));
-      if (key === 'study') {
-        quizArea.classList.add('hidden');
-        studyArea.classList.remove('hidden');
-        renderStudy();
-      } else {
-        studyArea.classList.add('hidden');
-        quizArea.classList.remove('hidden');
-        nextQuestion();
-      }
-    }
-
-    function nextQuestion() {
-      const mode = MODES[state.mode];
-      if (!mode.needs(pools)) {
-        quizArea.innerHTML = '<p class="tr-empty">Not enough built data for this mode yet.</p>';
-        return;
-      }
-      const q = mode.build(pools);
-      state.current = q;
-      quizArea.innerHTML = `
-        <div class="prompt-card">
-          <div class="prompt-label">${q.label}</div>
-          ${q.icon ? iconSvg(q.icon, 'prompt-icon') : ''}
-          ${q.illustration ? `<div class="prompt-illustration">${q.illustration}</div>` : ''}
-          ${q.main ? `<div class="prompt-main">${q.main}</div>` : ''}
-          ${q.sub ? `<div class="prompt-sub">${q.sub}</div>` : ''}
-          <p class="prompt-text">${q.text}</p>
-        </div>
-        <div class="answers">${q.options.map((opt) => `<button type="button" class="answer-btn" data-opt="${esc(opt)}"><span class="a-name">${esc(opt)}</span></button>`).join('')}</div>
-        <div class="feedback hidden" id="feedback"></div>
-        <button type="button" class="next-btn hidden" id="nextBtn">Next</button>
-      `;
-      quizArea.querySelectorAll('.answer-btn').forEach((btn) => btn.addEventListener('click', () => answer(btn.dataset.opt)));
-      quizArea.querySelector('#nextBtn').addEventListener('click', nextQuestion);
-    }
-
-    function answer(choice) {
-      const q = state.current;
-      const correct = choice === q.answer;
-      state.answered += 1;
-      if (correct) { state.correct += 1; state.streak += 1; state.best = Math.max(state.best, state.streak); }
-      else { state.streak = 0; }
-      statCorrect.textContent = state.correct;
-      statTotal.textContent = state.answered;
-      statStreak.textContent = state.streak;
-      statBest.textContent = state.best;
-
-      quizArea.querySelectorAll('.answer-btn').forEach((btn) => {
-        btn.disabled = true;
-        if (btn.dataset.opt === q.answer) btn.classList.add('correct');
-        else if (btn.dataset.opt === choice) btn.classList.add('wrong');
-      });
-      const feedback = quizArea.querySelector('#feedback');
-      feedback.classList.remove('hidden');
-      feedback.innerHTML = `${correct ? '<b>Correct.</b>' : `<b>Answer: ${esc(q.answer)}.</b>`} ${q.why}`;
-      quizArea.querySelector('#nextBtn').classList.remove('hidden');
-    }
-
-    function renderStudy() {
-      const chipsEl = container.querySelector('#orderChips');
-      if (!chipsEl.dataset.built) {
-        chipsEl.dataset.built = '1';
-        chipsEl.innerHTML = pools.orders.map((o) => `<button type="button" class="order-chip" style="--chip-color:${esc(o.accent || '#c79a2b')}" data-order="${esc(o.name)}">${esc(o.name)}</button>`).join('');
-        chipsEl.querySelectorAll('.order-chip').forEach((btn) => btn.addEventListener('click', () => showStudyOrder(btn.dataset.order)));
-      }
-      if (!state.studyOrder) showStudyOrder(pools.orders[0].name);
-    }
-
-    function showStudyOrder(name) {
-      state.studyOrder = name;
-      const order = pools.orders.find((o) => o.name === name);
-      container.querySelectorAll('.order-chip').forEach((b) => b.classList.toggle('active', b.dataset.order === name));
-      container.querySelector('#studyOrderDesc').innerHTML = order.desc || '';
-      container.querySelector('#studyGrid').innerHTML = (order.families || []).map(studyCardHtml).join('');
-    }
-
-    container.querySelectorAll('nav.modes button').forEach((btn) => btn.addEventListener('click', () => setMode(btn.dataset.mode)));
-    setMode(state.mode);
-  }
-
-  window.Herb = window.Herb || {};
-  window.Herb.renderTrainer = renderTrainer;
-})();
-
-
 // Field Log tab: private log of user-found plants. Reads the taxonomy tree
 // only to build the species picker (so a logged sighting can reference a
 // real species/family/order) - the log entries themselves live only in
@@ -8633,11 +8328,17 @@ window.Herb = (function () {
 // Discover tab: a vertical snap-scroll feed of one-fact-per-card plant
 // trivia, built once per load by flattening every funFacts[] entry found
 // anywhere in the tree (order/informal-group/clade, family, species) into a
-// flat card pool. Unseen cards are shuffled ahead of seen ones on every
-// open; only the seen-set itself persists (in localStorage), never a fixed
-// queue order.
+// flat card pool, plus one species-detail-illustration card per illustrated
+// species, plus one multiple-choice quiz card per eligible target across all
+// six of the former Trainer tab's quiz relationships (species->family,
+// species->group, family->group, spot-the-difference, icon->group,
+// illustration->species - see buildQuizCards). Unseen cards are shuffled
+// ahead of seen ones on every open; only the seen-set itself persists (in
+// localStorage), never a fixed queue order.
 (function () {
-  const { esc, iconSvg, walk } = window.Herb;
+  const {
+    esc, iconSvg, walk, collectGroups,
+  } = window.Herb;
 
   const SEEN_KEY = 'df-seen';
 
@@ -8691,6 +8392,174 @@ window.Herb = (function () {
     return `<svg class="df-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">${ILLUSTRATION_GLYPH}</svg>`;
   }
 
+  // Quiz cards: a third, additive card type folded into the same feed and
+  // seen-tracking system as fact cards and illustration cards. One card per
+  // eligible target per mode (not an infinite random generator - a fixed
+  // pool like everything else in Discover), covering all six of the former
+  // Trainer tab's quiz relationships. Study/Browse had no quiz content of
+  // its own (it just paged through Field Guide-equivalent info) and is not
+  // represented here at all.
+  const QUIZ_BADGE_COLOR = '#4a7a9a';
+  const QUIZ_GLYPH = '<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 015 .5c0 1.5-2 1.8-2 3.5"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/>';
+  function quizGlyphSvg() {
+    return `<svg class="df-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">${QUIZ_GLYPH}</svg>`;
+  }
+
+  function buildQuizCards(tree) {
+    const orders = collectGroups(tree).filter((o) => o.families && o.families.length);
+    const families = [];
+    const species = [];
+    for (const order of orders) {
+      for (const fam of order.families) {
+        if (!fam.species || !fam.species.length) continue;
+        families.push({ ...fam, orderName: order.name, orderRank: order.rank });
+        for (const sp of fam.species) {
+          species.push({
+            ...sp, familyName: fam.name, orderName: order.name, orderRank: order.rank,
+          });
+        }
+      }
+    }
+    const iconOrders = collectGroups(tree).filter((o) => o.quizClue && o.icon);
+    const illustratedSpecies = species.filter((sp) => sp.illustration);
+
+    const cards = [];
+
+    if (families.length >= 4) {
+      for (const sp of species) {
+        const options = shuffle([sp.familyName, ...pick(families.map((f) => f.name), 3, sp.familyName)]);
+        cards.push({
+          cardId: `quiz:speciesFamily:${sp.id}`,
+          isQuiz: true,
+          modeLabel: 'Species → Family',
+          promptName: sp.common,
+          promptSub: sp.sci,
+          promptSubStyle: 'sci',
+          questionHtml: 'Which family does this belong to?',
+          options,
+          answer: sp.familyName,
+          whyHtml: `${esc(sp.common)} sits in ${esc(sp.familyName)}, ${esc(sp.orderRank)} ${esc(sp.orderName)}.`,
+        });
+      }
+    }
+
+    if (families.length >= 4 && orders.length >= 4) {
+      for (const sp of species) {
+        const options = shuffle([sp.orderName, ...pick(orders.map((o) => o.name), 3, sp.orderName)]);
+        cards.push({
+          cardId: `quiz:speciesGroup:${sp.id}`,
+          isQuiz: true,
+          modeLabel: 'Species → Group',
+          promptName: sp.common,
+          promptSub: sp.sci,
+          promptSubStyle: 'sci',
+          questionHtml: `Which ${esc(sp.orderRank)} does this belong to?`,
+          options,
+          answer: sp.orderName,
+          whyHtml: `${esc(sp.common)} sits in ${esc(sp.familyName)}, ${esc(sp.orderRank)} ${esc(sp.orderName)}.`,
+        });
+      }
+    }
+
+    if (families.length >= 4 && orders.length >= 4) {
+      for (const fam of families) {
+        const options = shuffle([fam.orderName, ...pick(orders.map((o) => o.name), 3, fam.orderName)]);
+        cards.push({
+          cardId: `quiz:familyGroup:${fam.id}`,
+          isQuiz: true,
+          modeLabel: 'Family → Group',
+          promptName: fam.name,
+          promptSub: fam.common,
+          promptSubStyle: 'common',
+          questionHtml: `${fam.trait} Which group is this?`,
+          options,
+          answer: fam.orderName,
+          whyHtml: fam.differentia,
+        });
+      }
+    }
+
+    if (families.length >= 4) {
+      for (const fam of families) {
+        const siblings = families.filter((f) => f.orderName === fam.orderName && f.name !== fam.name);
+        const distractorPool = siblings.length >= 3 ? siblings : families;
+        const options = shuffle([fam.name, ...pick(distractorPool.map((f) => f.name), 3, fam.name)]);
+        cards.push({
+          cardId: `quiz:differentia:${fam.id}`,
+          isQuiz: true,
+          modeLabel: 'Spot the Difference',
+          promptName: 'Which family is this?',
+          promptSub: null,
+          questionHtml: fam.differentia,
+          options,
+          answer: fam.name,
+          whyHtml: `${esc(fam.name)} (${esc(fam.common)}) — ${fam.trait}`,
+        });
+      }
+    }
+
+    if (iconOrders.length >= 4) {
+      for (const grp of iconOrders) {
+        const options = shuffle([grp.name, ...pick(iconOrders.map((o) => o.name), 3, grp.name)]);
+        cards.push({
+          cardId: `quiz:iconGroup:${grp.id}`,
+          isQuiz: true,
+          modeLabel: 'Icon → Group',
+          promptIcon: grp.icon,
+          questionHtml: `${grp.quizClue} Which group is this?`,
+          options,
+          answer: grp.name,
+          whyHtml: grp.quizWhy,
+        });
+      }
+    }
+
+    if (illustratedSpecies.length >= 4) {
+      for (const sp of illustratedSpecies) {
+        const options = shuffle([sp.common, ...pick(illustratedSpecies.map((s) => s.common), 3, sp.common)]);
+        cards.push({
+          cardId: `quiz:illustrationSpecies:${sp.id}`,
+          isQuiz: true,
+          modeLabel: 'Illustration → Species',
+          promptIllustrationSvg: sp.illustration.svg,
+          questionHtml: 'Which species does this illustration show?',
+          options,
+          answer: sp.common,
+          whyHtml: `${esc(sp.common)} (${esc(sp.sci)}) — ${sp.illustration.caption}`,
+        });
+      }
+    }
+
+    return cards;
+  }
+
+  function quizPromptHtml(card) {
+    let html = '';
+    if (card.promptIcon) html += iconSvg(card.promptIcon, 'df-icon');
+    if (card.promptIllustrationSvg) html += `<div class="df-illustration">${card.promptIllustrationSvg}</div>`;
+    if (card.promptName) {
+      html += `<h2 class="df-name">${esc(card.promptName)}</h2>`;
+      if (card.promptSub) {
+        html += card.promptSubStyle === 'common'
+          ? `<div class="df-common">${esc(card.promptSub)}</div>`
+          : `<div class="df-sci">${esc(card.promptSub)}</div>`;
+      }
+    }
+    return html;
+  }
+
+  function quizCardHtml(card) {
+    return `<div class="df-card df-quiz-card" data-card-id="${esc(card.cardId)}">
+      <div class="df-rank">Quiz &middot; ${esc(card.modeLabel)}</div>
+      ${quizPromptHtml(card)}
+      <span class="df-badge" style="--badge-color:${QUIZ_BADGE_COLOR}">${quizGlyphSvg()}Quiz</span>
+      <p class="df-fact">${card.questionHtml}</p>
+      <div class="answers">${card.options.map((opt) => `<button type="button" class="answer-btn" data-opt="${esc(opt)}"><span class="a-name">${esc(opt)}</span></button>`).join('')}</div>
+      <div class="feedback hidden"></div>
+      <button type="button" class="next-btn hidden">Continue scrolling &darr;</button>
+    </div>`;
+  }
+
   function shuffle(arr) {
     const a = arr.slice();
     for (let i = a.length - 1; i > 0; i--) {
@@ -8698,6 +8567,12 @@ window.Herb = (function () {
       [a[i], a[j]] = [a[j], a[i]];
     }
     return a;
+  }
+
+  // Picks n random items from arr, excluding `exclude` - used to build
+  // multiple-choice distractors for quiz cards (see buildQuizCards below).
+  function pick(arr, n, exclude) {
+    return shuffle(arr.filter((x) => x !== exclude)).slice(0, n);
   }
 
   // Flatten every funFacts entry in the tree into one card per fact. Built
@@ -8861,6 +8736,8 @@ window.Herb = (function () {
   }
 
   function cardHtml(card) {
+    if (card.isQuiz) return quizCardHtml(card);
+
     const guideAnchor = fieldGuideAnchorId(card);
     const diagramAnchor = diagramAnchorId(card);
     const viewLinksHtml = `<div class="df-viewlinks">
@@ -8894,7 +8771,7 @@ window.Herb = (function () {
   }
 
   function renderDiscover(container, tree) {
-    const pool = buildCardPool(tree);
+    const pool = [...buildCardPool(tree), ...buildQuizCards(tree)];
 
     if (!pool.length) {
       container.innerHTML = '<p class="df-empty">No facts yet &mdash; check back once the Discover feed has content.</p>';
@@ -8903,6 +8780,7 @@ window.Herb = (function () {
 
     const seenSet = loadSeen();
     const order = buildFeedOrder(pool, seenSet);
+    const cardById = new Map(order.map((c) => [c.cardId, c]));
 
     container.innerHTML = `<div class="df-feed" id="dfFeed">${order.map(cardHtml).join('')}</div>`;
 
@@ -8932,6 +8810,39 @@ window.Herb = (function () {
           if (document.fonts && document.fonts.ready) document.fonts.ready.then(attempt);
           setTimeout(attempt, 350);
           setTimeout(attempt, 900);
+        });
+      });
+    });
+
+    // Quiz cards: tap an option to answer in place (one try per card, like
+    // the old Trainer tab), then "Continue scrolling" smooth-scrolls to
+    // whatever card comes next in the feed - there is no regenerate-in-place
+    // here, since a quiz card is a fixed, pre-built member of the pool like
+    // any other Discover card.
+    feedEl.querySelectorAll('.df-quiz-card').forEach((cardEl) => {
+      const card = cardById.get(cardEl.dataset.cardId);
+      if (!card) return;
+      const buttons = [...cardEl.querySelectorAll('.answer-btn')];
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          if (cardEl.dataset.answered) return;
+          cardEl.dataset.answered = '1';
+          const choice = btn.dataset.opt;
+          const correct = choice === card.answer;
+          buttons.forEach((b) => {
+            b.disabled = true;
+            if (b.dataset.opt === card.answer) b.classList.add('correct');
+            else if (b.dataset.opt === choice) b.classList.add('wrong');
+          });
+          const feedback = cardEl.querySelector('.feedback');
+          feedback.classList.remove('hidden');
+          feedback.innerHTML = `${correct ? '<b>Correct.</b>' : `<b>Answer: ${esc(card.answer)}.</b>`} ${card.whyHtml}`;
+          const nextBtn = cardEl.querySelector('.next-btn');
+          nextBtn.classList.remove('hidden');
+          nextBtn.addEventListener('click', () => {
+            const next = cardEl.nextElementSibling;
+            if (next) next.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, { once: true });
         });
       });
     });
@@ -8969,11 +8880,10 @@ window.Herb = (function () {
 (function () {
   function boot(data) {
     const tree = data.tree;
-    const rendered = { guide: false, diagram: false, trainer: false, log: false };
+    const rendered = { guide: false, diagram: false, log: false };
     const panels = {
       guide: document.getElementById('panel-field-guide'),
       diagram: document.getElementById('panel-diagram'),
-      trainer: document.getElementById('panel-trainer'),
       log: document.getElementById('panel-field-log'),
       discover: document.getElementById('panel-discover'),
     };
@@ -8994,7 +8904,6 @@ window.Herb = (function () {
         rendered[tab] = true;
         if (tab === 'guide') window.Herb.renderFieldGuide(panels.guide, tree);
         if (tab === 'diagram') window.Herb.renderDiagram(panels.diagram, tree);
-        if (tab === 'trainer') window.Herb.renderTrainer(panels.trainer, tree);
         if (tab === 'log') window.Herb.renderFieldLog(panels.log, tree);
       }
     }

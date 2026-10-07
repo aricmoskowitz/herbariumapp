@@ -4,11 +4,10 @@
 (function () {
   function boot(data) {
     const tree = data.tree;
-    const rendered = { guide: false, diagram: false, trainer: false, log: false };
+    const rendered = { guide: false, diagram: false, log: false };
     const panels = {
       guide: document.getElementById('panel-field-guide'),
       diagram: document.getElementById('panel-diagram'),
-      trainer: document.getElementById('panel-trainer'),
       log: document.getElementById('panel-field-log'),
       discover: document.getElementById('panel-discover'),
     };
@@ -29,7 +28,6 @@
         rendered[tab] = true;
         if (tab === 'guide') window.Herb.renderFieldGuide(panels.guide, tree);
         if (tab === 'diagram') window.Herb.renderDiagram(panels.diagram, tree);
-        if (tab === 'trainer') window.Herb.renderTrainer(panels.trainer, tree);
         if (tab === 'log') window.Herb.renderFieldLog(panels.log, tree);
       }
     }
