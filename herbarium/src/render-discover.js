@@ -573,11 +573,41 @@
       windowCenter = centerIndex;
     }
 
+    // .df-feed's CSS height (100dvh minus the tab-bar's own reserved
+    // --tabbar-h) is a close approximation, but on an installed
+    // home-screen app (no Safari chrome to measure against, which is what
+    // 100dvh is actually for) small drift between that calc() and the tab
+    // bar's true rendered height shows up as a visible gap - the bottom
+    // tab bar is a `position:fixed` sibling, not a layout participant, so
+    // nothing forces the two to match exactly. Measuring both real,
+    // on-screen values at runtime and setting an explicit pixel height
+    // sidesteps that: it's correct regardless of which iOS mode, version,
+    // or safe-area quirk is in play. #appSwitch only docks to the bottom
+    // as a tab bar under the same max-width:640px breakpoint its own CSS
+    // uses - above that it's a floating corner pill that shouldn't be
+    // subtracted at all.
+    function syncFeedHeight() {
+      const appSwitchEl = document.getElementById('appSwitch');
+      const viewportH = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+      const isBottomBar = window.matchMedia('(max-width:640px)').matches;
+      const barH = (isBottomBar && appSwitchEl) ? appSwitchEl.getBoundingClientRect().height : 0;
+      feedEl.style.height = `${Math.max(viewportH - barH, 0)}px`;
+    }
+    syncFeedHeight();
+
     let cardHeight = feedEl.clientHeight || 1;
     function currentIndex() {
       return Math.round(feedEl.scrollTop / cardHeight);
     }
     updateWindow(currentIndex());
+
+    // #appSwitch's rendered height depends on its button padding, which
+    // depends on the Space Mono webfont - re-sync once it's actually
+    // loaded (plus a fixed-delay fallback) in case the font swaps in after
+    // the measurement above already ran, the same font-timing issue the
+    // view-link scroll logic below works around.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => handleViewportChange());
+    setTimeout(() => handleViewportChange(), 300);
 
     let scrollTicking = false;
     feedEl.addEventListener('scroll', () => {
@@ -590,10 +620,17 @@
         if (idx !== windowCenter) updateWindow(idx);
       });
     }, { passive: true });
-    window.addEventListener('resize', () => {
+    function handleViewportChange() {
+      syncFeedHeight();
       cardHeight = feedEl.clientHeight || cardHeight;
       updateWindow(currentIndex());
-    });
+    }
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleViewportChange);
+    } else {
+      window.addEventListener('resize', handleViewportChange);
+    }
+    window.addEventListener('orientationchange', handleViewportChange);
 
     // One delegated listener for the whole feed instead of one per button -
     // view-link navigation, quiz answers, and the quiz "continue" button all
