@@ -4,7 +4,9 @@
 (function () {
   function boot(data) {
     const tree = data.tree;
-    const rendered = { guide: false, diagram: false, log: false };
+    const rendered = {
+      discover: false, guide: false, diagram: false, log: false,
+    };
     const panels = {
       guide: document.getElementById('panel-field-guide'),
       diagram: document.getElementById('panel-diagram'),
@@ -12,6 +14,13 @@
       discover: document.getElementById('panel-discover'),
     };
 
+    // Every tab, Discover included, renders once per page load and is
+    // cached from then on - switching tabs just toggles `hidden`. Discover
+    // used to fully rebuild (reshuffle, re-walk the tree, replace the whole
+    // DOM) on every single visit; now that it carries quiz cards as well as
+    // fact cards the feed is large enough that doing this on every tab
+    // switch was the main source of visible lag, so a fresh shuffle now
+    // only happens once per page load rather than once per visit.
     function show(tab) {
       Object.entries(panels).forEach(([key, el]) => {
         el.hidden = key !== tab;
@@ -19,13 +28,9 @@
       document.querySelectorAll('#appSwitch [data-tab]').forEach((btn) => {
         btn.classList.toggle('active', btn.dataset.tab === tab);
       });
-      // Discover reshuffles its feed order fresh every time the tab opens
-      // (only the seen-set persists), so it re-renders on every visit
-      // rather than being cached like the other tabs.
-      if (tab === 'discover') {
-        window.Herb.renderDiscover(panels.discover, tree);
-      } else if (!rendered[tab]) {
+      if (!rendered[tab]) {
         rendered[tab] = true;
+        if (tab === 'discover') window.Herb.renderDiscover(panels.discover, tree);
         if (tab === 'guide') window.Herb.renderFieldGuide(panels.guide, tree);
         if (tab === 'diagram') window.Herb.renderDiagram(panels.diagram, tree);
         if (tab === 'log') window.Herb.renderFieldLog(panels.log, tree);
