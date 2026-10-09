@@ -8326,18 +8326,31 @@ window.Herb = (function () {
 
 
 // Discover tab: a vertical snap-scroll feed of one-fact-per-card plant
-// trivia, built once per load by flattening every funFacts[] entry found
-// anywhere in the tree (order/informal-group/clade, family, species) into a
-// flat card pool, plus one species-detail-illustration card per illustrated
-// species, plus one multiple-choice quiz card per eligible target across all
-// six of the former Trainer tab's quiz relationships (species->family,
-// species->group, family->group, spot-the-difference, icon->group,
-// illustration->species - see buildQuizCards). Unseen cards are shuffled
-// ahead of seen ones on every open; only the seen-set itself persists (in
-// localStorage), never a fixed queue order.
+// trivia, flattening every funFacts[] entry found anywhere in the tree
+// (order/informal-group/clade, family, species) into a flat card pool, plus
+// one species-detail-illustration card per illustrated species, plus one
+// multiple-choice quiz card per eligible target across all six of the
+// former Trainer tab's quiz relationships (species->family, species->group,
+// family->group, spot-the-difference, icon->group, illustration->species -
+// see buildQuizCards). Unseen cards are shuffled ahead of seen ones; only
+// the seen-set itself persists (in localStorage), never a fixed queue
+// order.
+//
+// Built once per page load, not once per tab visit - bootstrap.js caches
+// this tab's render exactly like Field Guide/Diagram/Field Log now, so
+// switching away and back doesn't repeat the work below. The feed can run
+// to several thousand cards once quiz cards are included, so the DOM is
+// virtualized (see "windowing" below): every card gets a same-sized
+// placeholder div up front (scroll-snap needs a real, correctly-sized
+// element per snap point), but only a small window of cards around the
+// current scroll position ever has its actual content (icons,
+// illustrations, quiz answer buttons) materialized. Click handling for
+// view-links and quiz answers is delegated to one listener on the feed
+// container rather than one per button, since the fixed-pool/button count
+// would otherwise scale with the whole feed instead of the visible window.
 (function () {
   const {
-    esc, iconSvg, walk, collectGroups,
+    esc, iconSvg, walk,
   } = window.Herb;
 
   const SEEN_KEY = 'df-seen';
@@ -8405,161 +8418,6 @@ window.Herb = (function () {
     return `<svg class="df-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">${QUIZ_GLYPH}</svg>`;
   }
 
-  function buildQuizCards(tree) {
-    const orders = collectGroups(tree).filter((o) => o.families && o.families.length);
-    const families = [];
-    const species = [];
-    for (const order of orders) {
-      for (const fam of order.families) {
-        if (!fam.species || !fam.species.length) continue;
-        families.push({ ...fam, orderName: order.name, orderRank: order.rank });
-        for (const sp of fam.species) {
-          species.push({
-            ...sp, familyName: fam.name, orderName: order.name, orderRank: order.rank,
-          });
-        }
-      }
-    }
-    const iconOrders = collectGroups(tree).filter((o) => o.quizClue && o.icon);
-    const illustratedSpecies = species.filter((sp) => sp.illustration);
-
-    const cards = [];
-
-    if (families.length >= 4) {
-      for (const sp of species) {
-        const options = shuffle([sp.familyName, ...pick(families.map((f) => f.name), 3, sp.familyName)]);
-        cards.push({
-          cardId: `quiz:speciesFamily:${sp.id}`,
-          isQuiz: true,
-          modeLabel: 'Species → Family',
-          promptName: sp.common,
-          promptSub: sp.sci,
-          promptSubStyle: 'sci',
-          questionHtml: 'Which family does this belong to?',
-          options,
-          answer: sp.familyName,
-          whyHtml: `${esc(sp.common)} sits in ${esc(sp.familyName)}, ${esc(sp.orderRank)} ${esc(sp.orderName)}.`,
-        });
-      }
-    }
-
-    if (families.length >= 4 && orders.length >= 4) {
-      for (const sp of species) {
-        const options = shuffle([sp.orderName, ...pick(orders.map((o) => o.name), 3, sp.orderName)]);
-        cards.push({
-          cardId: `quiz:speciesGroup:${sp.id}`,
-          isQuiz: true,
-          modeLabel: 'Species → Group',
-          promptName: sp.common,
-          promptSub: sp.sci,
-          promptSubStyle: 'sci',
-          questionHtml: `Which ${esc(sp.orderRank)} does this belong to?`,
-          options,
-          answer: sp.orderName,
-          whyHtml: `${esc(sp.common)} sits in ${esc(sp.familyName)}, ${esc(sp.orderRank)} ${esc(sp.orderName)}.`,
-        });
-      }
-    }
-
-    if (families.length >= 4 && orders.length >= 4) {
-      for (const fam of families) {
-        const options = shuffle([fam.orderName, ...pick(orders.map((o) => o.name), 3, fam.orderName)]);
-        cards.push({
-          cardId: `quiz:familyGroup:${fam.id}`,
-          isQuiz: true,
-          modeLabel: 'Family → Group',
-          promptName: fam.name,
-          promptSub: fam.common,
-          promptSubStyle: 'common',
-          questionHtml: `${fam.trait} Which group is this?`,
-          options,
-          answer: fam.orderName,
-          whyHtml: fam.differentia,
-        });
-      }
-    }
-
-    if (families.length >= 4) {
-      for (const fam of families) {
-        const siblings = families.filter((f) => f.orderName === fam.orderName && f.name !== fam.name);
-        const distractorPool = siblings.length >= 3 ? siblings : families;
-        const options = shuffle([fam.name, ...pick(distractorPool.map((f) => f.name), 3, fam.name)]);
-        cards.push({
-          cardId: `quiz:differentia:${fam.id}`,
-          isQuiz: true,
-          modeLabel: 'Spot the Difference',
-          promptName: 'Which family is this?',
-          promptSub: null,
-          questionHtml: fam.differentia,
-          options,
-          answer: fam.name,
-          whyHtml: `${esc(fam.name)} (${esc(fam.common)}) — ${fam.trait}`,
-        });
-      }
-    }
-
-    if (iconOrders.length >= 4) {
-      for (const grp of iconOrders) {
-        const options = shuffle([grp.name, ...pick(iconOrders.map((o) => o.name), 3, grp.name)]);
-        cards.push({
-          cardId: `quiz:iconGroup:${grp.id}`,
-          isQuiz: true,
-          modeLabel: 'Icon → Group',
-          promptIcon: grp.icon,
-          questionHtml: `${grp.quizClue} Which group is this?`,
-          options,
-          answer: grp.name,
-          whyHtml: grp.quizWhy,
-        });
-      }
-    }
-
-    if (illustratedSpecies.length >= 4) {
-      for (const sp of illustratedSpecies) {
-        const options = shuffle([sp.common, ...pick(illustratedSpecies.map((s) => s.common), 3, sp.common)]);
-        cards.push({
-          cardId: `quiz:illustrationSpecies:${sp.id}`,
-          isQuiz: true,
-          modeLabel: 'Illustration → Species',
-          promptIllustrationSvg: sp.illustration.svg,
-          questionHtml: 'Which species does this illustration show?',
-          options,
-          answer: sp.common,
-          whyHtml: `${esc(sp.common)} (${esc(sp.sci)}) — ${sp.illustration.caption}`,
-        });
-      }
-    }
-
-    return cards;
-  }
-
-  function quizPromptHtml(card) {
-    let html = '';
-    if (card.promptIcon) html += iconSvg(card.promptIcon, 'df-icon');
-    if (card.promptIllustrationSvg) html += `<div class="df-illustration">${card.promptIllustrationSvg}</div>`;
-    if (card.promptName) {
-      html += `<h2 class="df-name">${esc(card.promptName)}</h2>`;
-      if (card.promptSub) {
-        html += card.promptSubStyle === 'common'
-          ? `<div class="df-common">${esc(card.promptSub)}</div>`
-          : `<div class="df-sci">${esc(card.promptSub)}</div>`;
-      }
-    }
-    return html;
-  }
-
-  function quizCardHtml(card) {
-    return `<div class="df-card df-quiz-card" data-card-id="${esc(card.cardId)}">
-      <div class="df-rank">Quiz &middot; ${esc(card.modeLabel)}</div>
-      ${quizPromptHtml(card)}
-      <span class="df-badge" style="--badge-color:${QUIZ_BADGE_COLOR}">${quizGlyphSvg()}Quiz</span>
-      <p class="df-fact">${card.questionHtml}</p>
-      <div class="answers">${card.options.map((opt) => `<button type="button" class="answer-btn" data-opt="${esc(opt)}"><span class="a-name">${esc(opt)}</span></button>`).join('')}</div>
-      <div class="feedback hidden"></div>
-      <button type="button" class="next-btn hidden">Continue scrolling &darr;</button>
-    </div>`;
-  }
-
   function shuffle(arr) {
     const a = arr.slice();
     for (let i = a.length - 1; i > 0; i--) {
@@ -8575,18 +8433,33 @@ window.Herb = (function () {
     return shuffle(arr.filter((x) => x !== exclude)).slice(0, n);
   }
 
-  // Flatten every funFacts entry in the tree into one card per fact. Built
-  // once per load and kept in memory - never rebuilt per scroll.
+  // One walk over the tree builds both the fact/illustration card pool and
+  // the denormalized order/family/species pools buildQuizCards needs -
+  // these used to be two separate tree walks (buildCardPool, plus
+  // buildQuizCards calling collectGroups twice on its own) every single
+  // render.
   //
-  // Every card carries a `breadcrumb`: the chain of ancestor clade names,
-  // then (for family/species cards) the owning order/informal-group name,
-  // then (for species cards) the family name - so a card always shows where
-  // it sits in the tree, not just its own name. `walk`'s third callback
-  // argument is the node's ancestor chain (root-first, node itself
-  // excluded), which is exactly this breadcrumb's clade portion once
-  // filtered to rank === 'clade'.
-  function buildCardPool(tree) {
+  // Every fact/illustration card carries a `breadcrumb`: the chain of
+  // ancestor clade names, then (for family/species cards) the owning
+  // order/informal-group name, then (for species cards) the family name -
+  // so a card always shows where it sits in the tree, not just its own
+  // name. `walk`'s third callback argument is the node's ancestor chain
+  // (root-first, node itself excluded), which is exactly this breadcrumb's
+  // clade portion once filtered to rank === 'clade'.
+  //
+  // A handful of species are placeholder namesake stand-ins for otherwise
+  // empty families (e.g. "Grasses" / sci "Poaceae", for the Poaceae family
+  // itself) - fine as fact-card content, but a species->family quiz
+  // question built from one is tautological (the prompt's own subtitle
+  // already says the answer), so these are excluded from the quiz pools
+  // (not from the fact-card pool) by checking sci against the family name.
+  function collectFeedData(tree) {
     const cards = [];
+    const orders = [];
+    const families = [];
+    const species = [];
+    const iconOrders = [];
+    const illustratedSpecies = [];
 
     function pushNodeCard(level, rankLabel, node, breadcrumb) {
       if (!node.icon) return; // §4: iconless node with facts - skip rather than assume
@@ -8616,10 +8489,12 @@ window.Herb = (function () {
       // below, and the Diagram target every family/species card under this
       // node points at, are only meaningful when node is one of those two
       // ranks.
-      const groupBreadcrumb = (node.rank === 'order' || node.rank === 'informal group')
-        ? [...ancestryClades, node.name]
-        : ancestryClades;
-      const groupDiagramTarget = (node.rank === 'order' || node.rank === 'informal group') ? node.id : null;
+      const isGroup = node.rank === 'order' || node.rank === 'informal group';
+      const groupBreadcrumb = isGroup ? [...ancestryClades, node.name] : ancestryClades;
+      const groupDiagramTarget = isGroup ? node.id : null;
+
+      if (isGroup && node.quizClue && node.icon) iconOrders.push(node);
+      if (isGroup && node.families && node.families.length) orders.push(node);
 
       for (const fam of (node.families || [])) {
         (fam.funFacts || []).forEach((fact, i) => {
@@ -8634,6 +8509,11 @@ window.Herb = (function () {
             diagramTarget: groupDiagramTarget, // families have no box of their own in the Diagram - link to their order/informal group
           });
         });
+
+        if (fam.species && fam.species.length) {
+          families.push({ ...fam, orderName: node.name, orderRank: node.rank });
+        }
+
         for (const sp of (fam.species || [])) {
           (sp.funFacts || []).forEach((fact, i) => {
             cards.push({
@@ -8665,9 +8545,134 @@ window.Herb = (function () {
               diagramTarget: groupDiagramTarget,
             });
           }
+
+          if (sp.sci !== fam.name) {
+            const spWithParents = {
+              ...sp, familyName: fam.name, orderName: node.name, orderRank: node.rank,
+            };
+            species.push(spWithParents);
+            if (sp.illustration) illustratedSpecies.push(spWithParents);
+          }
         }
       }
     });
+
+    return {
+      cards, orders, families, species, iconOrders, illustratedSpecies,
+    };
+  }
+
+  function buildQuizCards({
+    orders, families, species, iconOrders, illustratedSpecies,
+  }) {
+    const cards = [];
+    const familyNames = families.map((f) => f.name);
+    const orderNames = orders.map((o) => o.name);
+    const iconOrderNames = iconOrders.map((o) => o.name);
+    const illustratedNames = illustratedSpecies.map((s) => s.common);
+
+    if (families.length >= 4) {
+      for (const sp of species) {
+        const options = shuffle([sp.familyName, ...pick(familyNames, 3, sp.familyName)]);
+        cards.push({
+          cardId: `quiz:speciesFamily:${sp.id}`,
+          isQuiz: true,
+          modeLabel: 'Species → Family',
+          promptName: sp.common,
+          promptSub: sp.sci,
+          promptSubStyle: 'sci',
+          questionHtml: 'Which family does this belong to?',
+          options,
+          answer: sp.familyName,
+          whyHtml: `${esc(sp.common)} sits in ${esc(sp.familyName)}, ${esc(sp.orderRank)} ${esc(sp.orderName)}.`,
+        });
+      }
+    }
+
+    if (families.length >= 4 && orders.length >= 4) {
+      for (const sp of species) {
+        const options = shuffle([sp.orderName, ...pick(orderNames, 3, sp.orderName)]);
+        cards.push({
+          cardId: `quiz:speciesGroup:${sp.id}`,
+          isQuiz: true,
+          modeLabel: 'Species → Group',
+          promptName: sp.common,
+          promptSub: sp.sci,
+          promptSubStyle: 'sci',
+          questionHtml: `Which ${esc(sp.orderRank)} does this belong to?`,
+          options,
+          answer: sp.orderName,
+          whyHtml: `${esc(sp.common)} sits in ${esc(sp.familyName)}, ${esc(sp.orderRank)} ${esc(sp.orderName)}.`,
+        });
+      }
+
+      for (const fam of families) {
+        const options = shuffle([fam.orderName, ...pick(orderNames, 3, fam.orderName)]);
+        cards.push({
+          cardId: `quiz:familyGroup:${fam.id}`,
+          isQuiz: true,
+          modeLabel: 'Family → Group',
+          promptName: fam.name,
+          promptSub: fam.common,
+          promptSubStyle: 'common',
+          questionHtml: `${fam.trait} Which group is this?`,
+          options,
+          answer: fam.orderName,
+          whyHtml: fam.differentia,
+        });
+      }
+    }
+
+    if (families.length >= 4) {
+      for (const fam of families) {
+        const siblings = families.filter((f) => f.orderName === fam.orderName && f.name !== fam.name);
+        const distractorPool = siblings.length >= 3 ? siblings.map((f) => f.name) : familyNames;
+        const options = shuffle([fam.name, ...pick(distractorPool, 3, fam.name)]);
+        cards.push({
+          cardId: `quiz:differentia:${fam.id}`,
+          isQuiz: true,
+          modeLabel: 'Spot the Difference',
+          promptName: 'Which family is this?',
+          promptSub: null,
+          questionHtml: fam.differentia,
+          options,
+          answer: fam.name,
+          whyHtml: `${esc(fam.name)} (${esc(fam.common)}) — ${fam.trait}`,
+        });
+      }
+    }
+
+    if (iconOrders.length >= 4) {
+      for (const grp of iconOrders) {
+        const options = shuffle([grp.name, ...pick(iconOrderNames, 3, grp.name)]);
+        cards.push({
+          cardId: `quiz:iconGroup:${grp.id}`,
+          isQuiz: true,
+          modeLabel: 'Icon → Group',
+          promptIcon: grp.icon,
+          questionHtml: `${grp.quizClue} Which group is this?`,
+          options,
+          answer: grp.name,
+          whyHtml: grp.quizWhy,
+        });
+      }
+    }
+
+    if (illustratedSpecies.length >= 4) {
+      for (const sp of illustratedSpecies) {
+        const options = shuffle([sp.common, ...pick(illustratedNames, 3, sp.common)]);
+        cards.push({
+          cardId: `quiz:illustrationSpecies:${sp.id}`,
+          isQuiz: true,
+          modeLabel: 'Illustration → Species',
+          promptIllustrationSvg: sp.illustration.svg,
+          questionHtml: 'Which species does this illustration show?',
+          options,
+          answer: sp.common,
+          whyHtml: `${esc(sp.common)} (${esc(sp.sci)}) — ${sp.illustration.caption}`,
+        });
+      }
+    }
 
     return cards;
   }
@@ -8687,9 +8692,9 @@ window.Herb = (function () {
     } catch (e) { /* storage unavailable - seen-tracking degrades gracefully */ }
   }
 
-  // Unseen cards first (shuffled), then seen cards (shuffled) - rebuilt
-  // fresh every time the tab opens, per the brief. Only the seen-set itself
-  // is durable.
+  // Unseen cards first (shuffled), then seen cards (shuffled) - computed
+  // once per page load (see the top-of-file note on caching). Only the
+  // seen-set itself is durable.
   function buildFeedOrder(allCards, seenSet) {
     const unseen = allCards.filter((c) => !seenSet.has(c.cardId));
     const seen = allCards.filter((c) => seenSet.has(c.cardId));
@@ -8710,7 +8715,7 @@ window.Herb = (function () {
   // Diagram anchor id for a card's diagramTarget - the order/informal-group
   // or clade box this card belongs under (families and species have no box
   // of their own in the Diagram, so they resolve to their owning
-  // order/informal group; see buildCardPool).
+  // order/informal group; see collectFeedData).
   function diagramAnchorId(card) {
     return card.diagramTarget ? `diag-${card.diagramTarget}` : null;
   }
@@ -8735,8 +8740,37 @@ window.Herb = (function () {
     return `<div class="df-breadcrumb">${narrowestFirst.map((n) => `<span>${esc(n)}</span>`).join('<span class="df-breadcrumb-sep">&lsaquo;</span>')}</div>`;
   }
 
-  function cardHtml(card) {
-    if (card.isQuiz) return quizCardHtml(card);
+  function quizPromptHtml(card) {
+    let html = '';
+    if (card.promptIcon) html += iconSvg(card.promptIcon, 'df-icon');
+    if (card.promptIllustrationSvg) html += `<div class="df-illustration">${card.promptIllustrationSvg}</div>`;
+    if (card.promptName) {
+      html += `<h2 class="df-name">${esc(card.promptName)}</h2>`;
+      if (card.promptSub) {
+        html += card.promptSubStyle === 'common'
+          ? `<div class="df-common">${esc(card.promptSub)}</div>`
+          : `<div class="df-sci">${esc(card.promptSub)}</div>`;
+      }
+    }
+    return html;
+  }
+
+  function quizCardInnerHtml(card) {
+    return `<div class="df-rank">Quiz &middot; ${esc(card.modeLabel)}</div>
+      ${quizPromptHtml(card)}
+      <span class="df-badge" style="--badge-color:${QUIZ_BADGE_COLOR}">${quizGlyphSvg()}Quiz</span>
+      <p class="df-fact">${card.questionHtml}</p>
+      <div class="answers">${card.options.map((opt) => `<button type="button" class="answer-btn" data-opt="${esc(opt)}"><span class="a-name">${esc(opt)}</span></button>`).join('')}</div>
+      <div class="feedback hidden"></div>
+      <button type="button" class="next-btn hidden">Continue scrolling &darr;</button>`;
+  }
+
+  // Inner content only - the outer <div class="df-card" data-card-id="...">
+  // is created once up front as a placeholder (see renderDiscover) so
+  // scroll-snap always has a correctly-sized element per card; this is
+  // what gets swapped in and out of that placeholder as the feed scrolls.
+  function cardInnerHtml(card) {
+    if (card.isQuiz) return quizCardInnerHtml(card);
 
     const guideAnchor = fieldGuideAnchorId(card);
     const diagramAnchor = diagramAnchorId(card);
@@ -8748,30 +8782,37 @@ window.Herb = (function () {
     if (card.isIllustration) {
       // card.illustrationSvg is trusted, author-supplied markup (same trust
       // level as taxonomy.json's icon paths elsewhere), inserted verbatim.
-      return `<div class="df-card" data-card-id="${esc(card.cardId)}">
-      <div class="df-illustration">${card.illustrationSvg}</div>
+      return `<div class="df-illustration">${card.illustrationSvg}</div>
       <div class="df-rank">${esc(card.rankLabel)}</div>
       ${nameHtml(card)}
       ${breadcrumbHtml(card)}
       <span class="df-badge" style="--badge-color:${ORGAN_BADGE_COLOR}">${illustrationGlyphSvg()}${esc(ORGAN_LABELS[card.organ] || card.organ)}</span>
       <p class="df-fact">${esc(card.caption)}</p>
-      ${viewLinksHtml}
-    </div>`;
+      ${viewLinksHtml}`;
     }
 
-    return `<div class="df-card" data-card-id="${esc(card.cardId)}">
-      ${iconSvg(card.icon, 'df-icon')}
+    return `${iconSvg(card.icon, 'df-icon')}
       <div class="df-rank">${esc(card.rankLabel)}</div>
       ${nameHtml(card)}
       ${breadcrumbHtml(card)}
       <span class="df-badge" style="--badge-color:${esc(TYPE_COLORS[card.factType] || TYPE_COLORS.other)}">${badgeGlyphSvg(card.factType)}${esc(TYPE_LABELS[card.factType] || TYPE_LABELS.other)}</span>
       <p class="df-fact">${esc(card.factText)}</p>
-      ${viewLinksHtml}
-    </div>`;
+      ${viewLinksHtml}`;
   }
 
+  // Module-scoped so a second call (there shouldn't normally be one now
+  // that bootstrap.js caches this render, but nothing stops a future
+  // caller) disconnects the previous observer instead of leaking it.
+  let activeObserver = null;
+
   function renderDiscover(container, tree) {
-    const pool = [...buildCardPool(tree), ...buildQuizCards(tree)];
+    if (activeObserver) {
+      activeObserver.disconnect();
+      activeObserver = null;
+    }
+
+    const data = collectFeedData(tree);
+    const pool = [...data.cards, ...buildQuizCards(data)];
 
     if (!pool.length) {
       container.innerHTML = '<p class="df-empty">No facts yet &mdash; check back once the Discover feed has content.</p>';
@@ -8782,14 +8823,78 @@ window.Herb = (function () {
     const order = buildFeedOrder(pool, seenSet);
     const cardById = new Map(order.map((c) => [c.cardId, c]));
 
-    container.innerHTML = `<div class="df-feed" id="dfFeed">${order.map(cardHtml).join('')}</div>`;
+    // Every card gets an empty, correctly-sized placeholder up front -
+    // scroll-snap computes its snap points from real in-flow children, so
+    // every card needs to exist and be full height even before its content
+    // is materialized. Only a small window around the current scroll
+    // position ever gets populated (see updateWindow), which is what keeps
+    // live DOM/SVG/button counts flat regardless of how long the feed gets.
+    container.innerHTML = `<div class="df-feed" id="dfFeed">${order.map((c) => `<div class="df-card" data-card-id="${esc(c.cardId)}"></div>`).join('')}</div>`;
 
     const feedEl = container.querySelector('#dfFeed');
+    const cardEls = [...feedEl.children];
 
-    feedEl.querySelectorAll('.df-viewlink').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const anchorId = btn.dataset.anchor;
-        const tabBtn = document.querySelector(`#appSwitch button[data-tab="${btn.dataset.tab}"]`);
+    const populated = new Set();
+    function populate(i) {
+      if (populated.has(i) || i < 0 || i >= order.length) return;
+      const card = order[i];
+      const el = cardEls[i];
+      el.innerHTML = cardInnerHtml(card);
+      el.classList.toggle('df-quiz-card', !!card.isQuiz);
+      populated.add(i);
+    }
+    function depopulate(i) {
+      if (!populated.has(i)) return;
+      const el = cardEls[i];
+      el.innerHTML = '';
+      el.classList.remove('df-quiz-card');
+      delete el.dataset.answered;
+      populated.delete(i);
+    }
+
+    const BUFFER = 4;
+    let windowCenter = -1;
+    function updateWindow(centerIndex) {
+      const lo = Math.max(0, centerIndex - BUFFER);
+      const hi = Math.min(order.length - 1, centerIndex + BUFFER);
+      for (const i of [...populated]) {
+        if (i < lo || i > hi) depopulate(i);
+      }
+      for (let i = lo; i <= hi; i++) populate(i);
+      windowCenter = centerIndex;
+    }
+
+    let cardHeight = feedEl.clientHeight || 1;
+    function currentIndex() {
+      return Math.round(feedEl.scrollTop / cardHeight);
+    }
+    updateWindow(currentIndex());
+
+    let scrollTicking = false;
+    feedEl.addEventListener('scroll', () => {
+      if (scrollTicking) return;
+      scrollTicking = true;
+      requestAnimationFrame(() => {
+        scrollTicking = false;
+        cardHeight = feedEl.clientHeight || cardHeight;
+        const idx = currentIndex();
+        if (idx !== windowCenter) updateWindow(idx);
+      });
+    }, { passive: true });
+    window.addEventListener('resize', () => {
+      cardHeight = feedEl.clientHeight || cardHeight;
+      updateWindow(currentIndex());
+    });
+
+    // One delegated listener for the whole feed instead of one per button -
+    // view-link navigation, quiz answers, and the quiz "continue" button all
+    // route through here. This is what keeps the live listener count flat
+    // regardless of feed length, on top of the windowing above.
+    feedEl.addEventListener('click', (e) => {
+      const viewBtn = e.target.closest('.df-viewlink');
+      if (viewBtn) {
+        const anchorId = viewBtn.dataset.anchor;
+        const tabBtn = document.querySelector(`#appSwitch button[data-tab="${viewBtn.dataset.tab}"]`);
         if (tabBtn) tabBtn.click();
 
         // The target tab's font-display:swap webfonts (Fraunces/Source
@@ -8811,52 +8916,55 @@ window.Herb = (function () {
           setTimeout(attempt, 350);
           setTimeout(attempt, 900);
         });
-      });
-    });
+        return;
+      }
 
-    // Quiz cards: tap an option to answer in place (one try per card, like
-    // the old Trainer tab), then "Continue scrolling" smooth-scrolls to
-    // whatever card comes next in the feed - there is no regenerate-in-place
-    // here, since a quiz card is a fixed, pre-built member of the pool like
-    // any other Discover card.
-    feedEl.querySelectorAll('.df-quiz-card').forEach((cardEl) => {
-      const card = cardById.get(cardEl.dataset.cardId);
-      if (!card) return;
-      const buttons = [...cardEl.querySelectorAll('.answer-btn')];
-      buttons.forEach((btn) => {
-        btn.addEventListener('click', () => {
-          if (cardEl.dataset.answered) return;
-          cardEl.dataset.answered = '1';
-          const choice = btn.dataset.opt;
-          const correct = choice === card.answer;
-          buttons.forEach((b) => {
-            b.disabled = true;
-            if (b.dataset.opt === card.answer) b.classList.add('correct');
-            else if (b.dataset.opt === choice) b.classList.add('wrong');
-          });
-          const feedback = cardEl.querySelector('.feedback');
-          feedback.classList.remove('hidden');
-          feedback.innerHTML = `${correct ? '<b>Correct.</b>' : `<b>Answer: ${esc(card.answer)}.</b>`} ${card.whyHtml}`;
-          const nextBtn = cardEl.querySelector('.next-btn');
-          nextBtn.classList.remove('hidden');
-          nextBtn.addEventListener('click', () => {
-            const next = cardEl.nextElementSibling;
-            if (next) next.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }, { once: true });
+      const nextBtn = e.target.closest('.next-btn');
+      if (nextBtn) {
+        const cardEl = nextBtn.closest('.df-card');
+        const next = cardEl && cardEl.nextElementSibling;
+        if (next) next.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+
+      // Quiz cards: tap an option to answer in place (one try per card,
+      // like the old Trainer tab) - there is no regenerate-in-place here,
+      // since a quiz card is a fixed, pre-built member of the pool like any
+      // other Discover card.
+      const answerBtn = e.target.closest('.answer-btn');
+      if (answerBtn) {
+        const cardEl = answerBtn.closest('.df-card');
+        if (!cardEl || cardEl.dataset.answered) return;
+        const card = cardById.get(cardEl.dataset.cardId);
+        if (!card) return;
+        cardEl.dataset.answered = '1';
+        const choice = answerBtn.dataset.opt;
+        const correct = choice === card.answer;
+        cardEl.querySelectorAll('.answer-btn').forEach((b) => {
+          b.disabled = true;
+          if (b.dataset.opt === card.answer) b.classList.add('correct');
+          else if (b.dataset.opt === choice) b.classList.add('wrong');
         });
-      });
+        const feedback = cardEl.querySelector('.feedback');
+        feedback.classList.remove('hidden');
+        feedback.innerHTML = `${correct ? '<b>Correct.</b>' : `<b>Answer: ${esc(card.answer)}.</b>`} ${card.whyHtml}`;
+        cardEl.querySelector('.next-btn').classList.remove('hidden');
+      }
     });
 
     // Seen-tracking: a card counts as seen once it scrolls off the top of
     // the viewport (exits with its top edge above 0), not merely once it
-    // has been visible. Writes are debounced rather than flushed every tick.
+    // has been visible. Writes are debounced rather than flushed every
+    // tick. Placeholder cards are correctly sized/positioned by CSS alone,
+    // so this observes every card regardless of whether its content is
+    // currently populated.
     let pendingWrite = null;
     const newlySeen = new Set(seenSet);
     function scheduleSave() {
       if (pendingWrite) clearTimeout(pendingWrite);
       pendingWrite = setTimeout(() => saveSeen(newlySeen), 400);
     }
-    const observer = new IntersectionObserver((entries) => {
+    activeObserver = new IntersectionObserver((entries) => {
       let changed = false;
       for (const entry of entries) {
         if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
@@ -8866,7 +8974,7 @@ window.Herb = (function () {
       }
       if (changed) scheduleSave();
     }, { root: feedEl, threshold: 0 });
-    feedEl.querySelectorAll('.df-card').forEach((el) => observer.observe(el));
+    cardEls.forEach((el) => activeObserver.observe(el));
   }
 
   window.Herb = window.Herb || {};
@@ -8880,7 +8988,9 @@ window.Herb = (function () {
 (function () {
   function boot(data) {
     const tree = data.tree;
-    const rendered = { guide: false, diagram: false, log: false };
+    const rendered = {
+      discover: false, guide: false, diagram: false, log: false,
+    };
     const panels = {
       guide: document.getElementById('panel-field-guide'),
       diagram: document.getElementById('panel-diagram'),
@@ -8888,6 +8998,13 @@ window.Herb = (function () {
       discover: document.getElementById('panel-discover'),
     };
 
+    // Every tab, Discover included, renders once per page load and is
+    // cached from then on - switching tabs just toggles `hidden`. Discover
+    // used to fully rebuild (reshuffle, re-walk the tree, replace the whole
+    // DOM) on every single visit; now that it carries quiz cards as well as
+    // fact cards the feed is large enough that doing this on every tab
+    // switch was the main source of visible lag, so a fresh shuffle now
+    // only happens once per page load rather than once per visit.
     function show(tab) {
       Object.entries(panels).forEach(([key, el]) => {
         el.hidden = key !== tab;
@@ -8895,13 +9012,9 @@ window.Herb = (function () {
       document.querySelectorAll('#appSwitch [data-tab]').forEach((btn) => {
         btn.classList.toggle('active', btn.dataset.tab === tab);
       });
-      // Discover reshuffles its feed order fresh every time the tab opens
-      // (only the seen-set persists), so it re-renders on every visit
-      // rather than being cached like the other tabs.
-      if (tab === 'discover') {
-        window.Herb.renderDiscover(panels.discover, tree);
-      } else if (!rendered[tab]) {
+      if (!rendered[tab]) {
         rendered[tab] = true;
+        if (tab === 'discover') window.Herb.renderDiscover(panels.discover, tree);
         if (tab === 'guide') window.Herb.renderFieldGuide(panels.guide, tree);
         if (tab === 'diagram') window.Herb.renderDiagram(panels.diagram, tree);
         if (tab === 'log') window.Herb.renderFieldLog(panels.log, tree);
