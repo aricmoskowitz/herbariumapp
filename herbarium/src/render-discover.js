@@ -365,13 +365,49 @@
     } catch (e) { /* storage unavailable - seen-tracking degrades gracefully */ }
   }
 
-  // Unseen cards first (shuffled), then seen cards (shuffled) - computed
-  // once per page load (see the top-of-file note on caching). Only the
-  // seen-set itself is durable.
+  // Interleaves several arrays into one, in proportion to their relative
+  // sizes, so no single array ever runs unbroken for long: at each step it
+  // takes the next item from whichever array is furthest behind its fair
+  // share so far. Used below to keep quiz cards and fact/illustration
+  // cards mixed throughout the feed regardless of how many of each exist.
+  function interleaveByShare(groups) {
+    const result = [];
+    const cursors = groups.map(() => 0);
+    const total = groups.reduce((n, g) => n + g.length, 0);
+    for (let n = 0; n < total; n++) {
+      let pick = -1;
+      let bestRatio = Infinity;
+      for (let g = 0; g < groups.length; g++) {
+        if (cursors[g] >= groups[g].length) continue;
+        const ratio = cursors[g] / groups[g].length;
+        if (ratio < bestRatio) { bestRatio = ratio; pick = g; }
+      }
+      result.push(groups[pick][cursors[pick]]);
+      cursors[pick] += 1;
+    }
+    return result;
+  }
+
+  // Within each card type (quiz vs. fact/illustration), unseen cards come
+  // first (shuffled), then seen cards (shuffled) - then the two type
+  // sequences are interleaved proportionally so quiz and fact cards stay
+  // mixed throughout the scroll, rather than segregating into one giant
+  // block per type. That segregation is exactly what happened the first
+  // time quiz cards shipped: ~1,000 of them were unseen for everyone at
+  // once, while most fact cards were already marked seen from ordinary
+  // use, so "unseen before seen" alone put nearly a thousand quiz cards in
+  // a row at the front of the feed before a single fact card appeared.
+  // Computed once per page load (see the top-of-file note on caching);
+  // only the seen-set itself is durable.
   function buildFeedOrder(allCards, seenSet) {
-    const unseen = allCards.filter((c) => !seenSet.has(c.cardId));
-    const seen = allCards.filter((c) => seenSet.has(c.cardId));
-    return [...shuffle(unseen), ...shuffle(seen)];
+    const orderWithinType = (arr) => {
+      const unseen = shuffle(arr.filter((c) => !seenSet.has(c.cardId)));
+      const seen = shuffle(arr.filter((c) => seenSet.has(c.cardId)));
+      return [...unseen, ...seen];
+    };
+    const quiz = orderWithinType(allCards.filter((c) => c.isQuiz));
+    const other = orderWithinType(allCards.filter((c) => !c.isQuiz));
+    return interleaveByShare([other, quiz]);
   }
 
   // Field Guide anchor id for a card's navTarget, per the id prefixes that

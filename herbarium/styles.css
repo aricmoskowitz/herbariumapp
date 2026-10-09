@@ -390,7 +390,14 @@ h2.order-name{ font-family:'Fraunces', serif; font-weight:600; font-size:clamp(2
 
 /* ---------- Discover (vertical snap-scroll fact feed) ---------- */
 .df-feed{
+  /* 100vh on mobile Safari can disagree with the actual visible viewport
+     once the browser's own chrome (address bar, etc.) is accounted for,
+     which left a gap between each card's bottom border and the fixed
+     bottom tab bar - two parallel lines instead of one. 100dvh tracks the
+     real, currently-visible viewport instead; kept as a progressive
+     enhancement after the vh fallback for older browsers. */
   height:calc(100vh - var(--tabbar-h));
+  height:calc(100dvh - var(--tabbar-h));
   overflow-y:scroll;
   scroll-snap-type:y mandatory;
   -webkit-overflow-scrolling:touch;
