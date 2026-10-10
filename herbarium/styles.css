@@ -414,6 +414,13 @@ h2.order-name{ font-family:'Fraunces', serif; font-weight:600; font-size:clamp(2
   padding:32px 28px;
   text-align:center;
   border-bottom:1px solid var(--line);
+  /* Every card must stay exactly one fixed height (scroll-snap, and the
+     Discover feed's own windowing math, both assume every card is the
+     same height) - so when a quiz card's answered-state content (prompt +
+     4 answers + a long explanation + view-links + continue button) runs
+     taller than that, it scrolls within its own box instead of bleeding
+     into the next card or clipping the controls at the bottom. */
+  overflow-y:auto;
 }
 .df-icon{ width:72px; height:72px; color:var(--gold-bright); flex-shrink:0; }
 .df-illustration{ height:36vh; max-height:340px; aspect-ratio:1/1; flex-shrink:0; display:flex; align-items:center; justify-content:center; }

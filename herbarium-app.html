@@ -431,6 +431,13 @@ h2.order-name{ font-family:'Fraunces', serif; font-weight:600; font-size:clamp(2
   padding:32px 28px;
   text-align:center;
   border-bottom:1px solid var(--line);
+  /* Every card must stay exactly one fixed height (scroll-snap, and the
+     Discover feed's own windowing math, both assume every card is the
+     same height) - so when a quiz card's answered-state content (prompt +
+     4 answers + a long explanation + view-links + continue button) runs
+     taller than that, it scrolls within its own box instead of bleeding
+     into the next card or clipping the controls at the bottom. */
+  overflow-y:auto;
 }
 .df-icon{ width:72px; height:72px; color:var(--gold-bright); flex-shrink:0; }
 .df-illustration{ height:36vh; max-height:340px; aspect-ratio:1/1; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
@@ -8542,7 +8549,9 @@ window.Herb = (function () {
         });
 
         if (fam.species && fam.species.length) {
-          families.push({ ...fam, orderName: node.name, orderRank: node.rank });
+          families.push({
+            ...fam, orderName: node.name, orderRank: node.rank, orderId: node.id,
+          });
         }
 
         for (const sp of (fam.species || [])) {
@@ -8579,7 +8588,7 @@ window.Herb = (function () {
 
           if (sp.sci !== fam.name) {
             const spWithParents = {
-              ...sp, familyName: fam.name, orderName: node.name, orderRank: node.rank,
+              ...sp, familyName: fam.name, orderName: node.name, orderRank: node.rank, orderId: node.id,
             };
             species.push(spWithParents);
             if (sp.illustration) illustratedSpecies.push(spWithParents);
@@ -8616,6 +8625,7 @@ window.Herb = (function () {
           options,
           answer: sp.familyName,
           whyHtml: `${esc(sp.common)} sits in ${esc(sp.familyName)}, ${esc(sp.orderRank)} ${esc(sp.orderName)}.`,
+          level: 'species', navTarget: sp.id, diagramTarget: sp.orderId,
         });
       }
     }
@@ -8634,6 +8644,7 @@ window.Herb = (function () {
           options,
           answer: sp.orderName,
           whyHtml: `${esc(sp.common)} sits in ${esc(sp.familyName)}, ${esc(sp.orderRank)} ${esc(sp.orderName)}.`,
+          level: 'species', navTarget: sp.id, diagramTarget: sp.orderId,
         });
       }
 
@@ -8650,6 +8661,7 @@ window.Herb = (function () {
           options,
           answer: fam.orderName,
           whyHtml: fam.differentia,
+          level: 'family', navTarget: fam.id, diagramTarget: fam.orderId,
         });
       }
     }
@@ -8669,6 +8681,7 @@ window.Herb = (function () {
           options,
           answer: fam.name,
           whyHtml: `${esc(fam.name)} (${esc(fam.common)}) — ${fam.trait}`,
+          level: 'family', navTarget: fam.id, diagramTarget: fam.orderId,
         });
       }
     }
@@ -8685,6 +8698,7 @@ window.Herb = (function () {
           options,
           answer: grp.name,
           whyHtml: grp.quizWhy,
+          level: 'order', navTarget: grp.id, diagramTarget: grp.id,
         });
       }
     }
@@ -8701,6 +8715,7 @@ window.Herb = (function () {
           options,
           answer: sp.common,
           whyHtml: `${esc(sp.common)} (${esc(sp.sci)}) — ${sp.illustration.caption}`,
+          level: 'species', navTarget: sp.id, diagramTarget: sp.orderId,
         });
       }
     }
@@ -8822,6 +8837,20 @@ window.Herb = (function () {
     return html;
   }
 
+  // Shared by fact/illustration cards (always visible) and quiz cards
+  // (hidden until answered - see the delegated click handler below). Every
+  // quiz target (species/family/order) has a real Field Guide section and
+  // Diagram box, so unlike fact/illustration cards neither link is ever
+  // omitted for a quiz card.
+  function viewLinksHtml(card, { hidden = false } = {}) {
+    const guideAnchor = fieldGuideAnchorId(card);
+    const diagramAnchor = diagramAnchorId(card);
+    return `<div class="df-viewlinks${hidden ? ' hidden' : ''}">
+        ${guideAnchor ? `<button type="button" class="df-viewlink" data-tab="guide" data-anchor="${esc(guideAnchor)}">View in Field Guide &rarr;</button>` : ''}
+        ${diagramAnchor ? `<button type="button" class="df-viewlink" data-tab="diagram" data-anchor="${esc(diagramAnchor)}">View in Diagram &rarr;</button>` : ''}
+      </div>`;
+  }
+
   function quizCardInnerHtml(card) {
     return `<div class="df-rank">Quiz &middot; ${esc(card.modeLabel)}</div>
       ${quizPromptHtml(card)}
@@ -8829,6 +8858,7 @@ window.Herb = (function () {
       <p class="df-fact">${card.questionHtml}</p>
       <div class="answers">${card.options.map((opt) => `<button type="button" class="answer-btn" data-opt="${esc(opt)}"><span class="a-name">${esc(opt)}</span></button>`).join('')}</div>
       <div class="feedback hidden"></div>
+      ${viewLinksHtml(card, { hidden: true })}
       <button type="button" class="next-btn hidden">Continue scrolling &darr;</button>`;
   }
 
@@ -8839,13 +8869,6 @@ window.Herb = (function () {
   function cardInnerHtml(card) {
     if (card.isQuiz) return quizCardInnerHtml(card);
 
-    const guideAnchor = fieldGuideAnchorId(card);
-    const diagramAnchor = diagramAnchorId(card);
-    const viewLinksHtml = `<div class="df-viewlinks">
-        ${guideAnchor ? `<button type="button" class="df-viewlink" data-tab="guide" data-anchor="${esc(guideAnchor)}">View in Field Guide &rarr;</button>` : ''}
-        ${diagramAnchor ? `<button type="button" class="df-viewlink" data-tab="diagram" data-anchor="${esc(diagramAnchor)}">View in Diagram &rarr;</button>` : ''}
-      </div>`;
-
     if (card.isIllustration) {
       // card.illustrationSvg is trusted, author-supplied markup (same trust
       // level as taxonomy.json's icon paths elsewhere), inserted verbatim.
@@ -8855,7 +8878,7 @@ window.Herb = (function () {
       ${breadcrumbHtml(card)}
       <span class="df-badge" style="--badge-color:${ORGAN_BADGE_COLOR}">${illustrationGlyphSvg()}${esc(ORGAN_LABELS[card.organ] || card.organ)}</span>
       <p class="df-fact">${esc(card.caption)}</p>
-      ${viewLinksHtml}`;
+      ${viewLinksHtml(card)}`;
     }
 
     return `${iconSvg(card.icon, 'df-icon')}
@@ -8864,7 +8887,7 @@ window.Herb = (function () {
       ${breadcrumbHtml(card)}
       <span class="df-badge" style="--badge-color:${esc(TYPE_COLORS[card.factType] || TYPE_COLORS.other)}">${badgeGlyphSvg(card.factType)}${esc(TYPE_LABELS[card.factType] || TYPE_LABELS.other)}</span>
       <p class="df-fact">${esc(card.factText)}</p>
-      ${viewLinksHtml}`;
+      ${viewLinksHtml(card)}`;
   }
 
   // Module-scoped so a second call (there shouldn't normally be one now
@@ -9052,6 +9075,8 @@ window.Herb = (function () {
         const feedback = cardEl.querySelector('.feedback');
         feedback.classList.remove('hidden');
         feedback.innerHTML = `${correct ? '<b>Correct.</b>' : `<b>Answer: ${esc(card.answer)}.</b>`} ${card.whyHtml}`;
+        const links = cardEl.querySelector('.df-viewlinks');
+        if (links) links.classList.remove('hidden');
         cardEl.querySelector('.next-btn').classList.remove('hidden');
       }
     });
