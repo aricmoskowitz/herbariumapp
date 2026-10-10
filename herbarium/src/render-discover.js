@@ -184,7 +184,9 @@
         });
 
         if (fam.species && fam.species.length) {
-          families.push({ ...fam, orderName: node.name, orderRank: node.rank });
+          families.push({
+            ...fam, orderName: node.name, orderRank: node.rank, orderId: node.id,
+          });
         }
 
         for (const sp of (fam.species || [])) {
@@ -221,7 +223,7 @@
 
           if (sp.sci !== fam.name) {
             const spWithParents = {
-              ...sp, familyName: fam.name, orderName: node.name, orderRank: node.rank,
+              ...sp, familyName: fam.name, orderName: node.name, orderRank: node.rank, orderId: node.id,
             };
             species.push(spWithParents);
             if (sp.illustration) illustratedSpecies.push(spWithParents);
@@ -258,6 +260,7 @@
           options,
           answer: sp.familyName,
           whyHtml: `${esc(sp.common)} sits in ${esc(sp.familyName)}, ${esc(sp.orderRank)} ${esc(sp.orderName)}.`,
+          level: 'species', navTarget: sp.id, diagramTarget: sp.orderId,
         });
       }
     }
@@ -276,6 +279,7 @@
           options,
           answer: sp.orderName,
           whyHtml: `${esc(sp.common)} sits in ${esc(sp.familyName)}, ${esc(sp.orderRank)} ${esc(sp.orderName)}.`,
+          level: 'species', navTarget: sp.id, diagramTarget: sp.orderId,
         });
       }
 
@@ -292,6 +296,7 @@
           options,
           answer: fam.orderName,
           whyHtml: fam.differentia,
+          level: 'family', navTarget: fam.id, diagramTarget: fam.orderId,
         });
       }
     }
@@ -311,6 +316,7 @@
           options,
           answer: fam.name,
           whyHtml: `${esc(fam.name)} (${esc(fam.common)}) — ${fam.trait}`,
+          level: 'family', navTarget: fam.id, diagramTarget: fam.orderId,
         });
       }
     }
@@ -327,6 +333,7 @@
           options,
           answer: grp.name,
           whyHtml: grp.quizWhy,
+          level: 'order', navTarget: grp.id, diagramTarget: grp.id,
         });
       }
     }
@@ -343,6 +350,7 @@
           options,
           answer: sp.common,
           whyHtml: `${esc(sp.common)} (${esc(sp.sci)}) — ${sp.illustration.caption}`,
+          level: 'species', navTarget: sp.id, diagramTarget: sp.orderId,
         });
       }
     }
@@ -464,6 +472,20 @@
     return html;
   }
 
+  // Shared by fact/illustration cards (always visible) and quiz cards
+  // (hidden until answered - see the delegated click handler below). Every
+  // quiz target (species/family/order) has a real Field Guide section and
+  // Diagram box, so unlike fact/illustration cards neither link is ever
+  // omitted for a quiz card.
+  function viewLinksHtml(card, { hidden = false } = {}) {
+    const guideAnchor = fieldGuideAnchorId(card);
+    const diagramAnchor = diagramAnchorId(card);
+    return `<div class="df-viewlinks${hidden ? ' hidden' : ''}">
+        ${guideAnchor ? `<button type="button" class="df-viewlink" data-tab="guide" data-anchor="${esc(guideAnchor)}">View in Field Guide &rarr;</button>` : ''}
+        ${diagramAnchor ? `<button type="button" class="df-viewlink" data-tab="diagram" data-anchor="${esc(diagramAnchor)}">View in Diagram &rarr;</button>` : ''}
+      </div>`;
+  }
+
   function quizCardInnerHtml(card) {
     return `<div class="df-rank">Quiz &middot; ${esc(card.modeLabel)}</div>
       ${quizPromptHtml(card)}
@@ -471,6 +493,7 @@
       <p class="df-fact">${card.questionHtml}</p>
       <div class="answers">${card.options.map((opt) => `<button type="button" class="answer-btn" data-opt="${esc(opt)}"><span class="a-name">${esc(opt)}</span></button>`).join('')}</div>
       <div class="feedback hidden"></div>
+      ${viewLinksHtml(card, { hidden: true })}
       <button type="button" class="next-btn hidden">Continue scrolling &darr;</button>`;
   }
 
@@ -481,13 +504,6 @@
   function cardInnerHtml(card) {
     if (card.isQuiz) return quizCardInnerHtml(card);
 
-    const guideAnchor = fieldGuideAnchorId(card);
-    const diagramAnchor = diagramAnchorId(card);
-    const viewLinksHtml = `<div class="df-viewlinks">
-        ${guideAnchor ? `<button type="button" class="df-viewlink" data-tab="guide" data-anchor="${esc(guideAnchor)}">View in Field Guide &rarr;</button>` : ''}
-        ${diagramAnchor ? `<button type="button" class="df-viewlink" data-tab="diagram" data-anchor="${esc(diagramAnchor)}">View in Diagram &rarr;</button>` : ''}
-      </div>`;
-
     if (card.isIllustration) {
       // card.illustrationSvg is trusted, author-supplied markup (same trust
       // level as taxonomy.json's icon paths elsewhere), inserted verbatim.
@@ -497,7 +513,7 @@
       ${breadcrumbHtml(card)}
       <span class="df-badge" style="--badge-color:${ORGAN_BADGE_COLOR}">${illustrationGlyphSvg()}${esc(ORGAN_LABELS[card.organ] || card.organ)}</span>
       <p class="df-fact">${esc(card.caption)}</p>
-      ${viewLinksHtml}`;
+      ${viewLinksHtml(card)}`;
     }
 
     return `${iconSvg(card.icon, 'df-icon')}
@@ -506,7 +522,7 @@
       ${breadcrumbHtml(card)}
       <span class="df-badge" style="--badge-color:${esc(TYPE_COLORS[card.factType] || TYPE_COLORS.other)}">${badgeGlyphSvg(card.factType)}${esc(TYPE_LABELS[card.factType] || TYPE_LABELS.other)}</span>
       <p class="df-fact">${esc(card.factText)}</p>
-      ${viewLinksHtml}`;
+      ${viewLinksHtml(card)}`;
   }
 
   // Module-scoped so a second call (there shouldn't normally be one now
@@ -694,6 +710,8 @@
         const feedback = cardEl.querySelector('.feedback');
         feedback.classList.remove('hidden');
         feedback.innerHTML = `${correct ? '<b>Correct.</b>' : `<b>Answer: ${esc(card.answer)}.</b>`} ${card.whyHtml}`;
+        const links = cardEl.querySelector('.df-viewlinks');
+        if (links) links.classList.remove('hidden');
         cardEl.querySelector('.next-btn').classList.remove('hidden');
       }
     });
