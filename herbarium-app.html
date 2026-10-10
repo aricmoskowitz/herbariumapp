@@ -462,11 +462,19 @@ h2.order-name{ font-family:'Fraunces', serif; font-weight:600; font-size:clamp(2
   font-family:'Source Serif 4', serif; font-size:17px; line-height:1.55; color:var(--card);
   max-width:520px; margin:6px 0 0;
 }
-.df-viewlinks{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:14px; }
+/* Always one row: with the "View in" prefix dropped, "Field Guide" and
+   "Diagram" are each short enough to sit comfortably at half width on any
+   phone, so this no longer needs to wrap to a second line like the old
+   "View in Field Guide" / "View in Diagram" pair sometimes did. flex:1 on
+   the buttons (not a 2-column grid) means a card with only one link - some
+   fact cards have just one - still gets a single full-width button instead
+   of leaving an empty second column. */
+.df-viewlinks{ display:flex; gap:10px; margin-top:10px; width:100%; max-width:420px; }
 .df-viewlink{
+  flex:1;
   font-family:'Space Mono', monospace; font-size:11px; letter-spacing:0.04em; text-transform:uppercase;
   background:transparent; color:var(--gold); border:1px solid var(--gold); border-radius:3px;
-  padding:9px 16px;
+  padding:9px 12px;
 }
 .df-viewlink:hover{ background:var(--gold); color:#1b2a20; }
 .df-empty{ text-align:center; color:var(--sage); font-style:italic; padding:60px 20px; }
@@ -8846,8 +8854,8 @@ window.Herb = (function () {
     const guideAnchor = fieldGuideAnchorId(card);
     const diagramAnchor = diagramAnchorId(card);
     return `<div class="df-viewlinks${hidden ? ' hidden' : ''}">
-        ${guideAnchor ? `<button type="button" class="df-viewlink" data-tab="guide" data-anchor="${esc(guideAnchor)}">View in Field Guide &rarr;</button>` : ''}
-        ${diagramAnchor ? `<button type="button" class="df-viewlink" data-tab="diagram" data-anchor="${esc(diagramAnchor)}">View in Diagram &rarr;</button>` : ''}
+        ${guideAnchor ? `<button type="button" class="df-viewlink" data-tab="guide" data-anchor="${esc(guideAnchor)}">Field Guide &rarr;</button>` : ''}
+        ${diagramAnchor ? `<button type="button" class="df-viewlink" data-tab="diagram" data-anchor="${esc(diagramAnchor)}">Diagram &rarr;</button>` : ''}
       </div>`;
   }
 
