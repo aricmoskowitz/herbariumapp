@@ -9043,7 +9043,21 @@ window.Herb = (function () {
         // mid-scroll). A no-op re-scroll (already in place) is harmless.
         const attempt = () => {
           const el = document.getElementById(anchorId);
-          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          if (!el) return;
+          // A species-level Field Guide anchor lands on its <li> row inside
+          // a family card - scrolling that row itself to the top leaves the
+          // family card's own name/trait/differentia (sitting above the
+          // row, in the same card) off the top of the screen, with nothing
+          // to say which family or order it's even looking at. Scroll the
+          // whole enclosing family-card (or, for family/order anchors,
+          // which land on that card/section directly, just the element
+          // itself) into view instead, so the full card or section is
+          // visible with a little buffer above it (both already carry
+          // scroll-margin-top for that). Diagram anchors never match
+          // either selector, so they fall through to the element itself
+          // exactly as before.
+          const scrollTarget = el.closest('.family-card, section.order') || el;
+          scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
         requestAnimationFrame(() => {
           attempt();
